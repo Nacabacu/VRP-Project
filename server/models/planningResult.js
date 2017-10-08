@@ -1,4 +1,4 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
 var PlanningResult = mongoose.model('planningResults', {
   date: {
@@ -6,13 +6,13 @@ var PlanningResult = mongoose.model('planningResults', {
     require: true
   },
   depoId: {
-    type: mongoose.Schema.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     require: true
   },
   vehicles: [
     {
       driverId: {
-        type: mongoose.Schema.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         require: true
       },
       route: {
@@ -32,7 +32,7 @@ var PlanningResult = mongoose.model('planningResults', {
   clients: [
     {
       clientId: {
-        type: mongoose.Schema.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         require: true
       },
       branchId: {
