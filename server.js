@@ -5,11 +5,11 @@ const http = require('http');
 const app = express();
 
 // API file for interacting with MongoDB
-const api = require('./server/routes/api');
+const api = require('./server/api');
 
 // Parsers
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 
 // Angular DIST output folder
 app.use(express.static(path.join(__dirname, 'dist')));
