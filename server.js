@@ -7,7 +7,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const flash = require('connect-flash');
 
-const api = require('./server/api');
+const routing = require('./server/routing');
 
 const app = express();
 
@@ -24,7 +24,7 @@ app.use(flash());
 app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'dist')));
 
-app.use('/api', api);
+app.use('/api', routing);
 
 var User = require('./server/models/user').User;
 passport.use(new LocalStrategy(User.authenticate()));
