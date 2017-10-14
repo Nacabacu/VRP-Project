@@ -4,7 +4,7 @@ const node_or_tools = require('node_or_tools');
 const vrpHandler = require('../handlers/vrp');
 
 var googleMapClient = require('@google/maps').createClient({
-    key: 'AIzaSyABytE7LZW-b6GR54wThg3n6iwaWuw0vqU',
+    key: 'AIzaSyCMk-d92auJ7HbZaXajcpdXtqcBMoH4RUc',
     Promise: require('q').Promise
 });
 
@@ -62,7 +62,7 @@ router.post('/saveRoute', (req, res) => {
         });
 
         var planningResult = new PlanningResult({
-            date: new Date('2018-01-22T14:56:59.301Z'),
+            date: new Date(req.body.date),
             depot: req.body.depot,
             vehicles: vehicles,
             clients: req.body.clients
