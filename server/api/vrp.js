@@ -8,7 +8,7 @@ var googleMapClient = require('@google/maps').createClient({
     Promise: require('q').Promise
 });
 
-router.post('/getdistances', (req, res) => {
+router.post('/saveRoute', (req, res) => {
     googleMapClient.distanceMatrix({
         origins: req.body.origins,
         destinations: req.body.destinations

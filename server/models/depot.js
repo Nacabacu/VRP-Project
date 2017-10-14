@@ -6,14 +6,7 @@ var Depot = mongoose.model('depots', {
     require: true,
     trim: true
   },
-  lat: {
-    type: Number,
-    require: true
-  },
-  lng: {
-    type: Number,
-    require: true
-  }
+  coordinate: [Number]
 });
 
 module.exports = { Depot }
