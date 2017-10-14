@@ -25,8 +25,8 @@ router.post('/create', (req, res) => {
     var newDepot = new Depot(req.body.depot);
     newDepot.save(function (err) {
         if (err) errorHandler(err, res);
-        res.status(200).send('create depot success')
-    })
+        res.status(200).send('create depot successfully');
+    });
 });
 
 router.patch('/update/:id', (req, res) => {
@@ -42,10 +42,10 @@ router.patch('/update/:id', (req, res) => {
             res.status(404).send();
         }
 
-        res.status(200).send('update depot success');
+        res.status(200).send('update depot successfully');
     }).catch((err) => {
         errorHandler(err, res);
-    })
+    });
 })
 
 router.delete('/delete/:id', (req, res) => {
@@ -60,7 +60,7 @@ router.delete('/delete/:id', (req, res) => {
             return res.status(404).send();
         }
 
-        res.status(200).send('delete depot success');
+        res.status(200).send('delete depot successfully');
     }).catch((e) => {
         res.status(400).send();
     });
