@@ -8,17 +8,73 @@ var googleMapClient = require('@google/maps').createClient({
     Promise: require('q').Promise
 });
 
+const { mongoose } = require('../db/mongoose')
+const { PlanningResult } = require('../models/planningResult');
+
+const errorHandler = (err, res) => {
+    response.status = 501;
+    response.message = typeof err == 'object' ? err.message : err;
+    res.status(501).json(response);
+};
+
+router.get('/getResults', (req, res) => {
+    PlanningResult.find().then((results) => {
+        res.send({ results });
+    }, (err) => {
+        errorHandler(err, res);
+    });
+});
+
 router.post('/saveRoute', (req, res) => {
+    var coordinates = [];
+    coordinates.push(req.body.depot.coordinate);
+
+    req.body.clients.forEach(function (client) {
+        coordinates.push(client.coordinate);
+    });
+
     googleMapClient.distanceMatrix({
-        origins: req.body.origins,
-        destinations: req.body.destinations
+        origins: coordinates,
+        destinations: coordinates
     })
     .asPromise()
     .then(function (response) {
         return vrpHandler.vrpSolver(req.body, response);      
     })
-    .then(function (results) {
-        res.send(results);
+    .then(function (result) {
+        var vehicles = [];
+        var index = 0;
+
+        result.routes.forEach(function (route) {
+            var loadWeight = 0;
+
+            route.forEach(function (client) {
+                loadWeight += req.body.demands[client];
+            });
+
+            vehicles.push({
+                "driver": req.body.drivers[index],
+                "route": route,
+                "LoadWeight": loadWeight,
+                "isCompleted": false
+            });
+            index++;
+        });
+
+        var planningResult = new PlanningResult({
+            date: new Date('2018-01-22T14:56:59.301Z'),
+            depot: req.body.depot,
+            vehicles: vehicles,
+            clients: req.body.clients
+        });
+
+        planningResult.save(function (err) {
+            if (err) errorHandler(err, res);
+            res.status(200).send('save vrp-result successfully');
+        });
+    })
+    .catch(function (err) {
+        errorHandler(err, res);
     });
 });
 

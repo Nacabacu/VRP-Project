@@ -5,21 +5,37 @@ var PlanningResult = mongoose.model('planningResults', {
     type: Date,
     require: true
   },
-  depoId: {
-    type: mongoose.Schema.Types.ObjectId,
-    require: true
+  depot: {
+    depotName: {
+      type: String,
+      require: true
+    },
+    coordinate: {
+      type: [Number],
+      require: true
+    }
   },
   vehicles: [
     {
-      driverId: {
-        type: mongoose.Schema.Types.ObjectId,
-        require: true
+      driver: {
+        name: {
+          type: String,
+          require: true
+        },
+        licenseNo: {
+          type: String,
+          require: true
+        },
+        vehicleNo: {
+          type: String,
+          require: true
+        }
       },
       route: {
         type: [Number],
         require: true
       },
-      capacity: {
+      LoadWeight: {
         type: Number,
         require: true
       },
@@ -31,12 +47,12 @@ var PlanningResult = mongoose.model('planningResults', {
   ],
   clients: [
     {
-      clientId: {
-        type: mongoose.Schema.Types.ObjectId,
+      clientName: {
+        type: String,
         require: true
       },
-      branchId: {
-        type: Number,
+      coordinate: {
+        type: [Number],
         require: true
       }
     },
