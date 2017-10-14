@@ -6,7 +6,7 @@ var Client = mongoose.model('clients', {
     require: true,
     trim: true
   },
-  branch: [
+  branches: [
     {
       branchId: {
         type: Number,
@@ -17,14 +17,7 @@ var Client = mongoose.model('clients', {
         require: true,
         trim: true
       },
-      lat: {
-        type: Number,
-        require: true
-      },
-      lng: {
-        type: Number,
-        require: true
-      }
+      coordinate: [Number]
     }
   ]
 });
