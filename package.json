@@ -31,6 +31,7 @@
     "lodash": "^4.17.4",
     "mongodb": "^2.2.31",
     "mongoose": "^4.12.0",
+    "morgan": "^1.9.0",
     "node_or_tools": "^1.0.5",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
