@@ -1,0 +1,9 @@
+mat-card.planer.mat-card {
+    text-align: -webkit-center;
+}
+mat-toolbar.mat-toolbar {
+    background-color: orange;
+}
+.btnLogout {
+    margin-left: 1140px;
+}

@@ -1,0 +1,22 @@
+mat-grid-tile {
+  background: white;
+}
+.login {
+  padding-top: 100px;
+}
+.btnLogin {
+  background-color: orange;
+  border-radius: 30px;
+ 
+}
+.btnPlanner {
+  margin-right: 20px;
+  zoom: 150%;
+}
+.btnDriver {
+  margin-left: 20px;
+  zoom: 150%;
+}
+h1.login {
+  font-size: -webkit-xxx-large;
+}

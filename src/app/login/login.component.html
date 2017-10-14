@@ -1,8 +1,15 @@
-<div>
-  <h1>Login</h1>
-</div>
-<div>
-  <!-- // just a link button -->
-  <button routerLink="/planner">Planner</button>
-  <button routerLink="/driver">Driver</button>
-</div>
+<app-header></app-header>
+<mat-grid-list cols="3" rowHeight="2:1">
+        <mat-grid-tile></mat-grid-tile>
+        <mat-grid-tile><h1 class="login">Login</h1></mat-grid-tile>
+        <mat-grid-tile></mat-grid-tile>
+        <mat-grid-tile></mat-grid-tile>
+        <mat-grid-tile class="btnLogin">              
+          <button mat-button routerLink="/planner" class="btnPlanner">Planner</button>
+          <button  mat-button routerLink="/driver" class="btnDriver">Driver</button
+        ></mat-grid-tile>
+        <mat-grid-tile></mat-grid-tile>
+        <mat-grid-tile></mat-grid-tile>
+        <mat-grid-tile></mat-grid-tile>
+        <mat-grid-tile></mat-grid-tile>
+      </mat-grid-list>

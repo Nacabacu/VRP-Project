@@ -1,10 +1,14 @@
-<p>
-  driver works!
-</p>
-<div>
-  <button routerLink="/driver">Driver home</button>
-  <button routerLink="todo/id">Driver process</button>
-  <button routerLink="result/id">Driving result</button>
-  <button routerLink="">Logout</button>
-</div>
-<router-outlet></router-outlet>
+<mat-toolbar>
+        <span>
+        <button mat-button routerLink="/driver">Driver home</button>
+        <button mat-button routerLink="todo/id">Driver process</button>
+        <button mat-button routerLink="result/id">Driving result</button>
+        <button mat-button routerLink="" class="btnLogout">Logout</button>
+        </span>
+    </mat-toolbar>
+<br><br><mat-card class="driver">
+    <p>
+        driver works!
+    </p>
+  <router-outlet></router-outlet>
+</mat-card>

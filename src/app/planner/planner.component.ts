@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {MatCardModule} from '@angular/material';
 
 @Component({
   selector: 'app-planner',
