@@ -1,6 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { Routes } from '@angular/router';
+import { MatTableModule, MatPaginatorModule, MatButtonModule } from '@angular/material';
+import { FormsModule } from '@angular/forms';
+import { HttpModule } from '@angular/http';
+import { AgmCoreModule } from '@agm/core';
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
@@ -21,6 +25,7 @@ import { HeaderComponent } from './header/header.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AuthService } from './auth.service';
 import { AuthGuard } from './auth-guard.service';
+import { ClientService } from './client.service';
 
 @NgModule({
   declarations: [
@@ -43,9 +48,16 @@ import { AuthGuard } from './auth-guard.service';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatButtonModule,
+    HttpModule,
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyCN8TC7W834nK2DfiF6mu9OhAkUFaSLHlk'
+    })
   ],
-  providers: [AuthGuard, AuthService],
+  providers: [AuthGuard, AuthService, ClientService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

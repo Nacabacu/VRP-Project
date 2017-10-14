@@ -1,5 +1,46 @@
-<p>
-  create client works!
-</p>
-<button routerLink="id">Create client</button>
+<h1>Client</h1>
+<mat-form-field floatPlaceholder="never">
+  <input matInput #filter placeholder="Filter company names">
+</mat-form-field>
+<a mat-raised-button routerLink="#">New client</a>
+<div class="example-container mat-elevation-z8">
+  <mat-table #table [dataSource]="dataSource">
+
+    <!-- Number Column -->
+    <ng-container matColumnDef="companyNumber">
+      <mat-header-cell *matHeaderCellDef> No. </mat-header-cell>
+      <mat-cell *matCellDef="let client"> {{client.companyNumber}} </mat-cell>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="companyName">
+      <mat-header-cell *matHeaderCellDef> Company name </mat-header-cell>
+      <mat-cell *matCellDef="let client"> {{client.companyName}} </mat-cell>
+    </ng-container>
+
+    <!-- Branch Column -->
+    <ng-container matColumnDef="numberOfBranch">
+      <mat-header-cell *matHeaderCellDef> Number of branch </mat-header-cell>
+      <mat-cell *matCellDef="let client"> {{client.numberOfBranch}} </mat-cell>
+    </ng-container>
+
+    <!-- Edit Column -->
+    <ng-container matColumnDef="edit">
+      <mat-header-cell *matHeaderCellDef></mat-header-cell>
+      <mat-cell *matCellDef="let client">
+        <a mat-raised-button color="primary" (click)='onEditClient(client)'>Edit</a>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
+  <!-- <mat-paginator #paginator
+    [length]="exampleDatabase.data.length"
+    [pageIndex]="0"
+    [pageSize]="25"
+    [pageSizeOptions]="[5, 10, 25, 100]">
+  </mat-paginator> -->
+</div>
+<agm-map></agm-map>
 <router-outlet></router-outlet>
