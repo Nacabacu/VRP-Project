@@ -35,7 +35,8 @@ router.post('/saveRoute', (req, res) => {
 
     googleMapClient.distanceMatrix({
         origins: coordinates,
-        destinations: coordinates
+        destinations: coordinates,
+        departure_time: new Date(req.body.date).getTime()
     })
     .asPromise()
     .then(function (response) {
@@ -43,9 +44,8 @@ router.post('/saveRoute', (req, res) => {
     })
     .then(function (result) {
         var vehicles = [];
-        var index = 0;
 
-        result.routes.forEach(function (route) {
+        result.routes.forEach(function (route, index) {
             var loadWeight = 0;
 
             route.forEach(function (client) {
@@ -70,7 +70,7 @@ router.post('/saveRoute', (req, res) => {
 
         planningResult.save(function (err) {
             if (err) errorHandler(err, res);
-            res.status(200).send('save vrp-result successfully');
+            res.status(200).send(result);
         });
     })
     .catch(function (err) {
@@ -132,6 +132,5 @@ router.get('/node', (req, res) => {
         res.send(solution);
     });
 });
-
 
 module.exports = router;

@@ -5,13 +5,13 @@ var getDistancesMatrix = function (input) {
         var distance = [];
         var duration = [];
 
-        input.json.rows.forEach(function (elements) {
+        input.json.rows.forEach(function (elements, rowIndex) {
             var distanceTemp = [];
             var durationTemp = [];
 
-            elements.elements.forEach(function (element) {
+            elements.elements.forEach(function (element, colIndex) {
                 distanceTemp.push(element.distance.value);
-                durationTemp.push(element.duration.value);
+                rowIndex === colIndex ? durationTemp.push(0) : durationTemp.push(element.duration_in_traffic.value);
             });
 
             distance.push(distanceTemp);
