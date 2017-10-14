@@ -1,7 +1,7 @@
-const node_or_tools = require('node_or_tools');
+const nodeOrTools = require('node_or_tools');
 
 var getDistancesMatrix = function (input) {
-    return new Promise(function (resolve, reject) {
+    return new Promise(function (resolve) {
         var distance = [];
         var duration = [];
 
@@ -17,16 +17,15 @@ var getDistancesMatrix = function (input) {
             distance.push(distanceTemp);
             duration.push(durationTemp);
         });
-        
+
         resolve({
             distance,
             duration
-        })
+        });
     });
-}
+};
 
 var vrpSolver = function (request, distances) {
-    
     return new Promise(function (resolve, reject) {
         getDistancesMatrix(distances).then(function (results) {
             // 8 hours [9am - 5pm]
@@ -36,19 +35,20 @@ var vrpSolver = function (request, distances) {
             var numNodes = results.duration[0].length;
             var timeWindows = new Array(numNodes);
             var demands = new Array(numNodes);
-            
+
             // set timeWindows as full day working
-            for (var at = 0; at < numNodes; ++at)
-            timeWindows[at] = [dayStarts, dayEnds];
-            
-            // set demands as 1 
+            for (var at = 0; at < numNodes; ++at) {
+                timeWindows[at] = [dayStarts, dayEnds];
+            }
+
+            // set demands as 1
             for (var from = 0; from < numNodes; ++from) {
                 demands[from] = new Array(numNodes);
                 for (var to = 0; to < numNodes; ++to) {
                     demands[from][to] = request.demands[from];
                 }
             }
-            
+
             var solverOpts = {
                 numNodes: numNodes,
                 costs: request.method === 'distance' ? results.distance : results.duration,
@@ -56,13 +56,13 @@ var vrpSolver = function (request, distances) {
                 timeWindows: timeWindows,
                 demands: demands
             };
-            
-            var VRP = new node_or_tools.VRP(solverOpts);
-            
+
+            var VRP = new nodeOrTools.VRP(solverOpts);
+
             var vrpSearchOpts = {
                 computeTimeLimit: 2000,
                 numVehicles: request.numVehicles,
-                depotNode: 0,
+                depotNode: depotIndex,
                 timeHorizon: 12 * 60 * 60,
                 vehicleCapacity: request.vehicleCapacity,
                 routeLocks: request.routeLocks,
@@ -76,10 +76,10 @@ var vrpSolver = function (request, distances) {
             });
         }).catch(function (err) {
             reject(err);
-        })
+        });
     });
-}
+};
 
 module.exports = {
     vrpSolver
-}
+};

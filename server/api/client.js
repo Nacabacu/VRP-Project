@@ -3,13 +3,12 @@ const router = express.Router();
 const ObjectID = require('mongodb').ObjectID;
 const _ = require('lodash');
 
-const { mongoose } = require('../db/mongoose')
 const { Client } = require('../models/client');
 
 const errorHandler = (err, res) => {
-    response.status = 501;
-    response.message = typeof err == 'object' ? err.message : err;
-    res.status(501).json(response);
+    res.status = 501;
+    res.message = typeof err == 'object' ? err.message : err;
+    res.status(501).json(res);
 };
 
 // Clients
@@ -31,11 +30,11 @@ router.post('/create', (req, res) => {
 
 router.patch('/update/:id', (req, res) => {
     var id = req.params.id;
-    var body = _.pick(req.body.client, ['client','companyName','branches']);
+    var body = _.pick(req.body.client, ['client', 'companyName', 'branches']);
 
     if (!ObjectID.isValid(id)) {
         res.status(404).send();
-    }   
+    }
 
     Client.findByIdAndUpdate(id, { $set: body }, { new: true }).then((client) => {
         if (!client) {
@@ -61,8 +60,8 @@ router.delete('/delete/:id', (req, res) => {
         }
 
         res.status(200).send('delete client successfully');
-    }).catch((e) => {
-        res.status(400).send();
+    }).catch((err) => {
+        errorHandler(err, res);
     });
 });
 

@@ -8,13 +8,12 @@ var googleMapClient = require('@google/maps').createClient({
     Promise: require('q').Promise
 });
 
-const { mongoose } = require('../db/mongoose')
 const { PlanningResult } = require('../models/planningResult');
 
 const errorHandler = (err, res) => {
-    response.status = 501;
-    response.message = typeof err == 'object' ? err.message : err;
-    res.status(501).json(response);
+    res.status = 501;
+    res.message = typeof err == 'object' ? err.message : err;
+    res.status(501).json(res);
 };
 
 router.get('/getResults', (req, res) => {
@@ -38,44 +37,44 @@ router.post('/saveRoute', (req, res) => {
         destinations: coordinates,
         departure_time: new Date(req.body.date).getTime()
     })
-    .asPromise()
-    .then(function (response) {
-        return vrpHandler.vrpSolver(req.body, response);      
-    })
-    .then(function (result) {
-        var vehicles = [];
+        .asPromise()
+        .then(function (response) {
+            return vrpHandler.vrpSolver(req.body, response);
+        })
+        .then(function (result) {
+            var vehicles = [];
 
-        result.routes.forEach(function (route, index) {
-            var loadWeight = 0;
+            result.routes.forEach(function (route, index) {
+                var loadWeight = 0;
 
-            route.forEach(function (client) {
-                loadWeight += req.body.demands[client];
+                route.forEach(function (client) {
+                    loadWeight += req.body.demands[client];
+                });
+
+                vehicles.push({
+                    "driver": req.body.drivers[index],
+                    "route": route,
+                    "LoadWeight": loadWeight,
+                    "isCompleted": false
+                });
+                index++;
             });
 
-            vehicles.push({
-                "driver": req.body.drivers[index],
-                "route": route,
-                "LoadWeight": loadWeight,
-                "isCompleted": false
+            var planningResult = new PlanningResult({
+                date: new Date(req.body.date),
+                depot: req.body.depot,
+                vehicles: vehicles,
+                clients: req.body.clients
             });
-            index++;
-        });
 
-        var planningResult = new PlanningResult({
-            date: new Date(req.body.date),
-            depot: req.body.depot,
-            vehicles: vehicles,
-            clients: req.body.clients
+            planningResult.save(function (err) {
+                if (err) errorHandler(err, res);
+                res.status(200).send(result);
+            });
+        })
+        .catch(function (err) {
+            errorHandler(err, res);
         });
-
-        planningResult.save(function (err) {
-            if (err) errorHandler(err, res);
-            res.status(200).send(result);
-        });
-    })
-    .catch(function (err) {
-        errorHandler(err, res);
-    });
 });
 
 router.get('/node', (req, res) => {
@@ -92,7 +91,7 @@ router.get('/node', (req, res) => {
             [922, 2116, 2537, 1353, 1772, 2585, 837, 0]
         ],
         durations: [
-            [0, 1, 1, 1, 1, 1, 1, 1],   
+            [0, 1, 1, 1, 1, 1, 1, 1],
             [1, 0, 1, 1, 1, 1, 1, 1],
             [1, 1, 0, 1, 1, 1, 1, 1],
             [1, 1, 1, 0, 1, 1, 1, 1],

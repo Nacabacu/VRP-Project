@@ -3,13 +3,12 @@ const router = express.Router();
 const ObjectID = require('mongodb').ObjectID;
 const _ = require('lodash');
 
-const { mongoose } = require('../db/mongoose')
 const { Depot } = require('../models/depot');
 
 const errorHandler = (err, res) => {
-    response.status = 501;
-    response.message = typeof err == 'object' ? err.message : err;
-    res.status(501).json(response);
+    res.status = 501;
+    res.message = typeof err == 'object' ? err.message : err;
+    res.status(501).json(res);
 };
 
 // Depots
@@ -31,11 +30,11 @@ router.post('/create', (req, res) => {
 
 router.patch('/update/:id', (req, res) => {
     var id = req.params.id;
-    var body = _.pick(req.body.depot, ['depotName','coordinate']);
+    var body = _.pick(req.body.depot, ['depotName', 'coordinate']);
 
     if (!ObjectID.isValid(id)) {
         res.status(404).send();
-    }   
+    }
 
     Depot.findByIdAndUpdate(id, { $set: body }, { new: true }).then((depot) => {
         if (!depot) {
@@ -46,7 +45,7 @@ router.patch('/update/:id', (req, res) => {
     }).catch((err) => {
         errorHandler(err, res);
     });
-})
+});
 
 router.delete('/delete/:id', (req, res) => {
     var id = req.params.id;
@@ -61,8 +60,8 @@ router.delete('/delete/:id', (req, res) => {
         }
 
         res.status(200).send('delete depot successfully');
-    }).catch((e) => {
-        res.status(400).send();
+    }).catch((err) => {
+        errorHandler(err, res);
     });
 });
 
