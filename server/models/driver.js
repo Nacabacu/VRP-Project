@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const { mongoose } = require('../db/mongoose');
 
 var Driver = mongoose.model('drivers', {
     name: {
@@ -22,4 +22,4 @@ var Driver = mongoose.model('drivers', {
     }
 });
 
-module.exports = { Driver }
+module.exports = { Driver };
