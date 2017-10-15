@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const { mongoose } = require('../db/mongoose');
 
 var Depot = mongoose.model('depots', {
     depotName: {
@@ -9,4 +9,4 @@ var Depot = mongoose.model('depots', {
     coordinate: [Number]
 });
 
-module.exports = { Depot }
+module.exports = { Depot };
