@@ -1,12 +1,12 @@
+import { Client } from '../../client';
 import { BehaviorSubject } from 'rxjs/Rx';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { DataSource } from '@angular/cdk/collections';
-import { MatPaginator, MatButton } from '@angular/material';
-import { AgmCoreModule } from '@agm/core';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { MatPaginator, MatButton, MatFormField, MatFormFieldControl } from '@angular/material';
+import { NavigationExtras, Router } from '@angular/router';
 
-import { ClientService } from '../../client.service';
-import { Company } from '../../company';
+
+import { ClientService } from '../../shared/service/client.service';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/merge';
@@ -18,56 +18,79 @@ import 'rxjs/add/operator/map';
   styleUrls: ['./client.component.css']
 })
 export class ClientComponent implements OnInit {
-  displayedColumns = ['companyNumber', 'companyName', 'numberOfBranch', 'edit'];
-  dataSource = new ExampleDataSource([]) || null;
+  displayedColumns = ['companyNumber', 'companyName', 'branches', 'edit'];
+  clientDatabase = new ClientDatabase(this.clientService);
+  dataSource: ClientSource | null;
 
   @ViewChild('filter') filter: ElementRef;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor(private clientService: ClientService, private router: Router) { }
 
   ngOnInit() {
     const that = this;
-    this.clientService.getCompany().then(function (response) {
-      that.dataSource = new ExampleDataSource(response);
+    this.clientService.getClients().then(function (response) {
+      that.dataSource = new ClientSource(that.clientDatabase, that.paginator);
     });
+
     Observable.fromEvent(this.filter.nativeElement, 'keyup')
-    .debounceTime(150)
-    .distinctUntilChanged()
-    .subscribe(() => {
-      if (!this.dataSource) { return; }
-      this.dataSource.filter = this.filter.nativeElement.value;
-    });
+      .debounceTime(150)
+      .distinctUntilChanged()
+      .subscribe(() => {
+        if (!this.dataSource) { return; }
+        this.dataSource.filter = this.filter.nativeElement.value;
+      });
   }
 
-  onEditClient($event) {
-    console.log($event);
-    this.router.navigate(['/planner/client/id']);
+  onEditClient(companyNumber: number) {
+    this.router.navigate(['/planner/client/create', {companyNumber: companyNumber}]);
   }
 }
 
-export class ExampleDataSource extends DataSource<any> {
+export class ClientDatabase {
+  /** Stream that emits whenever the data has been modified. */
+  dataChange: BehaviorSubject<Client[]> = new BehaviorSubject<Client[]>([]);
+  get data(): Client[] { return this.dataChange.value; }
+
+  constructor(private clientService: ClientService) {
+    const that = this;
+    this.clientService.getClients().then(function (response) {
+      that.dataChange.next(response);
+    });
+  }
+}
+
+export class ClientSource extends DataSource<any> {
   _filterChange = new BehaviorSubject('');
   get filter(): string { return this._filterChange.value; }
   set filter(filter: string) { this._filterChange.next(filter); }
-  constructor(private companyData: Company[]) {
+  constructor(private _clientDatabase: ClientDatabase, private _paginator: MatPaginator) {
     super();
   }
 
-  connect(): Observable<Company[]> {
+  connect(): Observable<Client[]> {
     const displayData = [
-      this.companyData,
-      this._filterChange
+      this._clientDatabase.dataChange,
+      this._paginator.page,
     ];
 
-    // return Observable.of(this.companyData);
-
     return Observable.merge(...displayData).map(() => {
-      return this.companyData.filter((item: Company) => {
-        const searchString = (item.companyName).toLowerCase();
-        return searchString.indexOf(this.filter.toLowerCase()) !== -1;
-      });
+      const data = this._clientDatabase.data.slice();
+
+      // Grab the page's slice of data.
+      const startIndex = this._paginator.pageIndex * this._paginator.pageSize;
+      return data.splice(startIndex, this._paginator.pageSize);
     });
   }
+
+  //   former filter logic
+  //   return Observable.merge(...displayData).map(() => {
+  // return this.clientData.filter((item: Client) => {
+  //   const searchString = (item.companyName).toLowerCase();
+  //   return searchString.indexOf(this.filter.toLowerCase()) !== -1;
+  // });
+  //   });
+  // }
 
   disconnect() { }
 }

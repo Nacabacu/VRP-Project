@@ -1,10 +1,20 @@
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { Routes } from '@angular/router';
-import { MatTableModule, MatPaginatorModule, MatButtonModule } from '@angular/material';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AgmCoreModule } from '@agm/core';
+import { CdkTableModule } from '@angular/cdk/table';
+import {
+  MatTableModule,
+  MatPaginatorModule,
+  MatButtonModule,
+  MatFormFieldModule,
+  MatInputModule,
+  MatOptionModule,
+  MatSelectModule
+} from '@angular/material';
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
@@ -25,7 +35,7 @@ import { HeaderComponent } from './header/header.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AuthService } from './auth.service';
 import { AuthGuard } from './auth-guard.service';
-import { ClientService } from './client.service';
+import { ClientService } from './shared/service/client.service';
 
 @NgModule({
   declarations: [
@@ -52,6 +62,11 @@ import { ClientService } from './client.service';
     MatTableModule,
     MatPaginatorModule,
     MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatOptionModule,
+    MatSelectModule,
+    BrowserAnimationsModule,
     HttpModule,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyCN8TC7W834nK2DfiF6mu9OhAkUFaSLHlk'

@@ -1,3 +1,48 @@
-<p>
-  create-client works!
-</p>
+<div class="row">
+  <div class="column-left">
+    <agm-map style="height: 500px; width: 50%" 
+      [latitude]="lat" 
+      [longitude]="lng" 
+      [zoom]="zoom"
+      (mapClick)="mapClicked($event)">
+        <agm-marker 
+          *ngFor="let marker of markers; let i = index" 
+          [latitude]="marker.lat" 
+          [longitude]="marker.lng" 
+          [label]="marker.label"
+          [markerDraggable]="marker.draggable"
+          (markerClick)="clickedMarker(m.label, i)">
+        </agm-marker>
+    </agm-map>
+  </div>
+  <div>
+    <div *ngIf="!client.companyName">
+      <mat-form-field>
+        <input matInput placeholder="Company name">
+      </mat-form-field>
+    </div>
+    <div *ngIf="client.companyName">
+      <label>{{client.companyName}}</label>
+    </div>
+    <button mat-button>New branch</button>
+  </div>
+
+  <div class="branch" *ngFor="let branch of client.branches">
+    <mat-form-field floatPlaceholder="never">
+      <input matInput placeholder="Input" value="{{branch.branchName}}">
+    </mat-form-field>
+
+    <mat-form-field floatPlaceholder="never">
+      <!-- need filter space comma -->
+      <input matInput placeholder="Input" value="[{{branch.coordinate}}]">
+    </mat-form-field>
+  </div>
+
+  <!-- input or table ?-->
+
+  <div>
+    <button mat-button>Save</button>
+    <button mat-button>Delete</button>
+    <button mat-button>Cancel</button>
+  </div>
+</div>
