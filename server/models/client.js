@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const { mongoose } = require('../db/mongoose');
 
 var Client = mongoose.model('clients', {
     companyName: {
@@ -21,6 +21,4 @@ var Client = mongoose.model('clients', {
     }]
 });
 
-module.exports = {
-    Client
-};
+module.exports = { Client };

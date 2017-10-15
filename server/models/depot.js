@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const { mongoose } = require('../db/mongoose');
 
 var Depot = mongoose.model('depots', {
     depotName: {
