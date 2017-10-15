@@ -1,0 +1,14 @@
+{
+    "extends": "google",
+    "parserOptions": {
+        "ecmaVersion": 6
+    },
+    "rules": {
+        "object-curly-spacing": 0,
+        "comma-dangle": 0,
+        "max-len": 0,
+        "no-var": 0,
+        "space-before-function-paren": 0,
+        "new-cap": 0
+    }
+}
