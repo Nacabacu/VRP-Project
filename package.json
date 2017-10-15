@@ -3,12 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "test": "ng test",
-    "lint": "ng lint",
-    "e2e": "ng e2e"
+    "start": "ng build && node server"
   },
   "private": true,
   "dependencies": {
@@ -31,8 +26,9 @@
     "express": "^4.16.2",
     "express-session": "^1.15.6",
     "lodash": "^4.17.4",
-    "mongodb": "^2.2.33",
-    "mongoose": "^4.12.2",
+    "mongodb": "^2.2.31",
+    "mongoose": "^4.12.0",
+    "morgan": "^1.9.0",
     "node_or_tools": "^1.0.5",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
@@ -48,6 +44,7 @@
     "@types/jasminewd2": "~2.0.2",
     "@types/node": "~6.0.60",
     "codelyzer": "~3.2.0",
+    "eslint-config-google": "^0.9.1",
     "jasmine-core": "~2.6.2",
     "jasmine-spec-reporter": "~4.1.0",
     "karma": "~1.7.0",
