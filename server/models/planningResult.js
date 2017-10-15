@@ -1,46 +1,62 @@
 const mongoose = require('mongoose');
 
 var PlanningResult = mongoose.model('planningResults', {
-  date: {
-    type: Date,
-    require: true
-  },
-  depoId: {
-    type: mongoose.Schema.Types.ObjectId,
-    require: true
-  },
-  vehicles: [
-    {
-      driverId: {
-        type: mongoose.Schema.Types.ObjectId,
+    date: {
+        type: Date,
         require: true
-      },
-      route: {
-        type: [Number],
-        require: true
-      },
-      capacity: {
-        type: Number,
-        require: true
-      },
-      isCompleted: {
-        type: Boolean,
-        require: true
-      }
-    }
-  ],
-  clients: [
-    {
-      clientId: {
-        type: mongoose.Schema.Types.ObjectId,
-        require: true
-      },
-      branchId: {
-        type: Number,
-        require: true
-      }
     },
-  ]
+    depot: {
+        depotName: {
+            type: String,
+            require: true
+        },
+        coordinate: {
+            type: [Number],
+            require: true
+        }
+    },
+    vehicles: [
+        {
+            driver: {
+                name: {
+                    type: String,
+                    require: true
+                },
+                licenseNo: {
+                    type: String,
+                    require: true
+                },
+                vehicleNo: {
+                    type: String,
+                    require: true
+                }
+            },
+            route: {
+                type: [Number],
+                require: true
+            },
+            LoadWeight: {
+                type: Number,
+                require: true
+            },
+            isCompleted: {
+                type: Boolean,
+                require: true
+            }
+        }
+    ],
+    clients: [
+        {
+            clientName: {
+                type: String,
+                require: true
+            },
+            coordinate: {
+                type: [Number],
+                require: true
+            }
+        },
+    ]
 }, 'planningResults');
 
 module.exports = { PlanningResult }

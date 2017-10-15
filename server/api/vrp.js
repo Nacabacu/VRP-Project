@@ -4,22 +4,77 @@ const node_or_tools = require('node_or_tools');
 const vrpHandler = require('../handlers/vrp');
 
 var googleMapClient = require('@google/maps').createClient({
-    key: 'AIzaSyABytE7LZW-b6GR54wThg3n6iwaWuw0vqU',
+    key: 'AIzaSyCMk-d92auJ7HbZaXajcpdXtqcBMoH4RUc',
     Promise: require('q').Promise
 });
 
-router.post('/getdistances', (req, res) => {
-    googleMapClient.distanceMatrix({
-        origins: req.body.origins,
-        destinations: req.body.destinations
-    })
-    .asPromise()
-    .then(function (response) {
-        return vrpHandler.vrpSolver(req.body, response);      
-    })
-    .then(function (results) {
-        res.send(results);
+const { PlanningResult } = require('../models/planningResult');
+
+const errorHandler = (err, res) => {
+    res.status = 501;
+    res.message = typeof err == 'object' ? err.message : err;
+    res.status(501).json(res);
+};
+
+router.get('/getResults', (req, res) => {
+    PlanningResult.find().then((results) => {
+        res.send({ results });
+    }, (err) => {
+        errorHandler(err, res);
     });
+});
+
+router.post('/saveRoute', (req, res) => {
+    var coordinates = [];
+    coordinates.push(req.body.depot.coordinate);
+
+    req.body.clients.forEach(function (client) {
+        coordinates.push(client.coordinate);
+    });
+
+    googleMapClient.distanceMatrix({
+        origins: coordinates,
+        destinations: coordinates,
+        departure_time: new Date(req.body.date).getTime()
+    })
+        .asPromise()
+        .then(function (response) {
+            return vrpHandler.vrpSolver(req.body, response);
+        })
+        .then(function (result) {
+            var vehicles = [];
+
+            result.routes.forEach(function (route, index) {
+                var loadWeight = 0;
+
+                route.forEach(function (client) {
+                    loadWeight += req.body.demands[client];
+                });
+
+                vehicles.push({
+                    "driver": req.body.drivers[index],
+                    "route": route,
+                    "LoadWeight": loadWeight,
+                    "isCompleted": false
+                });
+                index++;
+            });
+
+            var planningResult = new PlanningResult({
+                date: new Date(req.body.date),
+                depot: req.body.depot,
+                vehicles: vehicles,
+                clients: req.body.clients
+            });
+
+            planningResult.save(function (err) {
+                if (err) errorHandler(err, res);
+                res.status(200).send(result);
+            });
+        })
+        .catch(function (err) {
+            errorHandler(err, res);
+        });
 });
 
 router.get('/node', (req, res) => {
@@ -36,7 +91,7 @@ router.get('/node', (req, res) => {
             [922, 2116, 2537, 1353, 1772, 2585, 837, 0]
         ],
         durations: [
-            [0, 1, 1, 1, 1, 1, 1, 1],   
+            [0, 1, 1, 1, 1, 1, 1, 1],
             [1, 0, 1, 1, 1, 1, 1, 1],
             [1, 1, 0, 1, 1, 1, 1, 1],
             [1, 1, 1, 0, 1, 1, 1, 1],
@@ -76,6 +131,5 @@ router.get('/node', (req, res) => {
         res.send(solution);
     });
 });
-
 
 module.exports = router;

@@ -1,23 +1,23 @@
 const express = require('express');
-const router = express.Router();
+const router = express.router();
 const passport = require('passport');
 
 const { User } = require('../models/user');
 const Account = User.User;
 
 router.post('/register', (req, res) => {
-    var account = {
+    let account = {
         username: req.body.username,
         role: req.body.role,
         licenseId: req.body.licenseId
     };
 
-    Account.register(new Account(account), req.body.password, (err, account) => {
+    Account.register(new Account(account), req.body.password, (err) => {
         err ? res.send(err) : res.send('Register Successful');
     });
 });
 
-router.post('/login', passport.authenticate('local'/*, { failureRedirect: '/login', failureFlash: true }*/), (req, res) => {
+router.post('/login', passport.authenticate('local'/* , { failureRedirect: '/login', failureFlash: true } */), (req, res) => {
     req.session.save((err) => {
         err ? res.send(err) : res.send('Login Successful');
     });
