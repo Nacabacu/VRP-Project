@@ -9,4 +9,4 @@ var Depot = mongoose.model('depots', {
     coordinate: [Number]
 });
 
-module.exports = { Depot }
+module.exports = { Depot };

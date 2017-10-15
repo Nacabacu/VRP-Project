@@ -22,4 +22,4 @@ var Driver = mongoose.model('drivers', {
     }
 });
 
-module.exports = { Driver }
+module.exports = { Driver };

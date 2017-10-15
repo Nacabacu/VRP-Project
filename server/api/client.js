@@ -45,7 +45,7 @@ router.patch('/update/:id', (req, res) => {
     }).catch((err) => {
         errorHandler(err, res);
     });
-})
+});
 
 router.delete('/delete/:id', (req, res) => {
     var id = req.params.id;

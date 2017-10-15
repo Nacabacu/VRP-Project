@@ -10,10 +10,10 @@ const Account = new Schema({
         require: true
     },
     licenseId: String
-})
+});
 
 Account.plugin(passportLocalMongoose);
 
 var User = mongoose.model('users', Account);
 
-module.exports = { User }
+module.exports = { User };
