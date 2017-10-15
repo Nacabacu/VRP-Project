@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
-import { MatButtonModule, MatCheckboxModule } from '@angular/material';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Routes } from '@angular/router';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { MaterialModule } from './material.module';
 
 import { DriverHomeComponent } from './driver/driver-home/driver-home.component';
 import { DriverComponent } from './driver/driver.component';
@@ -50,8 +50,7 @@ import { AuthService } from './auth.service';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    MatButtonModule,
-    MatCheckboxModule,
+    MaterialModule,
   ],
   providers: [AuthGuard, AuthService],
 })
