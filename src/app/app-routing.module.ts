@@ -1,31 +1,25 @@
-import { AuthGuard } from './auth-guard.service';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
+import { AuthGuard } from './auth-guard.service';
+
+import { DriverComponent } from './driver/driver.component';
+import { DrivingResultComponent } from './driver/driving-result/driving-result.component';
+import { ErrorPageComponent } from './error-page/error-page.component';
 import { LoginComponent } from './login/login.component';
 import { ClientComponent } from './planner/client/client.component';
 import { CreateClientComponent } from './planner/client/create-client/create-client.component';
-import { DepotComponent } from './planner/depot/depot.component';
 import { CreateDepotComponent } from './planner/depot/create-depot/create-depot.component';
+import { DepotComponent } from './planner/depot/depot.component';
 import { PlannerComponent } from './planner/planner.component';
-import { PlannerHistoryComponent } from './planner/planner-history/planner-history.component';
-import { PlanningComponent } from './planner/planning/planning.component';
 import { PlanningResultComponent } from './planner/planning-result/planning-result.component';
-import { DriverComponent } from './driver/driver.component';
-import { DriverHomeComponent } from './driver/driver-home/driver-home.component';
-import { TodoDriverComponent } from './driver/todo-driver/todo-driver.component';
-import { DrivingResultComponent } from './driver/driving-result/driving-result.component';
-import { ErrorPageComponent } from './error-page/error-page.component';
+import { PlanningComponent } from './planner/planning/planning.component';
 
 const appRoutes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   {
-    path: 'planner', component: PlannerComponent, canActivateChild: [AuthGuard], children: [
-      {
-        path: '',
-        component: PlannerHistoryComponent
-      },
+    path: 'planner', component: PlannerComponent, canActivate: [AuthGuard], canActivateChild: [AuthGuard], children: [
       {
         path: 'planning/:id',
         component: PlanningComponent
@@ -39,7 +33,7 @@ const appRoutes: Routes = [
         component: ClientComponent,
         children: [
           {
-            path: ':id',
+            path: 'create/[:id]',
             component: CreateClientComponent
           }
         ]
@@ -49,7 +43,7 @@ const appRoutes: Routes = [
         component: DepotComponent,
         children: [
           {
-            path: ':id',
+            path: 'create/[:id]',
             component: CreateDepotComponent
           }
         ]
@@ -57,15 +51,7 @@ const appRoutes: Routes = [
     ]
   },
   {
-    path: 'driver', component: DriverComponent, canActivateChild: [AuthGuard], children: [
-      {
-        path: '',
-        component: DriverHomeComponent
-      },
-      {
-        path: 'todo/:id',
-        component: TodoDriverComponent
-      },
+    path: 'driver', component: DriverComponent, canActivate: [AuthGuard], canActivateChild: [AuthGuard], children: [
       {
         path: 'result/:id',
         component: DrivingResultComponent
