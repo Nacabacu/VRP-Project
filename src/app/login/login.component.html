@@ -37,7 +37,7 @@
                             <div class="form-element-container">
                                 <mat-form-field>
                                     <input matInput placeholder="password" formControlName="password" [type]="showPassword ? 'password' : 'text'">
-                                    <i matSuffix (click)="showPassword = !showPassword" [class]="hide ? 'fa fa-eye' : 'fa fa-eye-slash'" aria-hidden="true"></i>
+                                    <i matSuffix (click)="showPassword = !showPassword" [class]="showPassword ? 'fa fa-eye' : 'fa fa-eye-slash'" aria-hidden="true"></i>
                                     <mat-error *ngIf="loginForm.get('password').invalid">{{getErrorMessage()}}</mat-error>
                                 </mat-form-field>
                             </div>
