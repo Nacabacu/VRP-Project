@@ -1,3 +1,4 @@
+import { Subscription } from 'rxjs/Subscription';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -10,8 +11,10 @@ import { AuthService } from '../authentication/auth.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+  loggedInSubscription: Subscription;
+  isLoggedIn: boolean;
   loginForm: FormGroup;
-  hide = true;
+  showPassword = true;
   errorMessage: string;
 
   constructor(
@@ -20,7 +23,14 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.authService.logout();
+    this.loggedInSubscription = this.authService.loginEmitter().subscribe((res) => {
+      this.isLoggedIn = res;
+      if (this.isLoggedIn) {
+        const url = '/' + this.authService.getRole();
+        this.router.navigate([url]);
+      }
+    });
+    this.authService.isLoggedin();
     this.loginForm = new FormGroup({
       username: new FormControl(null, [Validators.required]),
       password: new FormControl(null, [Validators.required])
