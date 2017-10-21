@@ -1,3 +1,4 @@
+import { ResultService } from './services/result.service';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
@@ -59,7 +60,8 @@ import { DriverTodoComponent } from './driver/driver-todo/driver-todo.component'
   ],
   providers: [
     AuthGuard,
-    AuthService
+    AuthService,
+    ResultService
   ],
 })
 export class AppModule { }

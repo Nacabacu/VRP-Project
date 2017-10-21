@@ -1,3 +1,4 @@
+import { ResultService } from './../../services/result.service';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 
 @Component({
@@ -7,32 +8,44 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
   encapsulation: ViewEncapsulation.None
 })
 export class PlannerTodoComponent implements OnInit {
-  rows = [
-    { date: '10/6/2017', time: '06:00', depot: 'Bangkapi 1' },
-    { date: '10/6/2017', time: '06:00', depot: 'Bangkapi 1' },
-    { date: '10/6/2017', time: '06:00', depot: 'Bangkapi 1' },
-    { date: '10/6/2017', time: '06:00', depot: 'Bangkapi 1' },
-    { date: '10/6/2017', time: '06:00', depot: 'Bangkapi 1' },
-    { date: '10/6/2017', time: '06:00', depot: 'Bangkapi 1' },
-    { date: '10/6/2017', time: '06:00', depot: 'Bangkapi 1' },
-    { date: '10/6/2017', time: '06:00', depot: 'Bangkapi 1' },
-    { date: '10/6/2017', time: '06:00', depot: 'Bangkapi 1' },
-    { date: '10/6/2017', time: '06:00', depot: 'Bangkapi 1' },
-    { date: '10/6/2017', time: '06:00', depot: 'Bangkapi 1' },
-    { date: '10/6/2017', time: '06:00', depot: 'Bangkapi 1' },
-    { date: '10/6/2017', time: '06:00', depot: 'Bangkapi 1' },
-    { date: '10/6/2017', time: '06:00', depot: 'Bangkapi 1' },
-    { date: '10/6/2017', time: '06:00', depot: 'Bangkapi 1' },
-    { date: '10/6/2017', time: '06:00', depot: 'Bangkapi 1' },
-    { date: '10/6/2017', time: '06:00', depot: 'Bangkapi 1' },
-    { date: '10/6/2017', time: '06:00', depot: 'Bangkapi 1' },
-    { date: '10/6/2017', time: '06:00', depot: 'Bangkapi 1' },
-    { date: '10/6/2017', time: '06:00', depot: 'Bangkapi 1' }
-  ];
+  doing = [];
+  done = [];
 
-  constructor() { }
+  constructor(
+    private resultService: ResultService
+  ) { }
 
   ngOnInit() {
+    this.resultService.getResults().then((response) => {
+      response.results.forEach((result) => {
+        let isFinished = true;
+        console.log()
+        result.vehicles.forEach((vehicle) => {
+          if (!vehicle.isCompleted) {
+            isFinished = false;
+          }
+        });
+        if (isFinished) {
+          this.done.push({
+            date: result.date.replace(/T.+/g, ''),
+            time: /T(.+)\./g.exec(result.date)[1],
+            depot: result.depot.depotName,
+            id: result._id
+          });
+        } else {
+          this.doing.push({
+            date: result.date.replace(/T.+/g, ''),
+            time: /T(.+)\./g.exec(result.date)[1],
+            depot: result.depot.depotName,
+            id: result._id
+          });
+        }
+      });
+    });
+  }
+
+  onEdit(id: string) {
+    this.resultService.getResult(id).then(res => console.log(res))
   }
 
 }

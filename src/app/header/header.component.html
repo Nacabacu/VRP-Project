@@ -11,6 +11,10 @@
 
             <span *ngIf="isLoggedIn">
                <span *ngIf="role === 'planner'">
+                    <a mat-menu-item routerLink="/planner/plannning">
+                        <i class="fa fa-truck logo" style="margin-right: 7px;" aria-hidden="true"></i>
+                        <span>Planning</span>
+                    </a>
                     <a mat-menu-item routerLink="/planner/client">
                         <i class="fa fa-users logo" style="margin-right: 7px;" aria-hidden="true"></i>
                         <span>Client</span>
@@ -36,6 +40,7 @@
         <span *ngIf="isLoggedIn">
             <span *ngIf="role === 'planner'">
                 <!-- Planner -->
+                <a mat-button routerLink="/planner/planning">Planning</a>
                 <a mat-button routerLink="/planner/client">Client</a>
                 <a mat-button routerLink="/planner/depot">Depot</a>
             </span>
