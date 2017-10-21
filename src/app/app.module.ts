@@ -1,6 +1,8 @@
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpModule } from '@angular/http';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Routes } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
@@ -16,28 +18,30 @@ import {
   MatSelectModule
 } from '@angular/material';
 
+import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { LoginComponent } from './login/login.component';
-import { ClientComponent } from './planner/client/client.component';
-import { CreateClientComponent } from './planner/client/create-client/create-client.component';
-import { DepotComponent } from './planner/depot/depot.component';
-import { CreateDepotComponent } from './planner/depot/create-depot/create-depot.component';
-import { PlannerComponent } from './planner/planner.component';
-import { PlannerHistoryComponent } from './planner/planner-history/planner-history.component';
-import { PlanningComponent } from './planner/planning/planning.component';
-import { PlanningResultComponent } from './planner/planning-result/planning-result.component';
+import { MaterialModule } from './material.module';
+
 import { DriverComponent } from './driver/driver.component';
-import { DriverHomeComponent } from './driver/driver-home/driver-home.component';
-import { TodoDriverComponent } from './driver/todo-driver/todo-driver.component';
 import { DrivingResultComponent } from './driver/driving-result/driving-result.component';
 import { ErrorPageComponent } from './error-page/error-page.component';
 import { HeaderComponent } from './header/header.component';
-import { AppRoutingModule } from './app-routing.module';
-import { AuthService } from './auth.service';
-import { AuthGuard } from './auth-guard.service';
-import { ClientService } from './shared/service/client.service';
+import { LoginComponent } from './login/login.component';
+import { ClientComponent } from './planner/client/client.component';
+import { CreateClientComponent } from './planner/client/create-client/create-client.component';
+import { CreateDepotComponent } from './planner/depot/create-depot/create-depot.component';
+import { DepotComponent } from './planner/depot/depot.component';
+import { PlannerComponent } from './planner/planner.component';
+import { PlanningResultComponent } from './planner/planning-result/planning-result.component';
+import { PlanningComponent } from './planner/planning/planning.component';
+
+import { AuthGuard } from './authentication/auth-guard.service';
+import { AuthService } from './authentication/auth.service';
+import { PlannerTodoComponent } from './planner/planner-todo/planner-todo.component';
+import { DriverTodoComponent } from './driver/driver-todo/driver-todo.component';
 
 @NgModule({
+  bootstrap: [AppComponent],
   declarations: [
     AppComponent,
     LoginComponent,
@@ -49,12 +53,11 @@ import { ClientService } from './shared/service/client.service';
     PlanningResultComponent,
     CreateClientComponent,
     CreateDepotComponent,
-    TodoDriverComponent,
     DrivingResultComponent,
     ErrorPageComponent,
     HeaderComponent,
-    PlannerHistoryComponent,
-    DriverHomeComponent
+    PlannerTodoComponent,
+    DriverTodoComponent,
   ],
   imports: [
     BrowserModule,
@@ -68,11 +71,13 @@ import { ClientService } from './shared/service/client.service';
     MatSelectModule,
     BrowserAnimationsModule,
     HttpModule,
-    AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyCN8TC7W834nK2DfiF6mu9OhAkUFaSLHlk'
-    })
+    ReactiveFormsModule,
+    FormsModule,
+    MaterialModule,
   ],
-  providers: [AuthGuard, AuthService, ClientService],
-  bootstrap: [AppComponent]
+  providers: [
+    AuthGuard,
+    AuthService
+  ],
 })
 export class AppModule { }

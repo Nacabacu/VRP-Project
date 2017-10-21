@@ -1,3 +1,51 @@
-<p>
-  header works!
-</p>
+<mat-toolbar color="primary">
+    <div class="nav-responsive">
+        <button mat-icon-button [matMenuTriggerFor]="menu">
+            <i class="fa fa-bars fa-2x" aria-hidden="true"></i>
+        </button>
+        <mat-menu #menu="matMenu">
+            <a mat-menu-item routerLink="/">
+                <i class="fa fa-home logo" aria-hidden="true"></i>
+                <span style="margin-left: 1px;">Home</span>
+            </a>
+            <a mat-menu-item routerLink="/planner">
+                <i class="fa fa-truck logo" aria-hidden="true"></i>
+                <span>Planning</span>
+            </a>
+            <a mat-menu-item routerLink="/">
+                <i class="fa fa-users logo" style="margin-right: 7px;" aria-hidden="true"></i>
+                <span>Client</span>
+            </a>
+            <a mat-menu-item routerLink="/">
+                <i class="fa fa-building logo" aria-hidden="true"></i>
+                <span style="padding-left: 4px;">Depot</span>
+            </a>
+            <hr>
+            <a mat-menu-item routerLink="/">
+                <i class="fa fa-sign-out logo" aria-hidden="true"></i>
+                <span>Logout</span>
+            </a>
+        </mat-menu>
+    </div>
+
+    <div class="nav-bar">
+        <a mat-button (click)="onHomeClicked()">
+            <i class="fa fa-truck logo" aria-hidden="true"></i> Home</a>
+        
+        <span *ngIf="isLoggedIn">
+            <span *ngIf="role === 'planner'">
+                <!-- Planner -->
+                <a mat-button routerLink="/planner">History</a>
+                <a mat-button routerLink="/planner/client">Client</a>
+                <a mat-button routerLink="/planner/depot">Depot</a>
+            </span>
+            
+            <span *ngIf="role === 'driver'">
+                <!-- Driver -->
+                <a mat-button routerLink="/driver">History</a>
+            </span>
+
+            <a mat-button class="right" (click)="onLogout()">Logout</a>
+        </span>
+    </div>
+</mat-toolbar>

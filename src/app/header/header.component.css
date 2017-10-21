@@ -1,0 +1,57 @@
+.mat-toolbar {
+    height: 50px !important;
+    min-height: 50px !important;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.mat-toolbar-layout {
+    height: 50px !important;
+    min-height: 50px !important;
+}
+
+.mat-toolbar-row {
+    height: 50px !important;
+    min-height: 50px !important;
+}
+
+.nav-bar {
+    width: 100%;
+}
+
+.right {
+    float: right;
+}
+
+.logo {
+    font-size: 22px;
+    margin: 0px 3px 5px 0;
+}
+
+a.mat-button {
+    padding: 0 10px;
+    font-size: 16px;
+}
+
+.nav-responsive {
+    display: none;
+}
+
+hr {
+    width: 90%;
+    color: #cacaca;
+}
+
+.fa-2x {
+    font-size: 1.8em;
+}
+
+@media only screen and (max-width: 768px) {
+    .nav-bar {
+        display: none;
+    }
+
+    .nav-responsive {
+        display: inline;
+    }
+}
