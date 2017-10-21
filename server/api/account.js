@@ -17,9 +17,13 @@ router.post('/register', (req, res) => {
     });
 });
 
-router.post('/login', passport.authenticate('local'/* , { failureRedirect: '/login', failureFlash: true } */), (req, res) => {
+router.post('/login', passport.authenticate('local'), (req, res) => {
     req.session.save((err) => {
-        err ? res.send(err) : res.send('Login Successful');
+        err ? res.send(err) : res.send({
+            username: res.req.user.username,
+            role: res.req.user.role,
+            licenseId: res.req.user.licenseId
+        });
     });
 });
 

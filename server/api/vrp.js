@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const node_or_tools = require('node_or_tools');
+const nodeOrTools = require('node_or_tools');
 const vrpHandler = require('../handlers/vrp');
 
 var googleMapClient = require('@google/maps').createClient({
@@ -33,10 +33,10 @@ router.post('/saveRoute', (req, res) => {
     });
 
     googleMapClient.distanceMatrix({
-        origins: coordinates,
-        destinations: coordinates,
-        departure_time: new Date(req.body.date).getTime()
-    })
+            origins: coordinates,
+            destinations: coordinates,
+            departure_time: new Date(req.body.date).getTime()
+        })
         .asPromise()
         .then(function (response) {
             return vrpHandler.vrpSolver(req.body, response);
@@ -52,10 +52,10 @@ router.post('/saveRoute', (req, res) => {
                 });
 
                 vehicles.push({
-                    "driver": req.body.drivers[index],
-                    "route": route,
-                    "LoadWeight": loadWeight,
-                    "isCompleted": false
+                    'driver': req.body.drivers[index],
+                    'route': route,
+                    'LoadWeight': loadWeight,
+                    'isCompleted': false
                 });
                 index++;
             });
@@ -100,7 +100,16 @@ router.get('/node', (req, res) => {
             [1, 1, 1, 1, 1, 1, 0, 1],
             [1, 1, 1, 1, 1, 1, 1, 0]
         ],
-        timeWindows: [[0, 5], [0, 5], [0, 5], [0, 5], [0, 5], [0, 5], [0, 5], [0, 5]],
+        timeWindows: [
+            [0, 5],
+            [0, 5],
+            [0, 5],
+            [0, 5],
+            [0, 5],
+            [0, 5],
+            [0, 5],
+            [0, 5]
+        ],
         demands: [
             [0, 0, 0, 0, 0, 0, 0, 0],
             [1, 1, 1, 1, 1, 1, 1, 1],
@@ -113,7 +122,7 @@ router.get('/node', (req, res) => {
         ]
     };
 
-    var test = new node_or_tools.VRP(solverOpts);
+    var test = new nodeOrTools.VRP(solverOpts);
 
     var vrpSearchOpts = {
         computeTimeLimit: 1000,
@@ -121,7 +130,11 @@ router.get('/node', (req, res) => {
         depotNode: 0,
         timeHorizon: 9 * 60 * 60,
         vehicleCapacity: 3,
-        routeLocks: [[], [], []],
+        routeLocks: [
+            [],
+            [],
+            []
+        ],
         pickups: [],
         deliveries: []
     };
