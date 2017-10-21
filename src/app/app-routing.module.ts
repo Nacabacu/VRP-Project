@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { AuthGuard } from './auth-guard.service';
+import { AuthGuard } from './authentication/auth-guard.service';
 
 import { DriverComponent } from './driver/driver.component';
 import { DrivingResultComponent } from './driver/driving-result/driving-result.component';
@@ -20,35 +20,35 @@ const appRoutes: Routes = [
   { path: 'login', component: LoginComponent },
   {
     path: 'planner', component: PlannerComponent, canActivate: [AuthGuard], canActivateChild: [AuthGuard], children: [
-      {
-        path: 'planning/:id',
-        component: PlanningComponent
-      },
-      {
-        path: 'planning/result/:id',
-        component: PlanningResultComponent
-      },
-      {
-        path: 'client',
-        component: ClientComponent,
-        children: [
-          {
-            path: 'create/[:id]',
-            component: CreateClientComponent
-          }
-        ]
-      },
-      {
-        path: 'depot',
-        component: DepotComponent,
-        children: [
-          {
-            path: 'create/[:id]',
-            component: CreateDepotComponent
-          }
-        ]
-      }
-    ]
+    {
+      path: 'planning/:id',
+      component: PlanningComponent
+    },
+    {
+      path: 'planning/result/:id',
+      component: PlanningResultComponent
+    },
+    {
+      path: 'client',
+      component: ClientComponent,
+      children: [
+        {
+          path: 'create/[:id]',
+          component: CreateClientComponent
+        }
+      ]
+    },
+    {
+      path: 'depot',
+      component: DepotComponent,
+      children: [
+        {
+          path: 'create/[:id]',
+          component: CreateDepotComponent
+        }
+      ]
+    }
+  ]
   },
   {
     path: 'driver', component: DriverComponent, canActivate: [AuthGuard], canActivateChild: [AuthGuard], children: [

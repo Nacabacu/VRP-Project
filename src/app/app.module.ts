@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpModule } from '@angular/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Routes } from '@angular/router';
@@ -20,10 +21,9 @@ import { DepotComponent } from './planner/depot/depot.component';
 import { PlannerComponent } from './planner/planner.component';
 import { PlanningResultComponent } from './planner/planning-result/planning-result.component';
 import { PlanningComponent } from './planner/planning/planning.component';
-import { AccountService } from './services/account.service';
 
-import { AuthGuard } from './auth-guard.service';
-import { AuthService } from './auth.service';
+import { AuthGuard } from './authentication/auth-guard.service';
+import { AuthService } from './authentication/auth.service';
 
 @NgModule({
   bootstrap: [AppComponent],
@@ -48,12 +48,12 @@ import { AuthService } from './auth.service';
     BrowserAnimationsModule,
     MaterialModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpModule
   ],
   providers: [
     AuthGuard,
-    AuthService,
-    AccountService
+    AuthService
   ],
 })
 export class AppModule { }
