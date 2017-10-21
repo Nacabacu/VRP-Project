@@ -1,3 +1,64 @@
-<p>
-  driver-todo works!
-</p>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="title-container">
+        <div class="title">
+          <span>Planning History</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <mat-tab-group>
+      <mat-tab label="Doing">
+        <div class="col-sm-12 col-md-10 col-md-offset-1">
+          <ngx-datatable class="material" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="50" [reorderable]="false"
+            [rows]="doing" [limit]="10">
+            <ngx-datatable-column name="No." [maxWidth]="60">
+              <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex">
+                {{ rowIndex + 1 }}
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Date"></ngx-datatable-column>
+
+            <ngx-datatable-column name="Time"></ngx-datatable-column>
+
+            <ngx-datatable-column name="Depot"></ngx-datatable-column>
+
+            <ngx-datatable-column name="Edit">
+              <ng-template ngx-datatable-cell-template let-row="row">
+                <button mat-raised-button color="primary" (click)="onEdit(row.id)">Edit</button>
+              </ng-template>
+            </ngx-datatable-column>
+          </ngx-datatable>
+        </div>
+      </mat-tab>
+      <mat-tab label="Done">
+        <div class="col-sm-12 col-md-10 col-md-offset-1">
+          <ngx-datatable class="material" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="50" [reorderable]="false"
+            [rows]="done" [limit]="10">
+            <ngx-datatable-column name="No." [maxWidth]="60">
+              <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex">
+                {{ rowIndex + 1 }}
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Date"></ngx-datatable-column>
+
+            <ngx-datatable-column name="Time"></ngx-datatable-column>
+
+            <ngx-datatable-column name="Depot"></ngx-datatable-column>
+
+            <ngx-datatable-column name="Edit">
+              <ng-template ngx-datatable-cell-template let-row="row">
+                <button mat-raised-button color="primary" (click)="onEdit(row.id)">Edit</button>
+              </ng-template>
+            </ngx-datatable-column>
+          </ngx-datatable>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

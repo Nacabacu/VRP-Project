@@ -1,0 +1,22 @@
+.mat-tab-body {
+    padding-top: 10px;
+    height: 620px;
+}
+
+.mat-tab-label {
+    height: 50px !important;
+    min-width: 50% !important;
+    font-size: 18px;
+    color: white;
+    opacity: 1 !important;
+}
+
+.mat-tab-label-container {
+    background-color: #3f51b5 !important;
+}
+
+.mat-ink-bar {
+    background-color: white !important;
+    height: 4px !important;
+}
+
