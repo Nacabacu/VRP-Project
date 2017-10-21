@@ -1,13 +1,13 @@
+import { ClientService } from './shared/service/client.service';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Routes } from '@angular/router';
-import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
 import { AgmCoreModule } from '@agm/core';
 import { CdkTableModule } from '@angular/cdk/table';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import {
   MatTableModule,
   MatPaginatorModule,
@@ -61,6 +61,8 @@ import { DriverTodoComponent } from './driver/driver-todo/driver-todo.component'
   ],
   imports: [
     BrowserModule,
+    FormsModule,
+    ReactiveFormsModule,
     AppRoutingModule,
     MatTableModule,
     MatPaginatorModule,
@@ -74,10 +76,15 @@ import { DriverTodoComponent } from './driver/driver-todo/driver-todo.component'
     ReactiveFormsModule,
     FormsModule,
     MaterialModule,
+    NgxDatatableModule,
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyCN8TC7W834nK2DfiF6mu9OhAkUFaSLHlk'
+    })
   ],
   providers: [
     AuthGuard,
-    AuthService
+    AuthService,
+    ClientService
   ],
 })
 export class AppModule { }

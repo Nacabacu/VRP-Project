@@ -1,48 +1,35 @@
-<div class="row">
-  <div class="column-left">
-    <agm-map style="height: 500px; width: 50%" 
-      [latitude]="lat" 
-      [longitude]="lng" 
-      [zoom]="zoom"
-      (mapClick)="mapClicked($event)">
-        <agm-marker 
-          *ngFor="let marker of markers; let i = index" 
-          [latitude]="marker.lat" 
-          [longitude]="marker.lng" 
-          [label]="marker.label"
-          [markerDraggable]="marker.draggable"
-          (markerClick)="clickedMarker(m.label, i)">
+<h1>Create Client!</h1>
+<div class="container">
+  <div class="col-md">
+    <mat-card>
+      <agm-map style="height: 500px;" [latitude]="lat" [longitude]="lng" [zoom]="zoom" (mapClick)="mapClicked($event)">
+        <agm-marker *ngFor="let marker of markers; let i = index" [latitude]="marker.lat" [longitude]="marker.lng" [label]="marker.label"
+          [markerDraggable]="marker.draggable" (markerClick)="clickedMarker(m.label, i)">
         </agm-marker>
-    </agm-map>
+      </agm-map>
+    </mat-card>
   </div>
-  <div>
-    <div *ngIf="!client.companyName">
-      <mat-form-field>
-        <input matInput placeholder="Company name">
+  <div class="col-md">
+    <!-- <mat-card> -->
+      <div>
+        <div *ngIf="client.companyName">
+          Company name :
+          <mat-form-field floatPlaceholder="never">
+            <input matInput placeholder="Company Name" [value]="client.companyName">
+          </mat-form-field>
+        </div>
+      </div>
+      <mat-form-field floatPlaceholder="auto">
+        <input matInput placeholder='Type to filter the name column...' (keyup)='updateFilter($event)' />
       </mat-form-field>
-    </div>
-    <div *ngIf="client.companyName">
-      <label>{{client.companyName}}</label>
-    </div>
-    <button mat-button>New branch</button>
-  </div>
-
-  <div class="branch" *ngFor="let branch of client.branches">
-    <mat-form-field floatPlaceholder="never">
-      <input matInput placeholder="Input" value="{{branch.branchName}}">
-    </mat-form-field>
-
-    <mat-form-field floatPlaceholder="never">
-      <!-- need filter space comma -->
-      <input matInput placeholder="Input" value="[{{branch.coordinate}}]">
-    </mat-form-field>
-  </div>
-
-  <!-- input or table ?-->
-
-  <div>
-    <button mat-button>Save</button>
-    <button mat-button>Delete</button>
-    <button mat-button>Cancel</button>
+      <ngx-datatable #table class='material' [columns]="columns" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
+        [rowHeight]="'auto'" [limit]="10" [rows]='rows'>
+      </ngx-datatable>
+      <div>
+        <button mat-button>Save</button>
+        <button mat-button>Delete</button>
+        <button mat-button>Cancel</button>
+      </div>
+    <!-- </mat-card> -->
   </div>
 </div>

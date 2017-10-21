@@ -1,6 +1,6 @@
 import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
-import { Headers, Http } from '@angular/http';
+import { Headers, Http, RequestOptions } from '@angular/http';
 
 import { Client } from '../../client';
 
@@ -20,8 +20,12 @@ export class ClientService {
         }
     }
 
-    getClients(): Promise<Client[]> {
-        return this.http.get('http://localhost:3000/api/client/get')
+    getAllClients(): Promise<Client[]> {
+        const headers = new Headers();
+        headers.append('Access-Control-Allow-Origin', 'http://localhost:4200');
+        const opts = new RequestOptions();
+        opts.headers = headers;
+        return this.http.get('http://localhost:3000/api/client/get', opts)
             .toPromise()
             .then(response => {
                 const clients: Client[] = response.json().clients;
