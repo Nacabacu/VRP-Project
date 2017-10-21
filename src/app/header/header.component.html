@@ -29,13 +29,23 @@
     </div>
 
     <div class="nav-bar">
-        <a mat-button routerLink="/">
+        <a mat-button (click)="onHomeClicked()">
             <i class="fa fa-truck logo" aria-hidden="true"></i> Home</a>
         
-        <!-- Planner -->
-        <a mat-button routerLink="/planner">Planning</a>
-        <a mat-button routerLink="/planner/client">Client</a>
-        <a mat-button routerLink="/planner/depot">Depot</a>
-        <a mat-button class="right" routerLink="/">Logout</a>
+        <span *ngIf="isLoggedIn">
+            <span *ngIf="role === 'planner'">
+                <!-- Planner -->
+                <a mat-button routerLink="/planner">History</a>
+                <a mat-button routerLink="/planner/client">Client</a>
+                <a mat-button routerLink="/planner/depot">Depot</a>
+            </span>
+            
+            <span *ngIf="role === 'driver'">
+                <!-- Driver -->
+                <a mat-button routerLink="/driver">History</a>
+            </span>
+
+            <a mat-button class="right" routerLink="/">Logout</a>
+        </span>
     </div>
 </mat-toolbar>

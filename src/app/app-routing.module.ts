@@ -1,3 +1,5 @@
+import { DriverTodoComponent } from './driver/driver-todo/driver-todo.component';
+import { PlannerTodoComponent } from './planner/planner-todo/planner-todo.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
@@ -20,38 +22,46 @@ const appRoutes: Routes = [
   { path: 'login', component: LoginComponent },
   {
     path: 'planner', component: PlannerComponent, canActivate: [AuthGuard], canActivateChild: [AuthGuard], children: [
-    {
-      path: 'planning/:id',
-      component: PlanningComponent
-    },
-    {
-      path: 'planning/result/:id',
-      component: PlanningResultComponent
-    },
-    {
-      path: 'client',
-      component: ClientComponent,
-      children: [
-        {
-          path: 'create/[:id]',
-          component: CreateClientComponent
-        }
-      ]
-    },
-    {
-      path: 'depot',
-      component: DepotComponent,
-      children: [
-        {
-          path: 'create/[:id]',
-          component: CreateDepotComponent
-        }
-      ]
-    }
+      {
+        path: '',
+        component: PlannerTodoComponent
+      },
+      {
+        path: 'planning/:id',
+        component: PlanningComponent
+      },
+      {
+        path: 'planning/result/:id',
+        component: PlanningResultComponent
+      },
+      {
+        path: 'client',
+        component: ClientComponent,
+        children: [
+          {
+            path: 'create/[:id]',
+            component: CreateClientComponent
+          }
+        ]
+      },
+      {
+        path: 'depot',
+        component: DepotComponent,
+        children: [
+          {
+            path: 'create/[:id]',
+            component: CreateDepotComponent
+          }
+        ]
+      }
   ]
   },
   {
     path: 'driver', component: DriverComponent, canActivate: [AuthGuard], canActivateChild: [AuthGuard], children: [
+      {
+        path: '',
+        component: DriverTodoComponent
+      },
       {
         path: 'result/:id',
         component: DrivingResultComponent

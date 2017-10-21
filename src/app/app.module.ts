@@ -24,6 +24,8 @@ import { PlanningComponent } from './planner/planning/planning.component';
 
 import { AuthGuard } from './authentication/auth-guard.service';
 import { AuthService } from './authentication/auth.service';
+import { PlannerTodoComponent } from './planner/planner-todo/planner-todo.component';
+import { DriverTodoComponent } from './driver/driver-todo/driver-todo.component';
 
 @NgModule({
   bootstrap: [AppComponent],
@@ -41,6 +43,8 @@ import { AuthService } from './authentication/auth.service';
     DrivingResultComponent,
     ErrorPageComponent,
     HeaderComponent,
+    PlannerTodoComponent,
+    DriverTodoComponent,
   ],
   imports: [
     BrowserModule,
