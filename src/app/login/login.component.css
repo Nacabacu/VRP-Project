@@ -1,27 +1,13 @@
+.title-container {
+    height: 180px;
+}
+
 .col-xs-12 {
     padding: 0;
 }
 
 .mat-grid-list {
     height: 100% !important;
-}
-
-.brand-name-container {
-    background-color: #3f51b5;
-    position: relative;
-    z-index: -1;
-    width: 100%;
-    height: 250px;
-    display: flex;
-    justify-content: center;
-}
-
-.brand-name {
-    user-select: none;
-    cursor: default;
-    font-size: 50px;
-    color: white;
-    align-self: center;
 }
 
 .slogan {

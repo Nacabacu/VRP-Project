@@ -27,19 +27,23 @@ const appRoutes: Routes = [
         component: PlannerTodoComponent
       },
       {
-        path: 'planning/:id',
+        path: 'planning',
         component: PlanningComponent
       },
       {
-        path: 'planning/result/:id',
-        component: PlanningResultComponent
+        path: 'planning/:id',
+        component: PlanningComponent
       },
       {
         path: 'client',
         component: ClientComponent,
         children: [
           {
-            path: 'create/[:id]',
+            path: 'create',
+            component: CreateClientComponent
+          },
+          {
+            path: 'create:id',
             component: CreateClientComponent
           }
         ]
@@ -49,7 +53,11 @@ const appRoutes: Routes = [
         component: DepotComponent,
         children: [
           {
-            path: 'create/[:id]',
+            path: 'create',
+            component: CreateDepotComponent
+          },
+          {
+            path: 'create/:id',
             component: CreateDepotComponent
           }
         ]
