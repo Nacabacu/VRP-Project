@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const ObjectID = require('mongodb').ObjectID;
 const nodeOrTools = require('node_or_tools');
 const vrpHandler = require('../handlers/vrp');
 
@@ -15,6 +16,24 @@ const errorHandler = (err, res) => {
     res.message = typeof err == 'object' ? err.message : err;
     res.status(501).json(res);
 };
+
+router.get('/getresult/:id', (req, res) => {
+    var id = req.params.id;
+
+    if (!ObjectID.isValid(id)) {
+        return res.status(404).send();
+    }
+
+    PlanningResult.findById(id).then((result) => {
+        if (!result) {
+            return res.status(404).send();
+        }
+
+        res.status(200).send(result);
+    }).catch((err) => {
+        errorHandler(err, res);
+    });
+});
 
 router.get('/getResults', (req, res) => {
     PlanningResult.find().then((results) => {

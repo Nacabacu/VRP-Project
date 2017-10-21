@@ -20,6 +20,24 @@ router.get('/get', (req, res) => {
     });
 });
 
+router.get('/get/:id', (req, res) => {
+    var id = req.params.id;
+
+    if (!ObjectID.isValid(id)) {
+        return res.status(404).send();
+    }
+
+    Depot.findById(id).then((depot) => {
+        if (!depot) {
+            return res.status(404).send();
+        }
+
+        res.status(200).send(depot);
+    }).catch((err) => {
+        errorHandler(err, res);
+    });
+});
+
 router.post('/create', (req, res) => {
     var newDepot = new Depot(req.body.depot);
     newDepot.save(function (err) {
