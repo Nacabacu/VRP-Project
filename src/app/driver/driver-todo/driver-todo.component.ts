@@ -1,5 +1,5 @@
 import { ResultService } from './../../services/result.service';
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-driver-todo',
@@ -8,15 +8,25 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
   encapsulation: ViewEncapsulation.None
 })
 export class DriverTodoComponent implements OnInit {
+  @ViewChild('doingTable') doingTable: any;
+  @ViewChild('doneTable') doneTable: any;
+  doingExpanded: any = {};
+  doneExpanded: any = {};
   doing = [];
   done = [];
   licenseId: string;
+  isResponsive: boolean;
 
   constructor(
     private resultService: ResultService
   ) { }
 
   ngOnInit() {
+    this.onResize({
+      target: {
+        innerWidth: window.innerWidth
+      }
+    });
     this.licenseId = JSON.stringify(JSON.parse(localStorage.getItem('currentUser')).licenseId).replace(/\"/g, '');
     this.resultService.getResults().then((response) => {
       response.results.forEach((result) => {
@@ -43,8 +53,24 @@ export class DriverTodoComponent implements OnInit {
     });
   }
 
-  onEdit(id: string) {
-    this.resultService.getResult(id).then(res => console.log(res))
+  onView(id: string) {
+    this.resultService.getResult(id).then(res => console.log(res));
+  }
+
+  toggleExpandDoing(row) {
+    this.doingTable.rowDetail.toggleExpandRow(row);
+  }
+
+  toggleExpandDone(row) {
+    this.doneTable.rowDetail.toggleExpandRow(row);
+  }
+
+  onResize(e) {
+    if (e.target.innerWidth <= 768) {
+      this.isResponsive = true;
+    } else {
+      this.isResponsive = false;
+    }
   }
 
 }
