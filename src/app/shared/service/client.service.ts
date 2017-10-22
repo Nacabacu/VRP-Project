@@ -8,16 +8,20 @@ import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class ClientService {
-    clients: Client[];
 
     constructor(private http: Http, private router: Router) { }
 
-    getClient(companyNumber: number) {
-        if (companyNumber && this.clients) {
-            return this.clients[companyNumber - 1];
-        } else {
-            return this.router.navigate(['/planner/client']);
-        }
+    getClient(companyId) {
+        const headers = new Headers();
+        headers.append('Access-Control-Allow-Origin', 'http://localhost:4200');
+        const opts = new RequestOptions();
+        opts.headers = headers;
+        return this.http.get('http://localhost:3000/api/client/get/' + companyId, opts)
+            .toPromise()
+            .then((response) => {
+                return response.json();
+            })
+            .catch(this.handleError);
     }
 
     getAllClients(): Promise<Client[]> {
@@ -27,13 +31,12 @@ export class ClientService {
         opts.headers = headers;
         return this.http.get('http://localhost:3000/api/client/get', opts)
             .toPromise()
-            .then(response => {
+            .then((response) => {
                 const clients: Client[] = response.json().clients;
-                clients.map(function (client, index) {
+                clients.map((client, index) => {
                     client.companyNumber = index + 1;
                     return client;
                 });
-                this.clients = clients;
                 return clients;
             })
             .catch(this.handleError);
@@ -44,5 +47,3 @@ export class ClientService {
         return Promise.reject(error.message || error);
     }
 }
-
-

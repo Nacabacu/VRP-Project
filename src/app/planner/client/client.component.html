@@ -33,7 +33,7 @@
     <ng-container matColumnDef="edit">
       <mat-header-cell *matHeaderCellDef></mat-header-cell>
       <mat-cell *matCellDef="let client">
-        <a mat-raised-button color="primary" (click)="onEditClient(client.companyNumber)">Edit</a>
+        <a mat-raised-button color="primary" (click)="onEditClient(client._id)">Edit</a>
       </mat-cell>
     </ng-container>
 

@@ -29,7 +29,7 @@ export class ClientComponent implements OnInit {
 
   ngOnInit() {
     const that = this;
-    this.clientService.getAllClients().then(function (response) {
+    this.clientService.getAllClients().then((response) => {
       that.dataSource = new ClientSource(that.clientDatabase, that.paginator);
     });
 
@@ -42,8 +42,8 @@ export class ClientComponent implements OnInit {
       });
   }
 
-  onEditClient(companyNumber: number) {
-    this.router.navigate(['/planner/client/create'], { queryParams: { companyNumber: companyNumber } });
+  onEditClient(clientId) {
+    this.router.navigate(['/planner/client/create'], { queryParams: { companyId: clientId } });
   }
 }
 

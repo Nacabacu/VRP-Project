@@ -7,17 +7,10 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Routes } from '@angular/router';
 import { AgmCoreModule } from '@agm/core';
+import { AgmSnazzyInfoWindowModule } from '@agm/snazzy-info-window';
 import { CdkTableModule } from '@angular/cdk/table';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-import {
-  MatTableModule,
-  MatPaginatorModule,
-  MatButtonModule,
-  MatFormFieldModule,
-  MatInputModule,
-  MatOptionModule,
-  MatSelectModule
-} from '@angular/material';
+import { GooglePlaceModule } from "angular2-google-place";
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -65,26 +58,23 @@ import { DriverTodoComponent } from './driver/driver-todo/driver-todo.component'
     FormsModule,
     ReactiveFormsModule,
     AppRoutingModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatOptionModule,
-    MatSelectModule,
     BrowserAnimationsModule,
     HttpModule,
     ReactiveFormsModule,
     FormsModule,
     MaterialModule,
+    NgxDatatableModule,
+    GooglePlaceModule,
+    AgmSnazzyInfoWindowModule,
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyCN8TC7W834nK2DfiF6mu9OhAkUFaSLHlk'
+      apiKey: 'AIzaSyCN8TC7W834nK2DfiF6mu9OhAkUFaSLHlk',
+      libraries: ["places"]
     })
   ],
   providers: [
     AuthGuard,
     AuthService,
-    ResultService
+    ResultService,
     ClientService
   ],
 })
