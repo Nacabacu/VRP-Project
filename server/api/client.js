@@ -20,6 +20,24 @@ router.get('/get', (req, res) => {
     });
 });
 
+router.get('/get/:id', (req, res) => {
+    var id = req.params.id;
+
+    if (!ObjectID.isValid(id)) {
+        return res.status(404).send();
+    }
+
+    Client.findById(id).then((client) => {
+        if (!client) {
+            return res.status(404).send();
+        }
+
+        res.status(200).send(client);
+    }).catch((err) => {
+        errorHandler(err, res);
+    });
+});
+
 router.post('/create', (req, res) => {
     var newClient = new Client(req.body.client);
     newClient.save(function (err) {

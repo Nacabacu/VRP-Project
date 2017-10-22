@@ -27,12 +27,12 @@ const appRoutes: Routes = [
         component: PlannerTodoComponent
       },
       {
-        path: 'planning/:id',
+        path: 'planning',
         component: PlanningComponent
       },
       {
-        path: 'planning/result/:id',
-        component: PlanningResultComponent
+        path: 'planning/:id',
+        component: PlanningComponent
       },
       {
         path: 'client',

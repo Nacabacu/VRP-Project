@@ -1,3 +1,4 @@
+import { ResultService } from './services/result.service';
 import { ClientService } from './shared/service/client.service';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -76,7 +77,6 @@ import { DriverTodoComponent } from './driver/driver-todo/driver-todo.component'
     ReactiveFormsModule,
     FormsModule,
     MaterialModule,
-    NgxDatatableModule,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyCN8TC7W834nK2DfiF6mu9OhAkUFaSLHlk'
     })
@@ -84,6 +84,7 @@ import { DriverTodoComponent } from './driver/driver-todo/driver-todo.component'
   providers: [
     AuthGuard,
     AuthService,
+    ResultService
     ClientService
   ],
 })
