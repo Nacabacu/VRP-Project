@@ -1,0 +1,26 @@
+agm-map {
+    height: calc(100vh - 150px);
+}
+
+.timepicker {
+    width: 80px;
+}
+
+label {
+    margin-right: 6px;
+}
+
+.mat-raised-button {
+    float: right;
+    margin-top: 25px;
+}
+
+.driver-slider {
+    position: relative;
+    z-index: 1;
+    width: 50%;
+}
+
+.driver-table {
+    margin: 0 4px;
+}

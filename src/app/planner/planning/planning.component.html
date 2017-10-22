@@ -1,3 +1,117 @@
-<p>
-  planning works!
-</p>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="title-container">
+        <div class="title">
+          <span>Planning</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="col-xs-12 col-md-6">
+        <agm-map [latitude]="lat" [longitude]="lng">
+          <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
+        </agm-map>
+      </div>
+      <div class="col-xs-12 col-md-6">
+        <mat-horizontal-stepper [linear]="false">
+          <mat-step [stepControl]="planningInfoGroup">
+            <form [formGroup]="planningInfoGroup" (ngSubmit)="test()">
+              <ng-template matStepLabel>Planning Info</ng-template>
+
+              <label>Delivery Date: </label>
+              <mat-form-field>
+                <input matInput [matDatepickerFilter]="dateFilter" [matDatepicker]="picker" placeholder="Choose a date" formControlName="date">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+                <mat-error *ngIf="planningInfoGroup.get('date').invalid">{{getErrorMessage()}}</mat-error>
+              </mat-form-field>
+
+              <br>
+              <label>Delivery Start Time: </label>
+              <mat-form-field class="timepicker">
+                <input matInput type="number" min="1" max="24" placeholder="Hour" formControlName="hour" (blur)="onHourBlur($event)">
+                <mat-error *ngIf="planningInfoGroup.get('hour').invalid">{{getErrorMessage()}}</mat-error>
+              </mat-form-field>
+
+              <mat-form-field class="timepicker">
+                <input matInput type="number" min="0" max="59" placeholder="Minute" formControlName="minute" (blur)="onMinuteBlur($event)">
+                <mat-error *ngIf="planningInfoGroup.get('minute').invalid">{{getErrorMessage()}}</mat-error>
+              </mat-form-field>
+
+              <br>
+              <div style="margin-top:13.5px;">
+                <label>Select Method: </label>
+                <mat-radio-group formControlName="method">
+                  <mat-radio-button style="margin-right:6px;" value="distance">Distance</mat-radio-button>
+                  <mat-radio-button value="duration">Duration</mat-radio-button>
+                </mat-radio-group>
+              </div>
+              
+              <button mat-raised-button matStepperNext color="primary">Next</button>
+            </form>
+          </mat-step>
+
+          <mat-step [stepControl]="DriverFormGroup">
+            <form [formGroup]="DriverFormGroup">
+              <ng-template matStepLabel>Select Drivers</ng-template>
+
+              <label>Truck Capacity: </label>
+              <mat-form-field class="timepicker">
+                <input matInput type="number" min="1" placeholder="Capacity" formControlName="capacity">
+                <mat-error *ngIf="DriverFormGroup.get('capacity').invalid">{{getErrorMessage()}}</mat-error>
+              </mat-form-field>
+
+              <div>
+                <label>Number of Drivers: </label>
+                <mat-slider class="driver-slider" [value]="2" [min]="2" [max]="10" [step]="1" [thumb-label]="true" (change)="onSliderChange($event)"></mat-slider>
+                {{ numOfDrivers }} Drivers
+              </div>
+
+              <ngx-datatable class="material expandable driver-table" [columnMode]="'flex'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="50"
+                [reorderable]="false" [rows]="drivers" [limit]="5">
+                <ngx-datatable-column name="No." [minWidth]="30" [flexGrow]="0.3">
+                  <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex">
+                    {{ rowIndex + 1 }}
+                  </ng-template>
+                </ngx-datatable-column>
+              
+                <ngx-datatable-column name="Name" [minWidth]="100" [flexGrow]="0.8"></ngx-datatable-column>
+              
+                <ngx-datatable-column name="LicenseNo" [minWidth]="90" [flexGrow]="0.6"></ngx-datatable-column>
+              
+                <ngx-datatable-column name="VehicleNo" [minWidth]="90" [flexGrow]="0.6"></ngx-datatable-column>
+              </ngx-datatable>
+
+              <button mat-raised-button matStepperNext color="primary">Next</button>
+            </form>
+          </mat-step>
+
+          <mat-step [stepControl]="secondFormGroup">
+            <form [formGroup]="secondFormGroup">
+              <ng-template matStepLabel>Select Clients</ng-template>
+              <mat-form-field>
+                <input matInput placeholder="Address" formControlName="secondCtrl" required>
+              </mat-form-field>
+              <div>
+                <button mat-button matStepperPrevious>Back</button>
+                <button mat-button matStepperNext>Next</button>
+              </div>
+            </form>
+          </mat-step>
+
+          <mat-step>
+            <ng-template matStepLabel>Done</ng-template>
+            You are now done.
+            <div>
+              <button mat-button matStepperPrevious>Back</button>
+            </div>
+          </mat-step>
+        </mat-horizontal-stepper>
+      </div>
+    </div>
+  </div>
+</div>
