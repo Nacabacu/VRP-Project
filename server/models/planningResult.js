@@ -54,9 +54,17 @@ var PlanningResult = mongoose.model('planningResults', {
             coordinate: {
                 type: [Number],
                 require: true
+            },
+            demand: {
+                type: Number,
+                require: true
+            },
+            waitTime: {
+                type: Number,
+                require: true
             }
         },
     ]
 }, 'planningResults');
 
-module.exports = { PlanningResult }
+module.exports = { PlanningResult };

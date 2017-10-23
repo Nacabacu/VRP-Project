@@ -29,30 +29,50 @@ var vrpSolver = function (request, distances) {
     return new Promise(function (resolve, reject) {
         getDistancesMatrix(distances).then(function (results) {
             // 8 hours [9am - 5pm]
+            var demandsArray = [0];
+            var waitTimeArray = [0];
             var depotIndex = 0;
             var dayStarts = 0;
             var dayEnds = request.workingHour * 60 * 60;
             var numNodes = results.duration[0].length;
             var timeWindows = new Array(numNodes);
             var demands = new Array(numNodes);
+            var waitTime = new Array(numNodes);
 
             // set timeWindows as full day working
             for (var at = 0; at < numNodes; ++at) {
                 timeWindows[at] = [dayStarts, dayEnds];
             }
 
-            // set demands as 1
+            request.clients.forEach((client) => {
+                demandsArray.push(client.demand);
+                waitTimeArray.push(client.waitTime);
+            });
+
+            // Building demands Array
             for (var from = 0; from < numNodes; ++from) {
                 demands[from] = new Array(numNodes);
                 for (var to = 0; to < numNodes; ++to) {
-                    demands[from][to] = request.demands[from];
+                    demands[from][to] = demandsArray[from];
+                }
+            }
+
+            // Building wait time array
+            for (var from = 0; from < numNodes; from++) {
+                waitTime[from] = new Array(numNodes);
+                for (var to = 0; to < numNodes; to++) {
+                    if (from !== to) {
+                        waitTime[from][to] = waitTimeArray[from] + results.duration[from][to];
+                    } else {
+                        waitTime[from][to] = 0;
+                    }
                 }
             }
 
             var solverOpts = {
                 numNodes: numNodes,
                 costs: request.method === 'distance' ? results.distance : results.duration,
-                durations: results.duration,
+                durations: waitTime,
                 timeWindows: timeWindows,
                 demands: demands
             };
