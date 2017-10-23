@@ -8,18 +8,27 @@ import { } from 'googlemaps';
 import { ClientService } from '../../../services/client.service';
 import { Marker } from '../../../shared/marker';
 
+import { Inject} from '@angular/core';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+
+
 @Component({
   selector: 'app-create-client',
   templateUrl: './create-client.component.html',
   styleUrls: ['./create-client.component.css']
 })
 export class CreateClientComponent implements OnInit {
+  [x: string]: any;
   searchControl: FormControl;
   isNew: boolean = false;
   address;
   zoom;
   lat;
   lng;
+
+  animal: string;
+  name: string;
+
 
   editForm: FormGroup;
 
@@ -33,6 +42,7 @@ export class CreateClientComponent implements OnInit {
   selected = [];
   editing = {};
 
+
   @ViewChild("search")
   public searchElementRef: ElementRef;
 
@@ -41,8 +51,10 @@ export class CreateClientComponent implements OnInit {
     private router: Router,
     private clientService: ClientService,
     private mapsAPILoader: MapsAPILoader,
-    private ngZone: NgZone
-  ) { }
+    private ngZone: NgZone,
+    public dialog: MatDialog,
+    public dialogRef: MatDialogRef<CreateClientComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any) { } 
 
   ngOnInit() {
     const branchMarkers: Marker[] = [];
@@ -201,5 +213,46 @@ export class CreateClientComponent implements OnInit {
       });
     }
   }
+  onClick() {
+    this.modal.alert()
+        .size('lg')
+        .showClose(true)
+        .title('A simple Alert style modal window')
+        .body(`
+            <h4>Alert is a classic (title/body/footer) 1 button modal window that 
+            does not block.</h4>
+            <b>Configuration:</b>
+            <ul>
+                <li>Non blocking (click anywhere outside to dismiss)</li>
+                <li>Size large</li>
+                <li>Dismissed with default keyboard key (ESC)</li>
+                <li>Close wth button click</li>
+                <li>HTML content</li>
+            </ul>`)
+        .open();
+  }
 
+  // onEdit(){
+  //   const control = new FormControl(null, Validators.required);
+  //   (<FormArray>this.editForm.get('branchNameInput')).push(Control);
+
+  // }
+
+  openDialog(): void {
+    let dialogRef = this.dialog.open(CreateClientComponent, {
+      width: '250px',
+      data: { name: this.name, animal: this.animal }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      this.animal = result;
+    });
+  }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
 }
+
+
