@@ -2,24 +2,23 @@ import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { Headers, Http, RequestOptions } from '@angular/http';
 
-import { Client } from '../shared/client';
 import 'rxjs/add/operator/toPromise';
 
 @Injectable()
-export class ClientService {
+export class DepotService {
 
-    clientUrl = 'http://localhost:3000/api/client';
+    depotUrl = 'http://localhost:3000/api/depot';
 
     constructor(private http: Http, private router: Router) { }
 
-    createClient(companyData: Client) {
+    createDepot(depotData) {
         const headers = new Headers();
         headers.set('Access-Control-Allow-Origin', 'http://localhost:4200');
         headers.set('Content-Type', 'application/json');
         const opts = new RequestOptions();
         opts.headers = headers;
-        const body = { client: companyData };
-        return this.http.post(this.clientUrl + '/create/', JSON.stringify(body), opts)
+        const body = { client: depotData };
+        return this.http.post(this.depotUrl + '/create/', JSON.stringify(body), opts)
             .toPromise()
             .then((response) => {
                 return response;
@@ -27,12 +26,12 @@ export class ClientService {
             .catch(this.handleError);
     }
 
-    deleteClient(companyId) {
+    deleteDepot(depotId) {
         const headers = new Headers();
         headers.set('Access-Control-Allow-Origin', 'http://localhost:4200');
         const opts = new RequestOptions();
         opts.headers = headers;
-        return this.http.delete(this.clientUrl + '/delete/' + companyId, opts)
+        return this.http.delete(this.depotUrl + '/delete/' + depotId, opts)
             .toPromise()
             .then((response) => {
                 return response;
@@ -40,12 +39,12 @@ export class ClientService {
             .catch(this.handleError);
     }
 
-    getClient(companyId) {
+    getDepot(depotId) {
         const headers = new Headers();
         headers.set('Access-Control-Allow-Origin', ['http://localhost:4200']);
         const opts = new RequestOptions();
         opts.headers = headers;
-        return this.http.get(this.clientUrl + '/get/' + companyId, opts)
+        return this.http.get(this.depotUrl + '/get/' + depotId, opts)
             .toPromise()
             .then((response) => {
                 return response.json();
@@ -53,12 +52,12 @@ export class ClientService {
             .catch(this.handleError);
     }
 
-    getAllClients(): Promise<Client[]> {
+    getAllDepots(): Promise<any[]> {
         const headers = new Headers();
         headers.set('Access-Control-Allow-Origin', 'http://localhost:4200');
         const opts = new RequestOptions();
         opts.headers = headers;
-        return this.http.get(this.clientUrl + '/get', opts)
+        return this.http.get(this.depotUrl + '/get', opts)
             .toPromise()
             .then((response) => {
                 return response.json().clients;
@@ -66,15 +65,15 @@ export class ClientService {
             .catch(this.handleError);
     }
 
-    updateClient(companyData) {
+    updateDepot(depotData) {
         const headers = new Headers();
         headers.set('Access-Control-Allow-Origin', ['http://localhost:4200']);
         headers.set('Access-Control-Allow-Methods', "GET, POST, HEAD, OPTIONS, PUT, DELETE, PATCH");
         headers.set('Content-Type', 'application/json');
         const opts = new RequestOptions();
         opts.headers = headers;
-        const body = { client: companyData };
-        return this.http.put(this.clientUrl + '/update/' + companyData._id, JSON.stringify(body), opts)
+        const body = { client: depotData };
+        return this.http.put(this.depotUrl + '/update/' + depotData._id, JSON.stringify(body), opts)
             .toPromise()
             .then((response) => {
                 return response;
