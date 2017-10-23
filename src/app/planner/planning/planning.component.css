@@ -1,0 +1,59 @@
+agm-map {
+    height: calc(100vh - 150px);
+}
+
+.timepicker {
+    width: 80px;
+}
+
+label {
+    margin-right: 6px;
+}
+
+.buttonBack {
+    margin-left: 65px;
+    margin-top: 25px;
+}
+
+.buttonNext {
+    float: right;
+    margin-top: 25px;
+}
+
+.driver-slider {
+    position: relative;
+    z-index: 1;
+    width: 50%;
+}
+
+.driver-table {
+    margin: 0 4px;
+}
+
+.input-filter {
+    float: right;
+}
+
+.mat-horizontal-content-container {
+    padding: 0 12px 12px;
+}
+
+.driverTable-error {
+    width: 300px;
+}
+
+.driverTable-error .mat-input-flex {
+    display: none !important;
+}
+
+.driverTable-error .mat-input-underline {
+    height: 0 !important;
+}
+
+.driverTable-error .mat-input-ripple {
+    height: 0 !important;
+}
+
+.driverTable-error .mat-input-subscript-wrapper {
+    margin-top: 10px
+}

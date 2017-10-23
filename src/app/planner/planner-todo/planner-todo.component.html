@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="container-fluid" (window:resize)="onResize($event)">
   <div class="row">
     <div class="col-xs-12">
       <div class="title-container">
@@ -10,55 +10,89 @@
   </div>
 
   <div class="row">
-      <mat-tab-group>
-        <mat-tab label="Doing">
-          <div class="col-sm-12 col-md-10 col-md-offset-1">
-            <ngx-datatable class="material" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="50" [reorderable]="false"
-              [rows]="doing" [limit]="10">
-                <ngx-datatable-column name="No." [maxWidth]="60">
-                  <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex">
-                    {{ rowIndex + 1 }}
-                  </ng-template>
-                </ngx-datatable-column>
-              
-                <ngx-datatable-column name="Date"></ngx-datatable-column>
-              
-                <ngx-datatable-column name="Time"></ngx-datatable-column>
-              
-                <ngx-datatable-column name="Depot"></ngx-datatable-column>
-              
-                <ngx-datatable-column name="Edit">
-                  <ng-template ngx-datatable-cell-template let-row="row">
-                    <button mat-raised-button color="primary" (click)="onEdit(row.id)">Edit</button>
-                  </ng-template>
-                </ngx-datatable-column>
-            </ngx-datatable>
-          </div>
-        </mat-tab>
-        <mat-tab label="Done">
-          <div class="col-sm-12 col-md-10 col-md-offset-1">
-            <ngx-datatable class="material" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="50" [reorderable]="false"
-              [rows]="done" [limit]="10">
-              <ngx-datatable-column name="No." [maxWidth]="60">
-                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex">
-                  {{ rowIndex + 1 }}
-                </ng-template>
-              </ngx-datatable-column>
-              
-              <ngx-datatable-column name="Date"></ngx-datatable-column>
-              
-              <ngx-datatable-column name="Time"></ngx-datatable-column>
-              
-              <ngx-datatable-column name="Depot"></ngx-datatable-column>
-              
-              <ngx-datatable-column name="Edit">
-                <ng-template ngx-datatable-cell-template let-row="row">
-                  <button mat-raised-button color="primary" (click)="onEdit(row.id)">Edit</button>
-                </ng-template>
-              </ngx-datatable-column>
-            </ngx-datatable>
-          </div>
-        </mat-tab>
-      </mat-tab-group>
+    <mat-tab-group>
+      <mat-tab label="Doing">
+        <div class="col-sm-12 col-md-8 col-md-offset-2">
+          <ngx-datatable #doingTable class="material expandable" [columnMode]="'flex'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="50"
+            [reorderable]="false" [rows]="doing" [limit]="10">
+            <ngx-datatable-row-detail [rowHeight]="60" style="width:768px">
+              <ng-template let-row="row" let-expanded="doingExpanded" ngx-datatable-row-detail-template>
+                <button class="right" mat-raised-button color="primary" (click)="onView(row.id)" style="margin-left:5px;">View</button>
+                <button class="right" mat-raised-button color="primary" (click)="onEdit(row.id)">Edit</button>
+              </ng-template>
+            </ngx-datatable-row-detail>
+
+            <ngx-datatable-column name="No." [minWidth]="30" [flexGrow]="0.3">
+              <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex">
+                {{ rowIndex + 1 }}
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Date" [minWidth]="95" [flexGrow]="0.6"></ngx-datatable-column>
+
+            <ngx-datatable-column name="Time" [minWidth]="75" [flexGrow]="0.6"></ngx-datatable-column>
+
+            <ngx-datatable-column name="Depot" [minWidth]="90" [flexGrow]="0.8"></ngx-datatable-column>
+
+            <ngx-datatable-column *ngIf="!isResponsive" [minWidth]="200" [flexGrow]="1">
+              <ng-template ngx-datatable-cell-template let-row="row">
+                <button mat-raised-button color="primary" (click)="onView(row.id)" style="margin-right:5px;">View</button>
+                <button mat-raised-button color="primary" (click)="onEdit(row.id)">Edit</button>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column [width]="50" [resizeable]="false" [sortable]="false" [draggable]="false" [minWidth]="30" [flexGrow]="0.2" *ngIf="isResponsive">
+              <ng-template let-row="row" let-expanded="doingExpanded" ngx-datatable-cell-template>
+                <a (click)="doingExpanded = !doingExpanded" title="Expand/Collapse Row" (click)="toggleExpandDoing(row)">
+                  <i [class]="doingExpanded ? 'fa fa-search-plus' : 'fa fa-search-minus'" aria-hidden="true"></i>
+                </a>
+              </ng-template>
+            </ngx-datatable-column>
+
+          </ngx-datatable>
+        </div>
+      </mat-tab>
+      <mat-tab label="Done">
+        <div class="col-sm-12 col-md-8 col-md-offset-2">
+          <ngx-datatable #doneTable class="material expandable" [columnMode]="'flex'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="50"
+            [reorderable]="false" [rows]="done" [limit]="10">
+            <ngx-datatable-row-detail [rowHeight]="60" style="width:768px">
+              <ng-template let-row="row" let-expanded="doneExpanded" ngx-datatable-row-detail-template>
+                <button class="right" mat-raised-button color="primary" (click)="onView(row.id)" style="margin-left:5px;">View</button>
+                <button class="right" mat-raised-button color="primary" (click)="onEdit(row.id)">Edit</button>
+              </ng-template>
+            </ngx-datatable-row-detail>
+          
+            <ngx-datatable-column name="No." [minWidth]="30" [flexGrow]="0.3">
+              <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex">
+                {{ rowIndex + 1 }}
+              </ng-template>
+            </ngx-datatable-column>
+          
+            <ngx-datatable-column name="Date" [minWidth]="95" [flexGrow]="0.6"></ngx-datatable-column>
+          
+            <ngx-datatable-column name="Time" [minWidth]="75" [flexGrow]="0.6"></ngx-datatable-column>
+          
+            <ngx-datatable-column name="Depot" [minWidth]="90" [flexGrow]="0.8"></ngx-datatable-column>
+          
+            <ngx-datatable-column *ngIf="!isResponsive" [minWidth]="200" [flexGrow]="1">
+              <ng-template ngx-datatable-cell-template let-row="row">
+                <button mat-raised-button color="primary" (click)="onView(row.id)" style="margin-right:5px;">View</button>
+                <button mat-raised-button color="primary" (click)="onEdit(row.id)">Edit</button>
+              </ng-template>
+            </ngx-datatable-column>
+          
+            <ngx-datatable-column [width]="50" [resizeable]="false" [sortable]="false" [draggable]="false" [minWidth]="30" [flexGrow]="0.2" *ngIf="isResponsive">
+              <ng-template let-row="row" let-expanded="doneExpanded" ngx-datatable-cell-template>
+                <a (click)="doneExpanded = !doneExpanded" title="Expand/Collapse Row" (click)="toggleExpandDone(row)">
+                  <i [class]="doneExpanded ? 'fa fa-search-plus' : 'fa fa-search-minus'" aria-hidden="true"></i>
+                </a>
+              </ng-template>
+            </ngx-datatable-column>
+          
+          </ngx-datatable>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
   </div>
 </div>

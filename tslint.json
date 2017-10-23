@@ -11,7 +11,8 @@
       "no-empty": false,
       "member-access": false,
       "trailing-comma": false,
-      "ordered-imports": false
+      "ordered-imports": false,
+      "ban-types": false
     },
     "rulesDirectory": []
 }

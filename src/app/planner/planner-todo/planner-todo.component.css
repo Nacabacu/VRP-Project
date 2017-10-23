@@ -19,3 +19,18 @@
     background-color: white !important;
     height: 4px !important;
 }
+
+.right {
+    float: right;
+}
+
+.datatable-row-detail {
+    display: initial;
+    width: 100vw;
+}
+
+@media screen and (min-width: 768px) {
+    .datatable-row-detail {
+        display: none;
+    }
+}
