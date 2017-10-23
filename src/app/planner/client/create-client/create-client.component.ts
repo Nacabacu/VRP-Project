@@ -79,7 +79,7 @@ export class CreateClientComponent implements OnInit {
           this.markers.push({
             lat: this.lat,
             lng: this.lng,
-            draggable: true
+            draggable: false
           });
         });
       });
