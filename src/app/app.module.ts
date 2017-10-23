@@ -51,7 +51,7 @@ import { DriverTodoComponent } from './driver/driver-todo/driver-todo.component'
     ErrorPageComponent,
     HeaderComponent,
     PlannerTodoComponent,
-    DriverTodoComponent,
+    DriverTodoComponent
   ],
   imports: [
     BrowserModule,
@@ -77,5 +77,6 @@ import { DriverTodoComponent } from './driver/driver-todo/driver-todo.component'
     ResultService,
     ClientService
   ],
+
 })
 export class AppModule { }

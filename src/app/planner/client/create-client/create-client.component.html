@@ -21,6 +21,7 @@
     </mat-card>
   </div>
   <div class="col-md">
+    
     <mat-card>
       <div>
         <div *ngIf="client.companyName">
@@ -43,8 +44,13 @@
             <span title="Double click to edit" (dblclick)="editing[rowIndex + '-branchName'] = true" *ngIf="!editing[rowIndex + '-branchName']">
               {{value}}
             </span>
+            <form [formGroup]="editForm">
             <input autofocus (blur)="updateValue($event, 'branchName', rowIndex)" *ngIf="editing[rowIndex+ '-branchName']" type="text"
-              [value]="value" />
+              [value]="value"
+              id="bname"
+              formControlName="bname"
+              class="form-control"/>
+            </form>
           </ng-template>
         </ngx-datatable-column>
 
@@ -57,9 +63,14 @@
         </ngx-datatable-column>
 
       </ngx-datatable>
-
+      <span 
+      *ngIf="!editForm.valid && editForm.touched"
+      class="helpbox"
+      >Please enter valid data!</span>  
       <div>
-        <button mat-button (click)="onSave()">Save</button>
+        <button mat-button (click)="onSave()"
+        [disabled]="!editForm.valid && editForm.touched"
+        >Save</button>
         <button mat-button (click)="onDeleteAll()">Delete</button>
         <button mat-button (click)="onCancel()">Cancel</button>
       </div>

@@ -1,4 +1,4 @@
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { Component, ElementRef, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MapsAPILoader } from '@agm/core';
@@ -20,6 +20,8 @@ export class CreateClientComponent implements OnInit {
   lat = 13.7563;
   lng = 100.5018;
   zoom = 11;
+  
+  editForm: FormGroup;
 
   client: any = {
     companyName: '',
@@ -65,6 +67,13 @@ export class CreateClientComponent implements OnInit {
       });
       this.markers = branchMarkers;
     });
+      
+      this.editForm = new FormGroup({
+      'bname': new FormControl(null, Validators.required)
+        
+    });
+
+    
 
     // this.searchControl = new FormControl();
 
@@ -177,4 +186,5 @@ export class CreateClientComponent implements OnInit {
     console.log(event);
     console.log(this.address);
   }
+  
 }
