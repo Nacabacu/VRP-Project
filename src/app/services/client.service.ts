@@ -15,7 +15,7 @@ export class ClientService {
     createClient(companyData: Client) {
         const headers = new Headers();
         headers.set('Access-Control-Allow-Origin', 'http://localhost:4200');
-        // headers.set('Content-Type', 'application/json');
+        headers.set('Content-Type', 'application/json');
         const opts = new RequestOptions();
         opts.headers = headers;
         const body = { client: companyData };
