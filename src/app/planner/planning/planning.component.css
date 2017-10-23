@@ -10,7 +10,12 @@ label {
     margin-right: 6px;
 }
 
-.mat-raised-button {
+.buttonBack {
+    margin-left: 65px;
+    margin-top: 25px;
+}
+
+.buttonNext {
     float: right;
     margin-top: 25px;
 }
@@ -23,4 +28,32 @@ label {
 
 .driver-table {
     margin: 0 4px;
+}
+
+.input-filter {
+    float: right;
+}
+
+.mat-horizontal-content-container {
+    padding: 0 12px 12px;
+}
+
+.driverTable-error {
+    width: 300px;
+}
+
+.driverTable-error .mat-input-flex {
+    display: none !important;
+}
+
+.driverTable-error .mat-input-underline {
+    height: 0 !important;
+}
+
+.driverTable-error .mat-input-ripple {
+    height: 0 !important;
+}
+
+.driverTable-error .mat-input-subscript-wrapper {
+    margin-top: 10px
 }
