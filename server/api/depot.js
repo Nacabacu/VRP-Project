@@ -46,7 +46,7 @@ router.post('/create', (req, res) => {
     });
 });
 
-router.patch('/update/:id', (req, res) => {
+router.put('/update/:id', (req, res) => {
     var id = req.params.id;
     var body = _.pick(req.body.depot, ['depotName', 'coordinate']);
 
