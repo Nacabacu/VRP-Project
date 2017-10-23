@@ -1,4 +1,4 @@
-import { FormControl, Validators, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Component, ElementRef, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MapsAPILoader } from '@agm/core';
@@ -14,14 +14,14 @@ import { Marker } from '../../../shared/marker';
   styleUrls: ['./create-client.component.css']
 })
 export class CreateClientComponent implements OnInit {
+  companyNameInput = new FormControl(null, Validators.required);
   searchControl: FormControl;
   isNew: boolean = false;
+  isBranchNameValid: boolean = true;
   address;
   zoom;
   lat;
   lng;
-
-  editForm: FormGroup;
 
   client: any = {
     companyName: '',
@@ -33,8 +33,7 @@ export class CreateClientComponent implements OnInit {
   selected = [];
   editing = {};
 
-  @ViewChild("search")
-  public searchElementRef: ElementRef;
+  @ViewChild("search") public searchElementRef: ElementRef;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -51,34 +50,15 @@ export class CreateClientComponent implements OnInit {
       this.clientService.getClient(companyId).then((response) => {
         this.client = response;
         this.temp = [...this.client.branches];
-        this.client.branches.map((branch) => {
-          const branchMarker: Marker = {
-            lat: 0,
-            lng: 0,
-            draggable: true
-          };
-          branchMarker.lat = branch.coordinate[0];
-          branchMarker.lng = branch.coordinate[1];
-          branchMarker.label = branch.branchName;
-          branchMarker.draggable = true;
-          branchMarkers.push(branchMarker);
-        });
-        this.markers = branchMarkers;
+        this.renderMarkers();
       });
     } else {
       this.isNew = true;
     }
 
-    this.editForm = new FormGroup({
-      branchNameInput: new FormControl(null, Validators.required)
-
-    });
-
     this.searchControl = new FormControl();
-
     this.setCurrentPosition();
 
-    // load Places Autocomplete
     this.mapsAPILoader.load().then(() => {
       const autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement);
       autocomplete.addListener("place_changed", () => {
@@ -92,7 +72,7 @@ export class CreateClientComponent implements OnInit {
           }
 
           // set latitude, longitude and zoom
-          this.zoom = 15;
+          this.zoom = 16;
           this.lat = place.geometry.location.lat();
           this.lng = place.geometry.location.lng();
 
@@ -101,15 +81,6 @@ export class CreateClientComponent implements OnInit {
             lng: this.lng,
             draggable: true
           });
-
-          this.client.branches.push({
-            coordinate: [this.lat, this.lng]
-          });
-
-          const lastIndex = this.client.branches.length - 1;
-          this.client.branches[lastIndex].branchName = this.searchElementRef.nativeElement.value;
-          this.editing[lastIndex + '-branchName'] = true;
-          this.temp = [...this.client.branches];
         });
       });
     });
@@ -118,22 +89,15 @@ export class CreateClientComponent implements OnInit {
   mapClicked($event) {
     const latitude: number = $event.coords.lat;
     const longtitude: number = $event.coords.lng;
-    this.markers.push({
-      lat: latitude,
-      lng: longtitude,
-      draggable: true
-    });
     this.client.branches.push({
       coordinate: [latitude, longtitude]
     });
+    this.renderMarkers();
     const lastIndex = this.client.branches.length - 1;
-    this.client.branches[lastIndex].branchName = "New branch";
+    this.client.branches[lastIndex].branchName = "";
     this.editing[lastIndex + '-branchName'] = true;
     this.temp = [...this.client.branches];
-  }
-
-  clickedMarker(label: string, index: number) {
-    console.log(`clicked the marker: ${label || index}`);
+    this.isBranchNameValid = false;
   }
 
   markerDragEnd(marker: Marker, event, index: number) {
@@ -146,21 +110,49 @@ export class CreateClientComponent implements OnInit {
     const temp = this.temp.filter((data) => {
       return data.branchName.toLowerCase().indexOf(val) !== -1 || !val;
     });
-
-    // update the rows
     this.client.branches = temp;
   }
 
   updateValue(event, cell, rowIndex) {
-    this.editing[rowIndex + '-' + cell] = false;
     this.client.branches[rowIndex][cell] = event.target.value;
-    this.client.branches = [...this.client.branches];
+    if (event.target.value !== "") {
+      this.editing[rowIndex + '-' + cell] = false;
+      this.client.branches = [...this.client.branches];
+    }
+    this.checkBranchName();
+    console.log(this.client.branches, this.temp);
+  }
+
+  checkBranchName() {
+    let isValid: boolean = true;
+    this.client.branches.map((branch, i) => {
+      if (branch.branchName === "") {
+        isValid = false;
+        this.isBranchNameValid = false;
+      }
+      if (i === this.client.branches.length - 1) {
+        if (isValid) {
+          this.isBranchNameValid = true;
+        }
+      }
+    });
+  }
+
+  renderMarkers() {
+    this.markers = [];
+    this.client.branches.map((branch, index) => {
+      this.markers.push({
+        lat: branch.coordinate[0],
+        lng: branch.coordinate[1],
+        label: (index + 1).toString(),
+        draggable: true
+      });
+    });
   }
 
   onRowSelected() {
     this.lat = this.selected[0].coordinate[0];
     this.lng = this.selected[0].coordinate[1];
-    this.zoom = 15;
   }
 
   onSave() {
@@ -180,6 +172,8 @@ export class CreateClientComponent implements OnInit {
     this.client.branches.splice(rowIndex, 1);
     this.markers.splice(rowIndex, 1);
     this.temp = [...this.client.branches];
+    this.renderMarkers();
+    this.checkBranchName();
   }
 
   onDeleteAll() {
@@ -201,5 +195,4 @@ export class CreateClientComponent implements OnInit {
       });
     }
   }
-
 }
