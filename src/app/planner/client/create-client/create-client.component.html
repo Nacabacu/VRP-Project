@@ -1,16 +1,16 @@
-<h1>Create Client!</h1>
+<h1 *ngIf="isNew">New Client!</h1>
+<h1 *ngIf="!isNew">Create Client!</h1>
 <div class="container">
-  <div class="col-md">
+  <div class="col-sx-6">
     <mat-card>
-      <h1>Angular 2 + Google Maps Places Autocomplete</h1>
-      <!-- <div class="form-group">
-        <input placeholder="search for location" class="form-control"
-          #search [formControl]="searchControl">
-      </div> -->
-      <!-- <input type="text" [(ngModel)]="address"  (setAddress)="getAddress($event)" googleplace/> -->
+      <h2>Maps</h2>
+      <div class="form-group">
+        <input placeholder="search for location" class="form-control" #search [formControl]="searchControl">
+      </div>
+      <!-- <input type="text" [(ngModel)]="address" (setAddress)="getAddress($event)" googleplace/> -->
       <agm-map style="height: 700px;" [latitude]="lat" [longitude]="lng" [zoom]="zoom" (mapClick)="mapClicked($event)">
         <agm-marker *ngFor="let marker of markers; let i = index" [latitude]="marker.lat" [longitude]="marker.lng" [label]="marker.label"
-          [markerDraggable]="marker.draggable" (markerClick)="clickedMarker(marker.label, i)">
+          [markerDraggable]="marker.draggable" (markerClick)="clickedMarker(marker.label, i)" (dragEnd)="markerDragEnd(marker, $event, i)">
           <agm-snazzy-info-window [maxWidth]="200" [closeWhenOthersOpen]="true">
             <ng-template>
               {{marker.label}}
@@ -23,23 +23,28 @@
   <div class="col-md">
     
     <mat-card>
+      <h3>Client Info</h3>
       <div>
-        <div *ngIf="client.companyName">
-          Company name :
-          <mat-form-field floatPlaceholder="never">
-            <input matInput placeholder="Company Name" [value]="client.companyName">
-          </mat-form-field>
-        </div>
+        Company name :
+        <mat-form-field floatPlaceholder="never">
+          <input matInput placeholder="Company Name" [(ngModel)]="client.companyName">
+        </mat-form-field>
       </div>
 
       <mat-form-field floatPlaceholder="auto">
-        <input matInput placeholder='Type to filter the name column...' (keyup)='updateFilter($event)' />
+        <input matInput placeholder='Search branch name' (keyup)='updateFilter($event)' />
       </mat-form-field>
 
-      <ngx-datatable #table class='material' [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'"
-        [limit]="10" [rows]='rows' [selected]="selected" [selectionType]="'single'">
+      <ngx-datatable #table class='material' columnMode="flex" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [limit]="10"
+        [rows]='rows' [selected]="selected" [selectionType]="'single'" (select)='onRowSelected()'>
 
-        <ngx-datatable-column prop="branchName">
+        <!-- <ngx-datatable-column name="Index" [flexGrow]="1">
+          <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+            {{rowIndex + 1}}
+          </ng-template>
+        </ngx-datatable-column> -->
+
+        <ngx-datatable-column prop="branchName" [flexGrow]="2">
           <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
             <span title="Double click to edit" (dblclick)="editing[rowIndex + '-branchName'] = true" *ngIf="!editing[rowIndex + '-branchName']">
               {{value}}
@@ -54,11 +59,15 @@
           </ng-template>
         </ngx-datatable-column>
 
-        <ngx-datatable-column name="Coordinate"></ngx-datatable-column>
+        <ngx-datatable-column name="Coordinate" [flexGrow]="3">
+            <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+              {{ value[0] | number: '1.6-6' }}, {{ value[1] | number: '1.6-6'}}
+            </ng-template>
+        </ngx-datatable-column>
 
-        <ngx-datatable-column name="Edit">
+        <ngx-datatable-column name="Edit" [flexGrow]="2">
           <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-row="row" let-value="value">
-            <button mat-button (click)="onDelete(rowIndex)">Delete</button>
+            <button mat-raised-button color="primary" (click)="onDelete(rowIndex)">Delete</button>
           </ng-template>
         </ngx-datatable-column>
 
@@ -71,8 +80,8 @@
         <button mat-button (click)="onSave()"
         [disabled]="!editForm.valid && editForm.touched"
         >Save</button>
-        <button mat-button (click)="onDeleteAll()">Delete</button>
-        <button mat-button (click)="onCancel()">Cancel</button>
+        <button mat-raised-button color="warn" (click)="onDeleteAll()">Delete</button>
+        <button mat-raised-button (click)="onCancel()">Cancel</button>
       </div>
     </mat-card>
   </div>

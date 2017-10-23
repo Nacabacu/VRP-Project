@@ -1,5 +1,3 @@
-import { ResultService } from './services/result.service';
-import { ClientService } from './shared/service/client.service';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
@@ -28,11 +26,13 @@ import { DepotComponent } from './planner/depot/depot.component';
 import { PlannerComponent } from './planner/planner.component';
 import { PlanningResultComponent } from './planner/planning-result/planning-result.component';
 import { PlanningComponent } from './planner/planning/planning.component';
+import { PlannerTodoComponent } from './planner/planner-todo/planner-todo.component';
+import { DriverTodoComponent } from './driver/driver-todo/driver-todo.component';
 
 import { AuthGuard } from './authentication/auth-guard.service';
 import { AuthService } from './authentication/auth.service';
-import { PlannerTodoComponent } from './planner/planner-todo/planner-todo.component';
-import { DriverTodoComponent } from './driver/driver-todo/driver-todo.component';
+import { ResultService } from './services/result.service';
+import { ClientService } from './services/client.service';
 
 @NgModule({
   bootstrap: [AppComponent],

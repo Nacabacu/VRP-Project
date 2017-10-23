@@ -23,3 +23,7 @@
     overflow: auto;
     max-height: 500px;
 }
+
+.ngx-datatable.material {
+    box-shadow: none;
+}

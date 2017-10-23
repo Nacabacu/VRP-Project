@@ -5,9 +5,8 @@ import { MapsAPILoader } from '@agm/core';
 import { MatButton, MatFormField, MatFormFieldControl, MatInput } from '@angular/material';
 import { } from 'googlemaps';
 
-import { Marker } from '../../../marker';
-import { Client } from '../../../client';
-import { ClientService } from '../../../shared/service/client.service';
+import { ClientService } from '../../../services/client.service';
+import { Marker } from '../../../shared/marker';
 
 @Component({
   selector: 'app-create-client',
@@ -16,16 +15,16 @@ import { ClientService } from '../../../shared/service/client.service';
 })
 export class CreateClientComponent implements OnInit {
   searchControl: FormControl;
+  isNew: boolean = false;
   address;
-  lat = 13.7563;
-  lng = 100.5018;
-  zoom = 11;
+  zoom;
+  lat;
+  lng;
   
   editForm: FormGroup;
 
   client: any = {
     companyName: '',
-    companyNumber: 0,
     branches: []
   };
 
@@ -49,72 +48,80 @@ export class CreateClientComponent implements OnInit {
   ngOnInit() {
     const branchMarkers: Marker[] = [];
     const companyId = this.activatedRoute.snapshot.queryParams.companyId;
-    this.clientService.getClient(companyId).then((response) => {
-      this.client = response;
-      this.rows = this.client.branches;
-      this.temp = [...this.client.branches];
-      this.client.branches.map((branch) => {
-        const branchMarker: Marker = {
-          lat: 0,
-          lng: 0,
-          draggable: true
-        };
-        branchMarker.lat = branch.coordinate[0];
-        branchMarker.lng = branch.coordinate[1];
-        branchMarker.label = branch.branchName;
-        branchMarker.draggable = true;
-        branchMarkers.push(branchMarker);
+    if (companyId) {
+      this.clientService.getClient(companyId).then((response) => {
+        this.client = response;
+        this.rows = this.client.branches;
+        this.temp = [...this.client.branches];
+        this.client.branches.map((branch) => {
+          const branchMarker: Marker = {
+            lat: 0,
+            lng: 0,
+            draggable: true
+          };
+          branchMarker.lat = branch.coordinate[0];
+          branchMarker.lng = branch.coordinate[1];
+          branchMarker.label = branch.branchName;
+          branchMarker.draggable = true;
+          branchMarkers.push(branchMarker);
+        });
+        this.markers = branchMarkers;
       });
-      this.markers = branchMarkers;
-    });
+    } else {
+      this.isNew = true;
+    }
       
       this.editForm = new FormGroup({
       'bname': new FormControl(null, Validators.required)
         
     });
 
-    
+    this.searchControl = new FormControl();
 
-    // this.searchControl = new FormControl();
+    this.setCurrentPosition();
 
-    // this.setCurrentPosition();
+    // load Places Autocomplete
+    this.mapsAPILoader.load().then(() => {
+      const autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement);
+      autocomplete.addListener("place_changed", () => {
+        this.ngZone.run(() => {
+          // get the place result
+          const place: google.maps.places.PlaceResult = autocomplete.getPlace();
 
-    // // load Places Autocomplete
-    // this.mapsAPILoader.load().then(() => {
-    //   const autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement, {
-    //     types: ["address"]
-    //   });
-    //   autocomplete.addListener("place_changed", () => {
-    //     console.log("idiot");
-    //     this.ngZone.run(() => {
-    //       // get the place result
-    //       const place: google.maps.places.PlaceResult = autocomplete.getPlace();
+          // verify result
+          if (place.geometry === undefined || place.geometry === null) {
+            return;
+          }
 
-    //       // verify result
-    //       if (place.geometry === undefined || place.geometry === null) {
-    //         return;
-    //       }
+          // set latitude, longitude and zoom
+          this.zoom = 15;
+          this.lat = place.geometry.location.lat();
+          this.lng = place.geometry.location.lng();
 
-    //       // set latitude, longitude and zoom
-    //       this.lat = place.geometry.location.lat();
-    //       this.lng = place.geometry.location.lng();
-    //       this.markers.push({
-    //         lat: this.lat,
-    //         lng: this.lng,
-    //         draggable: true
-    //       });
-    //       this.zoom = 12;
-    //     });
-    //   });
-    // });
+          this.markers.push({
+            lat: this.lat,
+            lng: this.lng,
+            draggable: true
+          });
+
+          this.rows.push({
+            coordinate: [this.lat, this.lng]
+          });
+
+          const lastIndex = this.rows.length - 1;
+          this.rows[lastIndex].branchName = this.searchElementRef.nativeElement.value;
+          this.editing[lastIndex + '-branchName'] = true;
+        });
+      });
+    });
   }
 
   mapClicked($event) {
-    const latitude: number = ($event.coords.lat).toFixed(6);
-    const longtitude: number = ($event.coords.lng).toFixed(6);
+    const latitude: number = $event.coords.lat;
+    const longtitude: number = $event.coords.lng;
     this.markers.push({
-      lat: $event.coords.lat,
-      lng: $event.coords.lng,
+      lat: latitude,
+      lng: longtitude,
       draggable: true
     });
     this.rows.push({
@@ -130,9 +137,15 @@ export class CreateClientComponent implements OnInit {
     console.log(`clicked the marker: ${label || index}`);
   }
 
+  markerDragEnd(marker: Marker, event, index: number) {
+    this.rows[index].coordinate[0] = event.coords.lat;
+    this.rows[index].coordinate[1] = event.coords.lng;
+    this.rows[index].coordinate = [event.coords.lat, event.coords.lng];
+    this.rows = [...this.rows];
+  }
+
   updateFilter(event) {
     const val = event.target.value.toLowerCase();
-    // filter our data
     const temp = this.temp.filter((data) => {
       return data.branchName.toLowerCase().indexOf(val) !== -1 || !val;
     });
@@ -149,8 +162,24 @@ export class CreateClientComponent implements OnInit {
     console.log('UPDATED!', this.rows[rowIndex][cell]);
   }
 
-  onSave() {
+  onRowSelected() {
+    this.lat = this.selected[0].coordinate[0];
+    this.lng = this.selected[0].coordinate[1];
+    this.zoom = 15;
+  }
 
+  onSave() {
+    this.client.branches = this.rows;
+    if (this.isNew) {
+      this.clientService.createClient(this.client).then((response) => {
+        this.router.navigate(['/planner/client']);
+      });
+    } else {
+      console.log("Fuck up with CORS");
+      // this.clientService.updateClient(this.client).then((response) => {
+      //   this.router.navigate(['/planner/client']);
+      // });
+    }
   }
 
   onDelete(rowIndex: number) {
@@ -161,30 +190,23 @@ export class CreateClientComponent implements OnInit {
   }
 
   onDeleteAll() {
-    this.client.branches = [];
-    this.rows = [];
-    this.markers = [];
+    this.clientService.deleteClient(this.client._id).then((response) => {
+      this.router.navigate(['/planner/client']);
+    });
   }
 
   onCancel() {
     this.router.navigate(['/planner/client']);
   }
 
-  // private setCurrentPosition() {
-  //   if ("geolocation" in navigator) {
-  //     console.log(navigator);
-  //     navigator.geolocation.getCurrentPosition((position) => {
-  //       console.log(position);
-  //       this.lat = position.coords.latitude;
-  //       this.lng = position.coords.longitude;
-  //       this.zoom = 12;
-  //     });
-  //   }
-  // }
-
-  getAddress(event) {
-    console.log(event);
-    console.log(this.address);
+  private setCurrentPosition() {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        this.lat = position.coords.latitude;
+        this.lng = position.coords.longitude;
+        this.zoom = 12;
+      });
+    }
   }
   
 }
