@@ -20,7 +20,7 @@ export class CreateClientComponent implements OnInit {
   zoom;
   lat;
   lng;
-  
+
   editForm: FormGroup;
 
   client: any = {
@@ -28,9 +28,7 @@ export class CreateClientComponent implements OnInit {
     branches: []
   };
 
-  // rows, markers, and temp should observe client
   markers: Marker[] = [];
-  rows = [];
   temp = [];
   selected = [];
   editing = {};
@@ -38,7 +36,8 @@ export class CreateClientComponent implements OnInit {
   @ViewChild("search")
   public searchElementRef: ElementRef;
 
-  constructor(private activatedRoute: ActivatedRoute,
+  constructor(
+    private activatedRoute: ActivatedRoute,
     private router: Router,
     private clientService: ClientService,
     private mapsAPILoader: MapsAPILoader,
@@ -51,7 +50,6 @@ export class CreateClientComponent implements OnInit {
     if (companyId) {
       this.clientService.getClient(companyId).then((response) => {
         this.client = response;
-        this.rows = this.client.branches;
         this.temp = [...this.client.branches];
         this.client.branches.map((branch) => {
           const branchMarker: Marker = {
@@ -70,10 +68,10 @@ export class CreateClientComponent implements OnInit {
     } else {
       this.isNew = true;
     }
-      
-      this.editForm = new FormGroup({
-      'bname': new FormControl(null, Validators.required)
-        
+
+    this.editForm = new FormGroup({
+      branchNameInput: new FormControl(null, Validators.required)
+
     });
 
     this.searchControl = new FormControl();
@@ -104,13 +102,14 @@ export class CreateClientComponent implements OnInit {
             draggable: true
           });
 
-          this.rows.push({
+          this.client.branches.push({
             coordinate: [this.lat, this.lng]
           });
 
-          const lastIndex = this.rows.length - 1;
-          this.rows[lastIndex].branchName = this.searchElementRef.nativeElement.value;
+          const lastIndex = this.client.branches.length - 1;
+          this.client.branches[lastIndex].branchName = this.searchElementRef.nativeElement.value;
           this.editing[lastIndex + '-branchName'] = true;
+          this.temp = [...this.client.branches];
         });
       });
     });
@@ -124,13 +123,13 @@ export class CreateClientComponent implements OnInit {
       lng: longtitude,
       draggable: true
     });
-    this.rows.push({
+    this.client.branches.push({
       coordinate: [latitude, longtitude]
     });
-    const lastIndex = this.rows.length - 1;
-    this.rows[lastIndex].branchName = "New branch";
+    const lastIndex = this.client.branches.length - 1;
+    this.client.branches[lastIndex].branchName = "New branch";
     this.editing[lastIndex + '-branchName'] = true;
-    this.temp = this.rows;
+    this.temp = [...this.client.branches];
   }
 
   clickedMarker(label: string, index: number) {
@@ -138,10 +137,8 @@ export class CreateClientComponent implements OnInit {
   }
 
   markerDragEnd(marker: Marker, event, index: number) {
-    this.rows[index].coordinate[0] = event.coords.lat;
-    this.rows[index].coordinate[1] = event.coords.lng;
-    this.rows[index].coordinate = [event.coords.lat, event.coords.lng];
-    this.rows = [...this.rows];
+    this.client.branches[index].coordinate = [event.coords.lat, event.coords.lng];
+    this.client.branches = [...this.client.branches];
   }
 
   updateFilter(event) {
@@ -151,15 +148,13 @@ export class CreateClientComponent implements OnInit {
     });
 
     // update the rows
-    this.rows = temp;
+    this.client.branches = temp;
   }
 
   updateValue(event, cell, rowIndex) {
-    console.log('inline editing rowIndex', rowIndex);
     this.editing[rowIndex + '-' + cell] = false;
-    this.rows[rowIndex][cell] = event.target.value;
-    this.rows = [...this.rows];
-    console.log('UPDATED!', this.rows[rowIndex][cell]);
+    this.client.branches[rowIndex][cell] = event.target.value;
+    this.client.branches = [...this.client.branches];
   }
 
   onRowSelected() {
@@ -169,24 +164,22 @@ export class CreateClientComponent implements OnInit {
   }
 
   onSave() {
-    this.client.branches = this.rows;
+    this.client.branches = this.temp;
     if (this.isNew) {
       this.clientService.createClient(this.client).then((response) => {
         this.router.navigate(['/planner/client']);
       });
     } else {
-      console.log("Fuck up with CORS");
-      // this.clientService.updateClient(this.client).then((response) => {
-      //   this.router.navigate(['/planner/client']);
-      // });
+      this.clientService.updateClient(this.client).then((response) => {
+        this.router.navigate(['/planner/client']);
+      });
     }
   }
 
   onDelete(rowIndex: number) {
-    console.log(rowIndex);
     this.client.branches.splice(rowIndex, 1);
-    this.rows.splice(rowIndex, 1);
     this.markers.splice(rowIndex, 1);
+    this.temp = [...this.client.branches];
   }
 
   onDeleteAll() {
@@ -208,5 +201,5 @@ export class CreateClientComponent implements OnInit {
       });
     }
   }
-  
+
 }

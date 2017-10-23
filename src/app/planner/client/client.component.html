@@ -6,7 +6,7 @@
   </mat-form-field>
 
   <ngx-datatable #table class='material' columnMode="flex" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [limit]="10"
-    [rows]='rows'>
+    [rows]='clients'>
 
     <ngx-datatable-column name="Index" [flexGrow]="1">
       <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">

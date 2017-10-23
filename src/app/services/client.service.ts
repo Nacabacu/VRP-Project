@@ -22,7 +22,6 @@ export class ClientService {
         return this.http.post(this.clientUrl + '/create/', JSON.stringify(body), opts)
             .toPromise()
             .then((response) => {
-                console.log(response);
                 return response;
             })
             .catch(this.handleError);
@@ -36,7 +35,6 @@ export class ClientService {
         return this.http.delete(this.clientUrl + '/delete/' + companyId, opts)
             .toPromise()
             .then((response) => {
-                console.log(response);
                 return response;
             })
             .catch(this.handleError);
@@ -47,7 +45,6 @@ export class ClientService {
         headers.set('Access-Control-Allow-Origin', ['http://localhost:4200']);
         const opts = new RequestOptions();
         opts.headers = headers;
-        console.log(headers);
         return this.http.get(this.clientUrl + '/get/' + companyId, opts)
             .toPromise()
             .then((response) => {
@@ -77,10 +74,9 @@ export class ClientService {
         const opts = new RequestOptions();
         opts.headers = headers;
         const body = { client: companyData };
-        return this.http.patch(this.clientUrl + '/update/' + companyData._id, JSON.stringify(body), opts)
+        return this.http.put(this.clientUrl + '/update/' + companyData._id, JSON.stringify(body), opts)
             .toPromise()
             .then((response) => {
-                console.log(response);
                 return response;
             })
             .catch(this.handleError);

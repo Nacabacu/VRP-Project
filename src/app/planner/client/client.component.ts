@@ -17,15 +17,15 @@ import 'rxjs/add/operator/map';
   styleUrls: ['./client.component.css']
 })
 export class ClientComponent implements OnInit {
-  rows = [];
+  clients: Client[];
   temp = [];
 
   constructor(private clientService: ClientService, private router: Router) { }
 
   ngOnInit() {
     this.clientService.getAllClients().then((response) => {
-      this.rows = response;
-      this.temp = [...this.rows];
+      this.clients = response;
+      this.temp = [...this.clients];
     });
   }
 
@@ -36,7 +36,7 @@ export class ClientComponent implements OnInit {
     });
 
     // update the rows
-    this.rows = temp;
+    this.clients = temp;
   }
 
   onEdit(clientId) {
