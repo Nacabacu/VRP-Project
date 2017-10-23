@@ -33,6 +33,7 @@ import { AuthGuard } from './authentication/auth-guard.service';
 import { AuthService } from './authentication/auth.service';
 import { ResultService } from './services/result.service';
 import { ClientService } from './services/client.service';
+import { DepotService } from './services/depot.service';
 
 @NgModule({
   bootstrap: [AppComponent],
@@ -75,7 +76,8 @@ import { ClientService } from './services/client.service';
     AuthGuard,
     AuthService,
     ResultService,
-    ClientService
+    ClientService,
+    DepotService
   ],
 
 })
