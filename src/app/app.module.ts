@@ -1,11 +1,14 @@
-import { ResultService } from './services/result.service';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Routes } from '@angular/router';
+import { AgmCoreModule } from '@agm/core';
+import { AgmSnazzyInfoWindowModule } from '@agm/snazzy-info-window';
+import { CdkTableModule } from '@angular/cdk/table';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { GooglePlaceModule } from "angular2-google-place";
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -23,11 +26,13 @@ import { DepotComponent } from './planner/depot/depot.component';
 import { PlannerComponent } from './planner/planner.component';
 import { PlanningResultComponent } from './planner/planning-result/planning-result.component';
 import { PlanningComponent } from './planner/planning/planning.component';
+import { PlannerTodoComponent } from './planner/planner-todo/planner-todo.component';
+import { DriverTodoComponent } from './driver/driver-todo/driver-todo.component';
 
 import { AuthGuard } from './authentication/auth-guard.service';
 import { AuthService } from './authentication/auth.service';
-import { PlannerTodoComponent } from './planner/planner-todo/planner-todo.component';
-import { DriverTodoComponent } from './driver/driver-todo/driver-todo.component';
+import { ResultService } from './services/result.service';
+import { ClientService } from './services/client.service';
 
 @NgModule({
   bootstrap: [AppComponent],
@@ -46,22 +51,32 @@ import { DriverTodoComponent } from './driver/driver-todo/driver-todo.component'
     ErrorPageComponent,
     HeaderComponent,
     PlannerTodoComponent,
-    DriverTodoComponent,
+    DriverTodoComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    MaterialModule,
     FormsModule,
     ReactiveFormsModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
     HttpModule,
-    NgxDatatableModule
+    ReactiveFormsModule,
+    FormsModule,
+    MaterialModule,
+    NgxDatatableModule,
+    GooglePlaceModule,
+    AgmSnazzyInfoWindowModule,
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyCN8TC7W834nK2DfiF6mu9OhAkUFaSLHlk',
+      libraries: ["places"]
+    })
   ],
   providers: [
     AuthGuard,
     AuthService,
-    ResultService
+    ResultService,
+    ClientService
   ],
+
 })
 export class AppModule { }
