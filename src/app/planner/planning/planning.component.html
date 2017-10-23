@@ -53,7 +53,7 @@
                   </mat-radio-group>
                 </div>
                 
-                <button mat-raised-button matStepperNext color="primary">Next</button>
+                <button mat-raised-button matStepperNext color="primary" class="buttonPhase">Next</button>
               </div>
 
             </form>
@@ -105,8 +105,8 @@
               </mat-form-field>
               </div>
 
-              <button mat-raised-button matStepperPrevious color="primary" class="buttonBack">Back</button>
-              <button mat-raised-button matStepperNext color="primary" class="buttonNext">Next</button>
+              <button mat-raised-button matStepperNext color="primary" class="buttonPhase">Next</button>
+              <button mat-raised-button matStepperPrevious color="primary" class="buttonPhase">Back</button>
             </form>
           </mat-step>
 
@@ -117,8 +117,8 @@
                 <input matInput placeholder="Address" formControlName="secondCtrl" required>
               </mat-form-field>
               <div>
-                <button mat-button matStepperPrevious>Back</button>
-                <button mat-button matStepperNext>Next</button>
+                <button mat-raised-button matStepperNext color="primary" class="buttonPhase">Next</button>
+                <button mat-raised-button matStepperPrevious color="primary" class="buttonPhase">Back</button>
               </div>
             </form>
           </mat-step>

@@ -78,7 +78,7 @@ router.post('/saveRoute', (req, res) => {
                 vehicles.push({
                     'driver': req.body.drivers[index],
                     'route': route,
-                    'LoadWeight': loadWeight,
+                    'loadWeight': loadWeight,
                     'isCompleted': false
                 });
                 index++;

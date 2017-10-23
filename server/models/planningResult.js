@@ -35,7 +35,7 @@ var PlanningResult = mongoose.model('planningResults', {
                 type: [Number],
                 require: true
             },
-            LoadWeight: {
+            loadWeight: {
                 type: Number,
                 require: true
             },

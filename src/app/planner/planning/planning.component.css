@@ -10,14 +10,10 @@ label {
     margin-right: 6px;
 }
 
-.buttonBack {
-    margin-left: 65px;
-    margin-top: 25px;
-}
-
-.buttonNext {
+.buttonPhase {
     float: right;
     margin-top: 25px;
+    margin-left: 10px;
 }
 
 .driver-slider {

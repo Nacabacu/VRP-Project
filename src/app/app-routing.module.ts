@@ -35,6 +35,10 @@ const appRoutes: Routes = [
         component: PlanningComponent
       },
       {
+        path: 'result/:id',
+        component: PlanningResultComponent
+      },
+      {
         path: 'client',
         component: ClientComponent,
         children: [

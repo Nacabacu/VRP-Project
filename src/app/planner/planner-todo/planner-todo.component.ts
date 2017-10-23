@@ -1,3 +1,4 @@
+import { Router, ActivatedRoute } from '@angular/router';
 import { ResultService } from './../../services/result.service';
 import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
 
@@ -17,7 +18,9 @@ export class PlannerTodoComponent implements OnInit {
   isResponsive: boolean;
 
   constructor(
-    private resultService: ResultService
+    private resultService: ResultService,
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit() {
@@ -27,24 +30,18 @@ export class PlannerTodoComponent implements OnInit {
       }
     });
     this.resultService.getResults().then((response) => {
-      response.results.forEach((result) => {
-        let isFinished = true;
-        result.vehicles.forEach((vehicle) => {
-          if (!vehicle.isCompleted) {
-            isFinished = false;
-          }
-        });
-        if (isFinished) {
+      response.forEach((result) => {
+        if (result.isAllCompleted) {
           this.done.push({
-            date: result.date.replace(/T.+/g, ''),
-            time: /T(.+)\./g.exec(result.date)[1],
+            date: result.date,
+            time: result.time,
             depot: result.depot.depotName,
             id: result._id
           });
         } else {
           this.doing.push({
-            date: result.date.replace(/T.+/g, ''),
-            time: /T(.+)\./g.exec(result.date)[1],
+            date: result.date,
+            time: result.time,
             depot: result.depot.depotName,
             id: result._id
           });
@@ -58,7 +55,7 @@ export class PlannerTodoComponent implements OnInit {
   }
 
   onView(id: string) {
-    this.resultService.getResult(id).then(res => console.log(res));
+    this.router.navigate(['./result', id], {relativeTo: this.route});
   }
 
   toggleExpandDoing(row) {
@@ -76,5 +73,5 @@ export class PlannerTodoComponent implements OnInit {
       this.isResponsive = false;
     }
   }
-  
+
 }

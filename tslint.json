@@ -12,7 +12,9 @@
       "member-access": false,
       "trailing-comma": false,
       "ordered-imports": false,
-      "ban-types": false
+      "ban-types": false,
+      "no-string-literal": false,
+      "variable-name": false
     },
     "rulesDirectory": []
 }

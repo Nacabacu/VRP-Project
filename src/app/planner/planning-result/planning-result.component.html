@@ -1,3 +1,31 @@
-<p>
-  planning-result works!
-</p>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="title-container">
+        <div class="title">
+          <span>Planning Result</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="col-xs-12 col-md-6">
+        <agm-map></agm-map>
+      </div>
+      <div class="col-xs-12 col-md-6">
+        <mat-tab-group>
+          <mat-tab label="Main">
+            <mat-list>
+              <mat-list-item>Derivery Date: {{ result.date }}</mat-list-item>
+              <mat-list-item>Derivery Start Time: {{ result.time }}</mat-list-item>
+              <mat-list-item>Depot Name: {{ result.depot.depotName }}</mat-list-item>
+            </mat-list>
+          </mat-tab>
+          <mat-tab *ngFor="let vehicle of result.vehicles; let i = index" label="Route {{ i + 1}}">{{ vehicle.driver.name }}</mat-tab>
+        </mat-tab-group>
+      </div>
+    </div>
+  </div>
+</div>
