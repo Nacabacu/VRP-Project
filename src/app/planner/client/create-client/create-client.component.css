@@ -11,3 +11,11 @@
     box-shadow: none;
 }
 
+input.ng-invalid.ng-touched{
+    border: 1px solid red;
+}
+
+.helpbox{
+    color:red
+}
+
