@@ -1,12 +1,21 @@
-import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Component, ElementRef, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MapsAPILoader } from '@agm/core';
-import { MatButton, MatFormField, MatFormFieldControl, MatInput } from '@angular/material';
 import { } from 'googlemaps';
+import {
+  MatDialog,
+  MatButton,
+  MatFormField,
+  MatFormFieldControl,
+  MatInput
+} from '@angular/material';
 
 import { ClientService } from '../../../services/client.service';
+
 import { Marker } from '../../../shared/marker';
+import { Map } from '../../../shared/map';
+import { DeleteDialogComponent } from '../../../shared/delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'app-create-client',
@@ -18,10 +27,7 @@ export class CreateClientComponent implements OnInit {
   searchControl: FormControl;
   isNew: boolean = false;
   isBranchNameValid: boolean = true;
-  address;
-  zoom;
-  lat;
-  lng;
+  map = new Map();
 
   client: any = {
     companyName: '',
@@ -40,7 +46,8 @@ export class CreateClientComponent implements OnInit {
     private router: Router,
     private clientService: ClientService,
     private mapsAPILoader: MapsAPILoader,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    public dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -55,7 +62,6 @@ export class CreateClientComponent implements OnInit {
     } else {
       this.isNew = true;
     }
-
     this.searchControl = new FormControl();
     this.setCurrentPosition();
 
@@ -72,13 +78,13 @@ export class CreateClientComponent implements OnInit {
           }
 
           // set latitude, longitude and zoom
-          this.zoom = 16;
-          this.lat = place.geometry.location.lat();
-          this.lng = place.geometry.location.lng();
+          this.map.zoom = 16;
+          this.map.lat = place.geometry.location.lat();
+          this.map.lng = place.geometry.location.lng();
 
           this.markers.push({
-            lat: this.lat,
-            lng: this.lng,
+            lat: this.map.lat,
+            lng: this.map.lng,
             draggable: false
           });
         });
@@ -120,7 +126,6 @@ export class CreateClientComponent implements OnInit {
       this.client.branches = [...this.client.branches];
     }
     this.checkBranchName();
-    console.log(this.client.branches, this.temp);
   }
 
   checkBranchName() {
@@ -151,8 +156,8 @@ export class CreateClientComponent implements OnInit {
   }
 
   onRowSelected() {
-    this.lat = this.selected[0].coordinate[0];
-    this.lng = this.selected[0].coordinate[1];
+    this.map.lat = this.selected[0].coordinate[0];
+    this.map.lng = this.selected[0].coordinate[1];
   }
 
   onSave() {
@@ -169,16 +174,30 @@ export class CreateClientComponent implements OnInit {
   }
 
   onDelete(rowIndex: number) {
-    this.client.branches.splice(rowIndex, 1);
-    this.markers.splice(rowIndex, 1);
-    this.temp = [...this.client.branches];
-    this.renderMarkers();
-    this.checkBranchName();
+    const dialogRef = this.dialog.open(DeleteDialogComponent, {
+      width: '250px'
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.client.branches.splice(rowIndex, 1);
+        this.markers.splice(rowIndex, 1);
+        this.temp = [...this.client.branches];
+        this.renderMarkers();
+        this.checkBranchName();
+      }
+    });
   }
 
   onDeleteAll() {
-    this.clientService.deleteClient(this.client._id).then((response) => {
-      this.router.navigate(['/planner/client']);
+    const dialogRef = this.dialog.open(DeleteDialogComponent, {
+      width: '250px'
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.clientService.deleteClient(this.client._id);
+      }
     });
   }
 
@@ -186,12 +205,16 @@ export class CreateClientComponent implements OnInit {
     this.router.navigate(['/planner/client']);
   }
 
+  onClear() {
+    this.searchElementRef.nativeElement.value = null;
+    this.searchElementRef.nativeElement.focus();
+  }
+
   private setCurrentPosition() {
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition((position) => {
-        this.lat = position.coords.latitude;
-        this.lng = position.coords.longitude;
-        this.zoom = 12;
+        this.map.lat = position.coords.latitude;
+        this.map.lng = position.coords.longitude;
       });
     }
   }

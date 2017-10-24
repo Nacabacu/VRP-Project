@@ -25,6 +25,7 @@ import { PlanningResultComponent } from './planner/planning-result/planning-resu
 import { PlanningComponent } from './planner/planning/planning.component';
 import { PlannerTodoComponent } from './planner/planner-todo/planner-todo.component';
 import { DriverTodoComponent } from './driver/driver-todo/driver-todo.component';
+import { DeleteDialogComponent } from './shared/delete-dialog/delete-dialog.component';
 
 import { AuthGuard } from './authentication/auth-guard.service';
 import { AuthService } from './authentication/auth.service';
@@ -49,8 +50,10 @@ import { DepotService } from './services/depot.service';
     ErrorPageComponent,
     HeaderComponent,
     PlannerTodoComponent,
-    DriverTodoComponent
+    DriverTodoComponent,
+    DeleteDialogComponent
   ],
+  entryComponents: [DeleteDialogComponent],
   imports: [
     BrowserModule,
     FormsModule,
