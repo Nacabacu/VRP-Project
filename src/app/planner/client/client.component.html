@@ -1,3 +1,33 @@
-<p>
-  client works!
-</p>
+<h1>Client</h1>
+<div>
+<mat-card>
+  <mat-form-field floatPlaceholder="auto">
+    <input matInput placeholder='Search company name' (keyup)='updateFilter($event)' />
+  </mat-form-field>
+
+  <ngx-datatable #table class='material' columnMode="flex" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [limit]="10"
+    [rows]='clients'>
+
+    <ngx-datatable-column name="Index" [flexGrow]="1">
+      <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+        {{rowIndex + 1}}
+      </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-column prop="companyName" [flexGrow]="3"></ngx-datatable-column>
+
+    <ngx-datatable-column name="Branches" [flexGrow]="3">
+      <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+        {{value.length}}
+      </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-column name="Edit" [flexGrow]="2">
+      <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-row="row" let-value="value">
+        <button mat-raised-button color="primary" (click)="onEdit(row._id)">Edit</button>
+      </ng-template>
+    </ngx-datatable-column>
+  </ngx-datatable>
+</mat-card>
+</div>
+<router-outlet></router-outlet>

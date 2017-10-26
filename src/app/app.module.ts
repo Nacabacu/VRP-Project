@@ -1,4 +1,3 @@
-import { DriverService } from './services/driver.service';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
@@ -27,12 +26,15 @@ import { DepotComponent } from './planner/depot/depot.component';
 import { PlannerComponent } from './planner/planner.component';
 import { PlanningResultComponent } from './planner/planning-result/planning-result.component';
 import { PlanningComponent } from './planner/planning/planning.component';
+import { PlannerTodoComponent } from './planner/planner-todo/planner-todo.component';
+import { DriverTodoComponent } from './driver/driver-todo/driver-todo.component';
 
 import { AuthGuard } from './authentication/auth-guard.service';
 import { AuthService } from './authentication/auth.service';
 import { ResultService } from './services/result.service';
-import { PlannerTodoComponent } from './planner/planner-todo/planner-todo.component';
-import { DriverTodoComponent } from './driver/driver-todo/driver-todo.component';
+import { ClientService } from './services/client.service';
+import { DepotService } from './services/depot.service';
+import { DriverService } from './services/driver.service';
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -63,19 +65,22 @@ const MY_DATE_FORMATS = {
     ErrorPageComponent,
     HeaderComponent,
     PlannerTodoComponent,
-    DriverTodoComponent,
+    DriverTodoComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    MaterialModule,
     FormsModule,
     ReactiveFormsModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
     HttpModule,
+    ReactiveFormsModule,
+    FormsModule,
+    MaterialModule,
     NgxDatatableModule,
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyCMk-d92auJ7HbZaXajcpdXtqcBMoH4RUc'
+      apiKey: 'AIzaSyCN8TC7W834nK2DfiF6mu9OhAkUFaSLHlk',
+      libraries: ["places"]
     })
   ],
   providers: [
@@ -83,9 +88,11 @@ const MY_DATE_FORMATS = {
     AuthService,
     ResultService,
     DriverService,
+    ClientService,
     { provide: DateAdapter, useClass: MyDateAdapter },
     { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }
   ],
+
 })
 
 export class AppModule { }

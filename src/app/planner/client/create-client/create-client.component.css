@@ -1,0 +1,21 @@
+.container {
+    display: flex;
+    /* flex-direction: column; */
+}
+
+.container > * {
+    width: 50%;
+}
+
+.ngx-datatable.material {
+    box-shadow: none;
+}
+
+input.ng-invalid.ng-touched{
+    border: 1px solid red;
+}
+
+.helpbox{
+    color:red
+}
+
