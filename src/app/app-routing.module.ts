@@ -40,31 +40,15 @@ const appRoutes: Routes = [
       },
       {
         path: 'client',
-        component: ClientComponent,
-        children: [
-          {
-            path: 'create',
-            component: CreateClientComponent
-          },
-          {
-            path: 'create:id',
-            component: CreateClientComponent
-          }
-        ]
+        component: ClientComponent
+      },
+      {
+        path: 'client/create',
+        component: CreateClientComponent
       },
       {
         path: 'depot',
-        component: DepotComponent,
-        children: [
-          {
-            path: 'create',
-            component: CreateDepotComponent
-          },
-          {
-            path: 'create/:id',
-            component: CreateDepotComponent
-          }
-        ]
+        component: DepotComponent
       }
   ]
   },

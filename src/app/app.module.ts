@@ -27,12 +27,15 @@ import { DepotComponent } from './planner/depot/depot.component';
 import { PlannerComponent } from './planner/planner.component';
 import { PlanningResultComponent } from './planner/planning-result/planning-result.component';
 import { PlanningComponent } from './planner/planning/planning.component';
+import { PlannerTodoComponent } from './planner/planner-todo/planner-todo.component';
+import { DriverTodoComponent } from './driver/driver-todo/driver-todo.component';
+import { DeleteDialogComponent } from './shared/delete-dialog/delete-dialog.component';
 
 import { AuthGuard } from './authentication/auth-guard.service';
 import { AuthService } from './authentication/auth.service';
 import { ResultService } from './services/result.service';
-import { PlannerTodoComponent } from './planner/planner-todo/planner-todo.component';
-import { DriverTodoComponent } from './driver/driver-todo/driver-todo.component';
+import { ClientService } from './services/client.service';
+import { DepotService } from './services/depot.service';
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -64,28 +67,36 @@ const MY_DATE_FORMATS = {
     HeaderComponent,
     PlannerTodoComponent,
     DriverTodoComponent,
+    DeleteDialogComponent
   ],
+  entryComponents: [DeleteDialogComponent],
   imports: [
     BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    MaterialModule,
     FormsModule,
     ReactiveFormsModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
     HttpModule,
+    ReactiveFormsModule,
+    FormsModule,
+    MaterialModule,
     NgxDatatableModule,
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyCMk-d92auJ7HbZaXajcpdXtqcBMoH4RUc'
+      apiKey: 'AIzaSyCN8TC7W834nK2DfiF6mu9OhAkUFaSLHlk',
+      libraries: ["places"]
     })
   ],
   providers: [
     AuthGuard,
     AuthService,
     ResultService,
+    ClientService,
+    DepotService,
     DriverService,
     { provide: DateAdapter, useClass: MyDateAdapter },
     { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }
   ],
+
 })
 
 export class AppModule { }

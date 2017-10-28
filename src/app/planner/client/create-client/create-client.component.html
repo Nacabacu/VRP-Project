@@ -1,3 +1,84 @@
-<p>
-  create-client works!
-</p>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="title-container">
+        <div class="title">
+          <span *ngIf="isNew">New Client</span>
+          <span *ngIf="!isNew">Edit {{client?.companyName}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <mat-form-field floatPlaceholder="never">
+        <input matInput placeholder="Search for location" #search [formControl]="searchControl">
+      </mat-form-field>
+      <button mat-raised-button color="primary" (click)="onClear()" style="float: right;">Clear</button>
+      <agm-map style="height: calc(100vh - 250px);" [latitude]="map?.lat" [longitude]="map?.lng" [zoom]="map?.zoom" (mapClick)="mapClicked($event)">
+        <agm-marker *ngFor="let marker of markers; let i = index" [latitude]="marker.lat" [longitude]="marker.lng" [label]="marker.label"
+          [markerDraggable]="marker.draggable" (dragEnd)="markerDragEnd(marker, $event, i)">
+        </agm-marker>
+      </agm-map>
+    </div>
+
+    <div class="col-md-6">
+      <!-- <h3>Client Info</h3> -->
+      <div>
+        Company name :
+        <mat-form-field floatPlaceholder="never">
+          <input matInput [formControl]="companyNameInput" placeholder="Company Name" [(ngModel)]="client.companyName">
+          <mat-error *ngIf="companyNameInput.hasError('required')">
+            Company name is
+            <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <mat-form-field floatPlaceholder="auto" *ngIf="!isNew">
+        <input matInput placeholder='Search branch name' (keyup)='updateFilter($event)' />
+      </mat-form-field>
+
+      <ngx-datatable #table class='material' columnMode="flex" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [limit]="7"
+        [rows]='client.branches' [selected]="selected" [selectionType]="'single'" (select)='onRowSelected()'>
+
+        <ngx-datatable-column name="No." [flexGrow]="1">
+          <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+            {{rowIndex + 1}}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="branchName" [flexGrow]="2">
+          <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+            <span title="Double click to edit" (dblclick)="editing[rowIndex + '-branchName'] = true" *ngIf="!editing[rowIndex + '-branchName']">
+              {{value}}
+            </span>
+            <mat-form-field floatPlaceholder="never" *ngIf="editing[rowIndex+ '-branchName']">
+              <input matInput autofocus (blur)="updateValue($event, 'branchName', rowIndex)" type="text" [value]="value" placeholder="Branch name"
+              />
+            </mat-form-field>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="Coordinate" [flexGrow]="3">
+          <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+            {{ value[0] | number: '1.6-6' }}, {{ value[1] | number: '1.6-6'}}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="Edit" [flexGrow]="2">
+          <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-row="row" let-value="value">
+            <button mat-raised-button color="primary" (click)="onDelete(rowIndex)">Delete</button>
+          </ng-template>
+        </ngx-datatable-column>
+
+      </ngx-datatable>
+      <span *ngIf="!isBranchNameValid || companyNameInput.hasError('required')" class="helpbox">Please enter valid data!</span>
+      <div>
+        <button mat-raised-button color="primary" (click)="onSave()" [disabled]="!isBranchNameValid || companyNameInput.hasError('required')">Save</button>
+        <button mat-raised-button color="warn" (click)="onDeleteAll()">Delete</button>
+        <button mat-raised-button (click)="onCancel()" style="float: right;">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>

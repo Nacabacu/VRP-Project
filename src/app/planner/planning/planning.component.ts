@@ -1,3 +1,5 @@
+import { Client } from '../../shared/client';
+import { ClientService } from '../../services/client.service';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
 import { DriverService } from './../../services/driver.service';
@@ -27,13 +29,18 @@ export class PlanningComponent implements OnInit, OnDestroy {
   drivers = [];
   tempDrivers = [];
 
+  clients: Client[];
+  casualClient= [];
+  regularClient = [];
+
   planningInfoGroup: FormGroup;
   driverFormGroup: FormGroup;
   secondFormGroup: FormGroup;
 
   constructor(
     private formBuilder: FormBuilder,
-    private driverService: DriverService
+    private driverService: DriverService,
+    private clientService: ClientService
   ) { }
 
   ngOnInit() {
@@ -42,6 +49,10 @@ export class PlanningComponent implements OnInit, OnDestroy {
         this.drivers.push(driver);
       });
       this.tempDrivers = [...this.drivers];
+    });
+
+    this.clientService.getAllClients().then((response) => {
+      this.clients = response;
     });
 
     // Planning
@@ -121,10 +132,6 @@ export class PlanningComponent implements OnInit, OnDestroy {
     const currentDate = new Date();
     currentDate.setDate(currentDate.getDate() - 1);
     return date >= currentDate;
-  }
-
-  test() {
-    
   }
 
   ngOnDestroy() {
