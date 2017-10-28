@@ -35,7 +35,7 @@ var PlanningResult = mongoose.model('planningResults', {
                 type: [Number],
                 require: true
             },
-            LoadWeight: {
+            loadWeight: {
                 type: Number,
                 require: true
             },
@@ -54,9 +54,17 @@ var PlanningResult = mongoose.model('planningResults', {
             coordinate: {
                 type: [Number],
                 require: true
+            },
+            demand: {
+                type: Number,
+                require: true
+            },
+            waitTime: {
+                type: Number,
+                require: true
             }
         },
     ]
 }, 'planningResults');
 
-module.exports = { PlanningResult }
+module.exports = { PlanningResult };

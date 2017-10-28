@@ -36,3 +36,7 @@ html, body {
     display: flex;
     align-items: center;
 }
+
+.datatable-checkbox input[type='checkbox']:checked:before {
+    border-color: #3f51b5;
+}

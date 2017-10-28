@@ -62,18 +62,23 @@ router.post('/saveRoute', (req, res) => {
         })
         .then(function (result) {
             var vehicles = [];
+            var demandsArray = [0];
+
+            req.body.clients.forEach((client) => {
+                demandsArray.push(client.demand);
+            });
 
             result.routes.forEach(function (route, index) {
                 var loadWeight = 0;
 
                 route.forEach(function (client) {
-                    loadWeight += req.body.demands[client];
+                    loadWeight += demandsArray[client];
                 });
 
                 vehicles.push({
                     'driver': req.body.drivers[index],
                     'route': route,
-                    'LoadWeight': loadWeight,
+                    'loadWeight': loadWeight,
                     'isCompleted': false
                 });
                 index++;
