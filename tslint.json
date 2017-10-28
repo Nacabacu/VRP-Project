@@ -12,7 +12,11 @@
       "member-access": false,
       "trailing-comma": false,
       "ordered-imports": false,
-      "ban-types": false
+      "ban-types": false,
+      "no-string-literal": false,
+      "variable-name": false,
+      "new-parens": false,
+      "prefer-for-of": false;
     },
     "rulesDirectory": []
 }
