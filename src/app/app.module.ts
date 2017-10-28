@@ -35,8 +35,6 @@ import { DeleteDialogComponent } from './shared/delete-dialog/delete-dialog.comp
 import { AuthGuard } from './authentication/auth-guard.service';
 import { AuthService } from './authentication/auth.service';
 import { ResultService } from './services/result.service';
-import { PlannerTodoComponent } from './planner/planner-todo/planner-todo.component';
-import { DriverTodoComponent } from './driver/driver-todo/driver-todo.component';
 import { DepotService } from './services/depot.service';
 import { ClientService } from './services/client.service';
 
@@ -72,7 +70,7 @@ const MY_DATE_FORMATS = {
     HeaderComponent,
     PlannerTodoComponent,
     DriverTodoComponent,
-    DirectionDirective
+    DirectionDirective,
     DeleteDialogComponent
   ],
   entryComponents: [DeleteDialogComponent],
@@ -102,10 +100,10 @@ const MY_DATE_FORMATS = {
     DriverService,
     { provide: DateAdapter, useClass: MyDateAdapter },
     { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
-    GoogleMapsAPIWrapper
+    GoogleMapsAPIWrapper,
+    DepotService,
+    ClientService
   ]
-    DepotService
-    ClientService,
 })
 
 export class AppModule { }
