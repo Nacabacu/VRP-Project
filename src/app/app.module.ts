@@ -6,6 +6,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Routes } from '@angular/router';
 
+import { AngularFontAwesomeModule } from 'angular-font-awesome/angular-font-awesome';
 import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { AgmCoreModule } from '@agm/core';
@@ -76,7 +77,8 @@ const MY_DATE_FORMATS = {
     NgxDatatableModule,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyCMk-d92auJ7HbZaXajcpdXtqcBMoH4RUc'
-    })
+    }),
+    AngularFontAwesomeModule
   ],
   providers: [
     AuthGuard,
