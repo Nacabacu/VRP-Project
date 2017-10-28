@@ -60,7 +60,7 @@ export class DepotService {
         return this.http.get(this.depotUrl + '/get', opts)
             .toPromise()
             .then((response) => {
-                return response.json().clients;
+                return response.json().depots;
             })
             .catch(this.handleError);
     }

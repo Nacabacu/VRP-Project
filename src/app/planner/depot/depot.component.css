@@ -1,0 +1,11 @@
+.helpbox{
+    color:red
+}
+
+.ngx-datatable.material { 
+    box-shadow: none; 
+}
+
+div#depotHeader {
+    padding: 0px;
+}

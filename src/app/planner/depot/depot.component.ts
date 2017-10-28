@@ -11,7 +11,7 @@ import {
   MatInput
 } from '@angular/material';
 
-import { ClientService } from '../../services/client.service';
+import { DepotService } from '../../services/depot.service';
 
 import { Marker } from '../../shared/marker';
 import { Map } from '../../shared/map';
@@ -23,16 +23,11 @@ import { DeleteDialogComponent } from '../../shared/delete-dialog/delete-dialog.
   styleUrls: ['./depot.component.css']
 })
 export class DepotComponent implements OnInit {
-  companyNameInput = new FormControl(null, Validators.required);
   searchControl: FormControl;
-  isNew: boolean = false;
-  isBranchNameValid: boolean = true;
+  isDepotNameValid: boolean = true;
   map = new Map();
 
-  client: any = {
-    companyName: '',
-    branches: []
-  };
+  depots: any[];
 
   markers: Marker[] = [];
   temp = [];
@@ -44,24 +39,20 @@ export class DepotComponent implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private clientService: ClientService,
+    private depotService: DepotService,
     private mapsAPILoader: MapsAPILoader,
     private ngZone: NgZone,
     public dialog: MatDialog
   ) { }
 
   ngOnInit() {
-    const branchMarkers: Marker[] = [];
-    const companyId = this.activatedRoute.snapshot.queryParams.companyId;
-    if (companyId) {
-      this.clientService.getClient(companyId).then((response) => {
-        this.client = response;
-        this.temp = [...this.client.branches];
-        this.renderMarkers();
-      });
-    } else {
-      this.isNew = true;
-    }
+    this.depotService.getAllDepots().then((response) => {
+      console.log(response)
+      this.depots = response;
+      this.temp = [...this.depots];
+      this.renderMarkers();
+    });
+
     this.searchControl = new FormControl();
     this.setCurrentPosition();
 
@@ -95,49 +86,50 @@ export class DepotComponent implements OnInit {
   mapClicked($event) {
     const latitude: number = $event.coords.lat;
     const longtitude: number = $event.coords.lng;
-    this.client.branches.push({
-      coordinate: [latitude, longtitude]
+    this.depots.push({
+      lat: latitude,
+      lng: longtitude
     });
     this.renderMarkers();
-    const lastIndex = this.client.branches.length - 1;
-    this.client.branches[lastIndex].branchName = "";
-    this.editing[lastIndex + '-branchName'] = true;
-    this.temp = [...this.client.branches];
-    this.isBranchNameValid = false;
+    const lastIndex = this.depots.length - 1;
+    this.depots[lastIndex].depotName = "";
+    this.editing[lastIndex + '-depotName'] = true;
+    this.temp = [...this.depots];
+    this.isDepotNameValid = false;
   }
 
   markerDragEnd(marker: Marker, event, index: number) {
-    this.client.branches[index].coordinate = [event.coords.lat, event.coords.lng];
-    this.client.branches = [...this.client.branches];
+    this.depots[index].coordinate = [event.coords.lat, event.coords.lng];
+    this.depots = [...this.depots];
   }
 
   updateFilter(event) {
     const val = event.target.value.toLowerCase();
     const temp = this.temp.filter((data) => {
-      return data.branchName.toLowerCase().indexOf(val) !== -1 || !val;
+      return data.depotName.toLowerCase().indexOf(val) !== -1 || !val;
     });
-    this.client.branches = temp;
+    this.depots = temp;
   }
 
   updateValue(event, cell, rowIndex) {
-    this.client.branches[rowIndex][cell] = event.target.value;
+    this.depots[rowIndex][cell] = event.target.value;
     if (event.target.value !== "") {
       this.editing[rowIndex + '-' + cell] = false;
-      this.client.branches = [...this.client.branches];
+      this.depots = [...this.depots];
     }
     this.checkBranchName();
   }
 
   checkBranchName() {
     let isValid: boolean = true;
-    this.client.branches.map((branch, i) => {
+    this.depots.map((branch, i) => {
       if (branch.branchName === "") {
         isValid = false;
-        this.isBranchNameValid = false;
+        this.isDepotNameValid = false;
       }
-      if (i === this.client.branches.length - 1) {
+      if (i === this.depots.length - 1) {
         if (isValid) {
-          this.isBranchNameValid = true;
+          this.isDepotNameValid = true;
         }
       }
     });
@@ -145,10 +137,10 @@ export class DepotComponent implements OnInit {
 
   renderMarkers() {
     this.markers = [];
-    this.client.branches.map((branch, index) => {
+    this.depots.map((depot, index) => {
       this.markers.push({
-        lat: branch.coordinate[0],
-        lng: branch.coordinate[1],
+        lat: depot.lat,
+        lng: depot.lng,
         label: (index + 1).toString(),
         draggable: true
       });
@@ -156,21 +148,15 @@ export class DepotComponent implements OnInit {
   }
 
   onRowSelected() {
-    this.map.lat = this.selected[0].coordinate[0];
-    this.map.lng = this.selected[0].coordinate[1];
+    this.map.lat = this.selected[0].lat;
+    this.map.lng = this.selected[0].lng;
   }
 
   onSave() {
-    this.client.branches = this.temp;
-    if (this.isNew) {
-      this.clientService.createClient(this.client).then((response) => {
-        this.router.navigate(['/planner/client']);
-      });
-    } else {
-      this.clientService.updateClient(this.client).then((response) => {
-        this.router.navigate(['/planner/client']);
-      });
-    }
+    this.depots = this.temp;
+    // this.depotService.updateDepot(this.depots).then((response) => {
+    //   this.router.navigate(['/planner']);
+    // });
   }
 
   onDelete(rowIndex: number) {
@@ -180,29 +166,17 @@ export class DepotComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.client.branches.splice(rowIndex, 1);
+        this.depots.splice(rowIndex, 1);
         this.markers.splice(rowIndex, 1);
-        this.temp = [...this.client.branches];
+        this.temp = [...this.depots];
         this.renderMarkers();
         this.checkBranchName();
       }
     });
   }
 
-  onDeleteAll() {
-    const dialogRef = this.dialog.open(DeleteDialogComponent, {
-      width: '250px'
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.clientService.deleteClient(this.client._id);
-      }
-    });
-  }
-
   onCancel() {
-    this.router.navigate(['/planner/client']);
+    this.router.navigate(['/planner']);
   }
 
   onClear() {
