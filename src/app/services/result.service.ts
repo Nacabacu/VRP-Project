@@ -1,3 +1,5 @@
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
 import { Result } from './../models/result';
 import { Router } from '@angular/router';
 import { Http, Response } from '@angular/http';
@@ -6,6 +8,7 @@ import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class ResultService {
+  clearMapSubject = new Subject<boolean>();
 
   constructor(
     private http: Http,
@@ -32,6 +35,14 @@ export class ResultService {
         return this.createResultModel(response.json());
       })
       .catch(this.handleError);
+  }
+
+  sendClearMap() {
+    this.clearMapSubject.next(true);
+  }
+
+  clearMap(): Observable<any> {
+    return this.clearMapSubject.asObservable();
   }
 
   private createResultModel(input): Result {

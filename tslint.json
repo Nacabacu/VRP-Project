@@ -14,7 +14,9 @@
       "ordered-imports": false,
       "ban-types": false,
       "no-string-literal": false,
-      "variable-name": false
+      "variable-name": false,
+      "new-parens": false,
+      "prefer-for-of": false;
     },
     "rulesDirectory": []
 }

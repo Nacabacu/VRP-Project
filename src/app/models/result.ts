@@ -3,22 +3,25 @@ export class Result {
     public date;
     public time;
     public clients = new Array<{
-        clientName: '',
-        demand: 0,
-        waitTime: 0
+        index: Number,
+        clientName: String,
+        demand: Number,
+        waitTime: Number,
+        coordinate: [Number]
     }>();
     public vehicles = new Array<{
-        loadWeight: 0,
-        isCompleted: false,
-        route: [''],
+        loadWeight: Number,
+        isCompleted: Boolean,
+        route: [Number],
         driver: {
-            name: '',
-            licenseNo: '',
-            vehicleNo: ''
-        }
+            name: String,
+            licenseNo: String,
+            vehicleNo: String
+        },
+        color: String
     }>();
     public depot = {
-        depotName: '',
+        depotName: String,
         coordinate: []
     };
     public isAllCompleted: boolean;
