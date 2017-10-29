@@ -1,5 +1,7 @@
+import { ClientBranch } from './client-branch';
+
 export interface Client {
     companyName: string;
-    branches: object[];
+    branches: ClientBranch[];
     __v?: number;
 }

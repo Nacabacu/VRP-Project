@@ -49,10 +49,6 @@ const appRoutes: Routes = [
       {
         path: 'depot',
         component: DepotComponent
-      },
-      {
-        path: 'depot/create',
-        component: CreateDepotComponent
       }
   ]
   },

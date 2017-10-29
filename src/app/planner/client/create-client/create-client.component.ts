@@ -1,12 +1,21 @@
-import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { Component, ElementRef, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MapsAPILoader } from '@agm/core';
-import { MatButton, MatFormField, MatFormFieldControl, MatInput } from '@angular/material';
 import { } from 'googlemaps';
+import {
+  MatDialog,
+  MatButton,
+  MatFormField,
+  MatFormFieldControl,
+  MatInput
+} from '@angular/material';
 
 import { ClientService } from '../../../services/client.service';
+
 import { Marker } from '../../../shared/marker';
+import { Map } from '../../../shared/map';
+import { DeleteDialogComponent } from '../../../shared/delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'app-create-client',
@@ -14,14 +23,11 @@ import { Marker } from '../../../shared/marker';
   styleUrls: ['./create-client.component.css']
 })
 export class CreateClientComponent implements OnInit {
+  companyNameInput = new FormControl(null, Validators.required);
   searchControl: FormControl;
   isNew: boolean = false;
-  address;
-  zoom;
-  lat;
-  lng;
-
-  editForm: FormGroup;
+  isBranchNameValid: boolean = true;
+  map = new Map();
 
   client: any = {
     companyName: '',
@@ -33,15 +39,15 @@ export class CreateClientComponent implements OnInit {
   selected = [];
   editing = {};
 
-  @ViewChild("search")
-  public searchElementRef: ElementRef;
+  @ViewChild("search") public searchElementRef: ElementRef;
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private clientService: ClientService,
     private mapsAPILoader: MapsAPILoader,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    public dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -51,34 +57,14 @@ export class CreateClientComponent implements OnInit {
       this.clientService.getClient(companyId).then((response) => {
         this.client = response;
         this.temp = [...this.client.branches];
-        this.client.branches.map((branch) => {
-          const branchMarker: Marker = {
-            lat: 0,
-            lng: 0,
-            draggable: true
-          };
-          branchMarker.lat = branch.coordinate[0];
-          branchMarker.lng = branch.coordinate[1];
-          branchMarker.label = branch.branchName;
-          branchMarker.draggable = true;
-          branchMarkers.push(branchMarker);
-        });
-        this.markers = branchMarkers;
+        this.renderMarkers();
       });
     } else {
       this.isNew = true;
     }
-
-    this.editForm = new FormGroup({
-      branchNameInput: new FormControl(null, Validators.required)
-
-    });
-
     this.searchControl = new FormControl();
-
     this.setCurrentPosition();
 
-    // load Places Autocomplete
     this.mapsAPILoader.load().then(() => {
       const autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement);
       autocomplete.addListener("place_changed", () => {
@@ -92,24 +78,15 @@ export class CreateClientComponent implements OnInit {
           }
 
           // set latitude, longitude and zoom
-          this.zoom = 15;
-          this.lat = place.geometry.location.lat();
-          this.lng = place.geometry.location.lng();
+          this.map.zoom = 16;
+          this.map.lat = place.geometry.location.lat();
+          this.map.lng = place.geometry.location.lng();
 
           this.markers.push({
-            lat: this.lat,
-            lng: this.lng,
-            draggable: true
+            lat: this.map.lat,
+            lng: this.map.lng,
+            draggable: false
           });
-
-          this.client.branches.push({
-            coordinate: [this.lat, this.lng]
-          });
-
-          const lastIndex = this.client.branches.length - 1;
-          this.client.branches[lastIndex].branchName = this.searchElementRef.nativeElement.value;
-          this.editing[lastIndex + '-branchName'] = true;
-          this.temp = [...this.client.branches];
         });
       });
     });
@@ -118,22 +95,15 @@ export class CreateClientComponent implements OnInit {
   mapClicked($event) {
     const latitude: number = $event.coords.lat;
     const longtitude: number = $event.coords.lng;
-    this.markers.push({
-      lat: latitude,
-      lng: longtitude,
-      draggable: true
-    });
     this.client.branches.push({
       coordinate: [latitude, longtitude]
     });
+    this.renderMarkers();
     const lastIndex = this.client.branches.length - 1;
-    this.client.branches[lastIndex].branchName = "New branch";
+    this.client.branches[lastIndex].branchName = "";
     this.editing[lastIndex + '-branchName'] = true;
     this.temp = [...this.client.branches];
-  }
-
-  clickedMarker(label: string, index: number) {
-    console.log(`clicked the marker: ${label || index}`);
+    this.isBranchNameValid = false;
   }
 
   markerDragEnd(marker: Marker, event, index: number) {
@@ -146,21 +116,48 @@ export class CreateClientComponent implements OnInit {
     const temp = this.temp.filter((data) => {
       return data.branchName.toLowerCase().indexOf(val) !== -1 || !val;
     });
-
-    // update the rows
     this.client.branches = temp;
   }
 
   updateValue(event, cell, rowIndex) {
-    this.editing[rowIndex + '-' + cell] = false;
     this.client.branches[rowIndex][cell] = event.target.value;
-    this.client.branches = [...this.client.branches];
+    if (event.target.value !== "") {
+      this.editing[rowIndex + '-' + cell] = false;
+      this.client.branches = [...this.client.branches];
+    }
+    this.checkBranchName();
+  }
+
+  checkBranchName() {
+    let isValid: boolean = true;
+    this.client.branches.map((branch, i) => {
+      if (branch.branchName === "") {
+        isValid = false;
+        this.isBranchNameValid = false;
+      }
+      if (i === this.client.branches.length - 1) {
+        if (isValid) {
+          this.isBranchNameValid = true;
+        }
+      }
+    });
+  }
+
+  renderMarkers() {
+    this.markers = [];
+    this.client.branches.map((branch, index) => {
+      this.markers.push({
+        lat: branch.coordinate[0],
+        lng: branch.coordinate[1],
+        label: (index + 1).toString(),
+        draggable: true
+      });
+    });
   }
 
   onRowSelected() {
-    this.lat = this.selected[0].coordinate[0];
-    this.lng = this.selected[0].coordinate[1];
-    this.zoom = 15;
+    this.map.lat = this.selected[0].coordinate[0];
+    this.map.lng = this.selected[0].coordinate[1];
   }
 
   onSave() {
@@ -177,14 +174,30 @@ export class CreateClientComponent implements OnInit {
   }
 
   onDelete(rowIndex: number) {
-    this.client.branches.splice(rowIndex, 1);
-    this.markers.splice(rowIndex, 1);
-    this.temp = [...this.client.branches];
+    const dialogRef = this.dialog.open(DeleteDialogComponent, {
+      width: '250px'
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.client.branches.splice(rowIndex, 1);
+        this.markers.splice(rowIndex, 1);
+        this.temp = [...this.client.branches];
+        this.renderMarkers();
+        this.checkBranchName();
+      }
+    });
   }
 
   onDeleteAll() {
-    this.clientService.deleteClient(this.client._id).then((response) => {
-      this.router.navigate(['/planner/client']);
+    const dialogRef = this.dialog.open(DeleteDialogComponent, {
+      width: '250px'
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.clientService.deleteClient(this.client._id);
+      }
     });
   }
 
@@ -192,14 +205,17 @@ export class CreateClientComponent implements OnInit {
     this.router.navigate(['/planner/client']);
   }
 
+  onClear() {
+    this.searchElementRef.nativeElement.value = null;
+    this.searchElementRef.nativeElement.focus();
+  }
+
   private setCurrentPosition() {
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition((position) => {
-        this.lat = position.coords.latitude;
-        this.lng = position.coords.longitude;
-        this.zoom = 12;
+        this.map.lat = position.coords.latitude;
+        this.map.lng = position.coords.longitude;
       });
     }
   }
-
 }

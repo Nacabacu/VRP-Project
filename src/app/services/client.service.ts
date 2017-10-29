@@ -35,7 +35,7 @@ export class ClientService {
         return this.http.delete(this.clientUrl + '/delete/' + companyId, opts)
             .toPromise()
             .then((response) => {
-                return response;
+                this.router.navigate(['/planner/client']);
             })
             .catch(this.handleError);
     }

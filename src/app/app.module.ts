@@ -28,6 +28,7 @@ import { PlanningResultComponent } from './planner/planning-result/planning-resu
 import { PlanningComponent } from './planner/planning/planning.component';
 import { PlannerTodoComponent } from './planner/planner-todo/planner-todo.component';
 import { DriverTodoComponent } from './driver/driver-todo/driver-todo.component';
+import { DeleteDialogComponent } from './shared/delete-dialog/delete-dialog.component';
 
 import { AuthGuard } from './authentication/auth-guard.service';
 import { AuthService } from './authentication/auth.service';
@@ -65,8 +66,10 @@ const MY_DATE_FORMATS = {
     ErrorPageComponent,
     HeaderComponent,
     PlannerTodoComponent,
-    DriverTodoComponent
+    DriverTodoComponent,
+    DeleteDialogComponent
   ],
+  entryComponents: [DeleteDialogComponent],
   imports: [
     BrowserModule,
     FormsModule,
@@ -74,8 +77,6 @@ const MY_DATE_FORMATS = {
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpModule,
-    ReactiveFormsModule,
-    FormsModule,
     MaterialModule,
     NgxDatatableModule,
     AgmCoreModule.forRoot({
@@ -87,6 +88,8 @@ const MY_DATE_FORMATS = {
     AuthGuard,
     AuthService,
     ResultService,
+    ClientService,
+    DepotService,
     DriverService,
     ClientService,
     { provide: DateAdapter, useClass: MyDateAdapter },
