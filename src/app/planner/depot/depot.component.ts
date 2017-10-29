@@ -47,7 +47,6 @@ export class DepotComponent implements OnInit {
 
   ngOnInit() {
     this.depotService.getAllDepots().then((response) => {
-      console.log(response)
       this.depots = response;
       this.temp = [...this.depots];
       this.renderMarkers();

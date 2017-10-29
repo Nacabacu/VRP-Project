@@ -77,8 +77,6 @@ const MY_DATE_FORMATS = {
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpModule,
-    ReactiveFormsModule,
-    FormsModule,
     MaterialModule,
     NgxDatatableModule,
     AgmCoreModule.forRoot({
