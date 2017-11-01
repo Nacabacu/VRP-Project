@@ -92,6 +92,7 @@ const MY_DATE_FORMATS = {
     DepotService,
     DriverService,
     ClientService,
+    DepotService,
     { provide: DateAdapter, useClass: MyDateAdapter },
     { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }
   ],

@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
+import { DepotService } from '../../services/depot.service';
 
 import { ClientService } from '../../services/client.service';
 import { DriverService } from './../../services/driver.service';
@@ -22,6 +23,7 @@ import { DeleteDialogComponent } from '../../shared/delete-dialog/delete-dialog.
 })
 export class PlanningComponent implements OnInit, OnDestroy {
   @ViewChild(DatatableComponent) driverTable: DatatableComponent;
+
   map = new Map();
   markers: Marker[];
   numOfDrivers = 2;
@@ -51,10 +53,17 @@ export class PlanningComponent implements OnInit, OnDestroy {
   driverFormGroup: FormGroup;
   clientFormGroup: FormGroup;
 
+  rows = [];
+  temps = [];
+  selected = [];
+  numOfSelectedDepotSubject = new Subject<number>();
+  numOfSelectedDepotSubScription: Subscription;
+
   constructor(
     private formBuilder: FormBuilder,
     private driverService: DriverService,
     private clientService: ClientService,
+    private depotService: DepotService,
     public dialog: MatDialog
   ) {
     // Planning
@@ -63,6 +72,7 @@ export class PlanningComponent implements OnInit, OnDestroy {
       hour: new FormControl(null, Validators.required),
       minute: new FormControl(null, Validators.required),
       method: new FormControl('distance'),
+      depotTable: new FormControl(null, this.checkDepotSelected.bind(this))
     });
 
     // Drivers
@@ -78,6 +88,12 @@ export class PlanningComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    //Depot
+    this.depotService.getAllDepots().then((response) => {
+      this.rows = response;
+      this.temps = [...this.rows];
+    });
+
     this.driverService.getDrivers().then((response) => {
       response.drivers.forEach((driver) => {
         this.drivers.push(driver);
@@ -97,6 +113,11 @@ export class PlanningComponent implements OnInit, OnDestroy {
         });
       });
       this.tempClients = [...this.regularClients];
+    });
+
+    this.numOfSelectedDepotSubScription = this.numOfSelectedDepotSubject.subscribe((value) => {
+      this.planningInfoGroup.get('depotTable').setValidators(this.checkDepotSelected.bind(this));
+      this.planningInfoGroup.get('depotTable').updateValueAndValidity();
     });
 
     this.numOfDriversSubScription = this.numOfDriversSubject.subscribe((value) => {
@@ -133,6 +154,14 @@ export class PlanningComponent implements OnInit, OnDestroy {
     this.selectedDriver.push(...selected);
   }
 
+  checkDepotSelected(control: FormControl): { [s: string]: boolean } {
+    if (this.selected.length < 1) {
+      return ({ selectedDepotError: true });
+    } else {
+      return (null);
+    }
+  }
+
   checkDriverSelected(control: FormControl): { [s: string]: boolean } {
     if (this.numOfDrivers !== this.selectedDriver.length) {
       return ({ selectedDriverError: true });
@@ -155,7 +184,7 @@ export class PlanningComponent implements OnInit, OnDestroy {
   }
 
   onHourBlur(e) {
-    if (e.target.valueAsNumber > 24) {
+    if (e.target.valueAsNumber > 23) {
       this.planningInfoGroup.get('hour').setValue(24);
     }
   }
@@ -243,8 +272,28 @@ export class PlanningComponent implements OnInit, OnDestroy {
     }
   }
 
+
+  onRowSelected({ selected }) {
+    this.map.lat = this.selected[0].lat;
+    this.map.lng = this.selected[0].lng;
+    this.map.zoom = 16;
+    this.numOfSelectedDepotSubject.next(selected.length);
+  }
+
   test() {
     console.log("Lorem");
+  }
+
+  //FilterDepot
+  updateFilterDepot(event) {
+    const valSearch = event.target.value.toLowerCase();
+    const tempSearch = this.temps.filter((data) => {
+      return data.depotName.toLowerCase().indexOf(valSearch) !== -1 || !valSearch;
+    });
+
+    // update the rows
+    this.rows = tempSearch;
+
   }
 
   ngOnDestroy() {
@@ -252,9 +301,5 @@ export class PlanningComponent implements OnInit, OnDestroy {
     this.numOfSelectedDriverSubScription.unsubscribe();
   }
 
-  private initEmail = (): FormGroup => {
-    return this.formBuilder.group({
-      capacity: [null, Validators.required]
-    });
-  }
 }
+
