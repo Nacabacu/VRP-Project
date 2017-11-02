@@ -1,13 +1,15 @@
-import { NgModule } from '@angular/core';
+import { DriverService } from './services/driver.service';
+import { NgModule, Directive } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Routes } from '@angular/router';
 
+import { AngularFontAwesomeModule } from 'angular-font-awesome/angular-font-awesome';
 import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-import { AgmCoreModule } from '@agm/core';
+import { AgmCoreModule, GoogleMapsAPIWrapper } from '@agm/core';
 
 import { MyDateAdapter } from './myDateAdapter';
 import { AppRoutingModule } from './app-routing.module';
@@ -36,6 +38,8 @@ import { ResultService } from './services/result.service';
 import { ClientService } from './services/client.service';
 import { DepotService } from './services/depot.service';
 import { DriverService } from './services/driver.service';
+
+import { DirectionDirective } from './directives/direction.directive';
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -67,6 +71,7 @@ const MY_DATE_FORMATS = {
     HeaderComponent,
     PlannerTodoComponent,
     DriverTodoComponent,
+    DirectionDirective
     DeleteDialogComponent
   ],
   entryComponents: [DeleteDialogComponent],
@@ -80,9 +85,10 @@ const MY_DATE_FORMATS = {
     MaterialModule,
     NgxDatatableModule,
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyCN8TC7W834nK2DfiF6mu9OhAkUFaSLHlk',
+      apiKey: 'AIzaSyCMk-d92auJ7HbZaXajcpdXtqcBMoH4RUc'
       libraries: ["places"]
     })
+    AngularFontAwesomeModule
   ],
   providers: [
     AuthGuard,
@@ -94,9 +100,9 @@ const MY_DATE_FORMATS = {
     ClientService,
     DepotService,
     { provide: DateAdapter, useClass: MyDateAdapter },
-    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }
-  ],
-
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+    GoogleMapsAPIWrapper
+  ]
 })
 
 export class AppModule { }
