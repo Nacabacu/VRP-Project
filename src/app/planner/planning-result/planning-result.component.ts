@@ -112,7 +112,6 @@ export class PlanningResultComponent implements OnInit {
   }
 
   clearSelectedRouteInfo() {
-    console.log(this.selectedRouteInfo)
     if (this.selectedRouteInfo.length !== 0) {
       this.subRoute = false;
       this.selectedRouteInfo = [];

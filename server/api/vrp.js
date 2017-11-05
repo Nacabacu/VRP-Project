@@ -91,9 +91,9 @@ router.post('/saveRoute', (req, res) => {
                 times: result.duration
             });
 
-            planningResult.save(function (err) {
+            planningResult.save(function (err, planning) {
                 if (err) errorHandler(err, res);
-                res.status(200).send(result.solution);
+                res.status(200).send(planning._id);
             });
         })
         .catch(function (err) {

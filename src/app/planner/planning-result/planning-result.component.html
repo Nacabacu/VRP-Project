@@ -23,7 +23,7 @@
           <agm-direction *ngFor="let vehicle of selectedResult; let i=index" [subRoute]="subRoute" [index]="i" [showAll]="false" [color]="vehicle.color" [route]="vehicle.route" [result]="result"></agm-direction>
         </agm-map>
       </div>
-      <div class="col-xs-12 col-md-6">
+      <div class="col-xs-12 col-md-6 info">
         <mat-tab-group (focusChange)="onChangedTab($event)">
           <mat-tab label="Main">
             <mat-list>

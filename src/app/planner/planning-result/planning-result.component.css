@@ -9,3 +9,8 @@ agm-map {
 .clear-btn {
     margin-left: calc(100% - 140px);
 }
+
+.info {
+   overflow: auto;
+   max-height: calc(100vh - 150px);
+}
