@@ -15,20 +15,20 @@
         <agm-map [hidden]="!showAll" [latitude]="result.depot.coordinate[0]" [longitude]="result.depot.coordinate[1]" [zoom]="15">
           <agm-marker [iconUrl]="depotMarker" [latitude]="result.depot.coordinate[0]" [longitude]="result.depot.coordinate[1]"></agm-marker>
           <agm-marker *ngFor="let client of result.clients;" [label]="client.index.toString()" [latitude]="client.coordinate[0]" [longitude]="client.coordinate[1]"></agm-marker>
-          <agm-direction *ngFor="let vehicle of result.vehicles; let i=index" [index]="i" [showAll]="true" [color]="vehicle.color" [route]="vehicle.route" [result]="result"></agm-direction>
+          <agm-direction *ngFor="let vehicle of result.vehicles; let i=index" [subRoute]="false" [index]="i" [showAll]="true" [color]="vehicle.color" [route]="vehicle.route" [result]="result"></agm-direction>
         </agm-map>
         <agm-map *ngIf="!showAll" [latitude]="result.depot.coordinate[0]" [longitude]="result.depot.coordinate[1]" [zoom]="15">
           <agm-marker [iconUrl]="depotMarker" [latitude]="result.depot.coordinate[0]" [longitude]="result.depot.coordinate[1]"></agm-marker>
           <agm-marker *ngFor="let client of selectedClient;" [label]="client.index.toString()" [latitude]="client.coordinate[0]" [longitude]="client.coordinate[1]"></agm-marker>
-          <agm-direction *ngFor="let vehicle of selectedResult; let i=index" [index]="i" [showAll]="false" [color]="vehicle.color" [route]="vehicle.route" [result]="result"></agm-direction>
+          <agm-direction *ngFor="let vehicle of selectedResult; let i=index" [subRoute]="subRoute" [index]="i" [showAll]="false" [color]="vehicle.color" [route]="vehicle.route" [result]="result"></agm-direction>
         </agm-map>
       </div>
-      <div class="col-xs-12 col-md-6">
+      <div class="col-xs-12 col-md-6 info">
         <mat-tab-group (focusChange)="onChangedTab($event)">
           <mat-tab label="Main">
             <mat-list>
               <mat-list-item>Derivery Date: {{ result.date }}</mat-list-item>
-              <mat-list-item>Derivery Start Time: {{ result.time }}</mat-list-item>
+              <mat-list-item>Departure Time: {{ result.time }}</mat-list-item>
               <mat-list-item>Depot Name: {{ result.depot.depotName }}</mat-list-item>
             </mat-list>
           </mat-tab>
@@ -39,6 +39,26 @@
               <mat-list-item>Vehicle No: {{ vehicle.driver.vehicleNo }}</mat-list-item>
               <mat-list-item>Load Weight: {{ vehicle.loadWeight }}</mat-list-item>
               <mat-list-item>Route: {{ vehicle.route }}</mat-list-item>
+
+              <ngx-datatable #driverTable class="material expandable driver-table" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
+                [rowHeight]="50" [reorderable]="false" [rows]="routeInfo[i]" [limit]="8" style="clear:both;" [selected]="selectedRouteInfo"
+                [selectionType]="'single'" (select)='onSubRouteSelected($event)'>
+              
+                <ngx-datatable-column name="Route"></ngx-datatable-column>
+
+                <ngx-datatable-column name="Departure"></ngx-datatable-column>
+
+                <ngx-datatable-column name="Arrival"></ngx-datatable-column>
+
+                <ngx-datatable-column name="Demand"></ngx-datatable-column>
+
+                <ngx-datatable-footer>
+                  <ng-template ngx-datatable-footer-template>
+                    <button class="clear-btn" mat-raised-button color="primary" (click)="clearSelectedRouteInfo()">Show All Route</button>
+                  </ng-template>
+                </ngx-datatable-footer>
+              </ngx-datatable>
+
             </mat-list>
           </mat-tab>
         </mat-tab-group>

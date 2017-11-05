@@ -68,13 +68,12 @@ router.post('/saveRoute', (req, res) => {
                 demandsArray.push(client.demand);
             });
 
-            result.routes.forEach(function (route, index) {
+            result.solution.routes.forEach(function (route, index) {
                 var loadWeight = 0;
 
                 route.forEach(function (client) {
                     loadWeight += demandsArray[client];
                 });
-
                 vehicles.push({
                     'driver': req.body.drivers[index],
                     'route': route,
@@ -88,12 +87,13 @@ router.post('/saveRoute', (req, res) => {
                 date: new Date(req.body.date),
                 depot: req.body.depot,
                 vehicles: vehicles,
-                clients: req.body.clients
+                clients: req.body.clients,
+                times: result.duration
             });
 
-            planningResult.save(function (err) {
+            planningResult.save(function (err, planning) {
                 if (err) errorHandler(err, res);
-                res.status(200).send(result);
+                res.status(200).send(planning._id);
             });
         })
         .catch(function (err) {

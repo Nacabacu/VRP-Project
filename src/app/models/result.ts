@@ -2,29 +2,31 @@ export class Result {
     public _id;
     public date;
     public time;
+    public dateTime;
     public clients = new Array<{
-        index: Number,
-        clientName: String,
-        demand: Number,
-        waitTime: Number,
-        coordinate: [Number]
+        index: number,
+        clientName: string,
+        demand: number,
+        waitTime: number,
+        coordinate: [number]
     }>();
     public vehicles = new Array<{
-        loadWeight: Number,
-        isCompleted: Boolean,
-        route: [Number],
+        loadWeight: number,
+        isCompleted: boolean,
+        route: [number],
         driver: {
-            name: String,
-            licenseNo: String,
-            vehicleNo: String
+            name: string,
+            licenseNo: string,
+            vehicleNo: string
         },
-        color: String
+        color: string
     }>();
     public depot = {
         depotName: String,
         coordinate: []
     };
     public isAllCompleted: boolean;
+    public times: [[number]]
 
     constructor() {}
 }
