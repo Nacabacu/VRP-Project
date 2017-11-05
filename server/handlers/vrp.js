@@ -92,7 +92,10 @@ var vrpSolver = function (request, distances) {
 
             VRP.Solve(vrpSearchOpts, function (err, solution) {
                 if (err) reject(err);
-                resolve(solution);
+                resolve({
+                    solution,
+                    duration: results.duration
+                });
             });
         }).catch(function (err) {
             reject(err);
