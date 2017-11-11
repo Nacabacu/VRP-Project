@@ -1,4 +1,3 @@
-import { DriverService } from './services/driver.service';
 import { NgModule, Directive } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
@@ -23,14 +22,12 @@ import { HeaderComponent } from './header/header.component';
 import { LoginComponent } from './login/login.component';
 import { ClientComponent } from './planner/client/client.component';
 import { CreateClientComponent } from './planner/client/create-client/create-client.component';
-import { CreateDepotComponent } from './planner/depot/create-depot/create-depot.component';
 import { DepotComponent } from './planner/depot/depot.component';
 import { PlannerComponent } from './planner/planner.component';
 import { PlanningResultComponent } from './planner/planning-result/planning-result.component';
 import { PlanningComponent } from './planner/planning/planning.component';
 import { PlannerTodoComponent } from './planner/planner-todo/planner-todo.component';
 import { DriverTodoComponent } from './driver/driver-todo/driver-todo.component';
-import { DeleteDialogComponent } from './shared/delete-dialog/delete-dialog.component';
 
 import { AuthGuard } from './authentication/auth-guard.service';
 import { AuthService } from './authentication/auth.service';
@@ -38,8 +35,10 @@ import { ResultService } from './services/result.service';
 import { ClientService } from './services/client.service';
 import { DepotService } from './services/depot.service';
 import { DriverService } from './services/driver.service';
-
 import { DirectionDirective } from './directives/direction.directive';
+
+import { DeleteDialogComponent } from './shared/delete-dialog/delete-dialog.component';
+import { ClientPickerDialogComponent } from './planner/planning/client-picker-dialog/client-picker-dialog.component';
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -65,16 +64,16 @@ const MY_DATE_FORMATS = {
     PlanningComponent,
     PlanningResultComponent,
     CreateClientComponent,
-    CreateDepotComponent,
     DrivingResultComponent,
     ErrorPageComponent,
     HeaderComponent,
     PlannerTodoComponent,
     DriverTodoComponent,
-    DirectionDirective
-    DeleteDialogComponent
+    DirectionDirective,
+    DeleteDialogComponent,
+    ClientPickerDialogComponent
   ],
-  entryComponents: [DeleteDialogComponent],
+  entryComponents: [DeleteDialogComponent, ClientPickerDialogComponent],
   imports: [
     BrowserModule,
     FormsModule,
@@ -85,9 +84,9 @@ const MY_DATE_FORMATS = {
     MaterialModule,
     NgxDatatableModule,
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyCMk-d92auJ7HbZaXajcpdXtqcBMoH4RUc'
+      apiKey: 'AIzaSyCMk-d92auJ7HbZaXajcpdXtqcBMoH4RUc',
       libraries: ["places"]
-    })
+    }),
     AngularFontAwesomeModule
   ],
   providers: [

@@ -11,7 +11,6 @@ import { ErrorPageComponent } from './error-page/error-page.component';
 import { LoginComponent } from './login/login.component';
 import { ClientComponent } from './planner/client/client.component';
 import { CreateClientComponent } from './planner/client/create-client/create-client.component';
-import { CreateDepotComponent } from './planner/depot/create-depot/create-depot.component';
 import { DepotComponent } from './planner/depot/depot.component';
 import { PlannerComponent } from './planner/planner.component';
 import { PlanningResultComponent } from './planner/planning-result/planning-result.component';

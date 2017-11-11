@@ -30,16 +30,22 @@
               <ng-template matStepLabel>Planning Info</ng-template>
 
               <div class="col-sm-12 col-md-8 col-md-offset-2">
-                <label>Delivery Date: </label>
+                <label>Delivery Date and Time : </label>
+                <mat-form-field floatPlaceholder="never">
+                  <input matInput type="datetime-local" placrholder="Choose Date and Time" formControlName="dateTime">
+                  <mat-error *ngIf="planningInfoGroup.get('dateTime').hasError['required']">You must enter a value</mat-error>
+                </mat-form-field>
+
+                <!-- <label>Delivery Date: </label>
                 <mat-form-field>
                   <input matInput [matDatepickerFilter]="dateFilter" [matDatepicker]="picker" placeholder="Choose a date" formControlName="date">
                   <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                   <mat-datepicker #picker></mat-datepicker>
                   <mat-error *ngIf="planningInfoGroup.get('date').hasError['required']">You must enter a value</mat-error>
                   <mat-error *ngIf="planningInfoGroup.get('date').hasError['matDatepickerFilter']">You must select correct date</mat-error>
-                </mat-form-field>
+                </mat-form-field> -->
 
-                <br>
+                <!-- <br>
                 <label>Delivery Start Time: </label>
                 <mat-form-field class="timepicker">
                   <input matInput type="number" min="0" max="23" placeholder="Hour" formControlName="hour" (blur)="onHourBlur($event)">
@@ -49,53 +55,51 @@
                 <mat-form-field class="timepicker">
                   <input matInput type="number" min="0" max="59" placeholder="Minute" formControlName="minute" (blur)="onMinuteBlur($event)">
                   <mat-error *ngIf="planningInfoGroup.get('minute').hasError['required']">You must enter a value</mat-error>
-                </mat-form-field>
-
+                </mat-form-field> -->
                 <br>
                 <div style="margin-top:13.5px;">
-                  <label>Select Method: </label>
+                  <label>Method : </label>
                   <mat-radio-group formControlName="method">
                     <mat-radio-button style="margin-right:6px;" color="primary" value="distance">Distance</mat-radio-button>
                     <mat-radio-button value="duration" color="primary">Duration</mat-radio-button>
                   </mat-radio-group>
                 </div>
-                <mat-card>
-                  <mat-form-field floatPlaceholder="auto">
-                    <input matInput placeholder='Search company name' (keyup)='updateFilterDepot($event)' />
-                  </mat-form-field>
-
-                  <ngx-datatable #depotTable class='material' columnMode="flex" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'"
-                    [limit]="10" [rows]='rows' [selected]="selected" [selectionType]="'single'" (select)='onRowSelected($event)'>
-
-                    <ngx-datatable-column name="Index" [flexGrow]="1">
-                      <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
-                        {{rowIndex + 1}}
-                      </ng-template>
-                    </ngx-datatable-column>
-
-                    <ngx-datatable-column prop="depotName" [flexGrow]="3"></ngx-datatable-column>
-
-
-                    <ngx-datatable-column name="Lat" [flexGrow]="3">
-                      <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
-                        {{value}}
-                      </ng-template>
-                    </ngx-datatable-column>
-
-                    <ngx-datatable-column name="Lng" [flexGrow]="3">
-                      <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
-                        {{value}}
-                      </ng-template>
-                    </ngx-datatable-column>
-
-
-
-                  </ngx-datatable>
-                </mat-card>
-
-                <mat-error *ngIf="planningInfoGroup.get('depotTable').invalid">You must select depot</mat-error>
-                <button mat-raised-button matStepperNext color="primary" class="buttonPhase">Next</button>
               </div>
+
+              <div>
+                <mat-form-field floatPlaceholder="auto">
+                  <input matInput placeholder='Search depot name' (keyup)='updateFilterDepot($event)' />
+                </mat-form-field>
+
+                <ngx-datatable #depotTable class='material' columnMode="flex" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'"
+                  [limit]="5" [rows]='rows' [selected]="selectedDepot" [selectionType]="'single'" (select)='onRowSelected($event)'>
+
+                  <ngx-datatable-column name="Index" [flexGrow]="1">
+                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                      {{rowIndex + 1}}
+                    </ng-template>
+                  </ngx-datatable-column>
+
+                  <ngx-datatable-column prop="depotName" [flexGrow]="3"></ngx-datatable-column>
+
+
+                  <ngx-datatable-column name="Lat" [flexGrow]="3">
+                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                      {{value}}
+                    </ng-template>
+                  </ngx-datatable-column>
+
+                  <ngx-datatable-column name="Lng" [flexGrow]="3">
+                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                      {{value}}
+                    </ng-template>
+                  </ngx-datatable-column>
+
+                </ngx-datatable>
+              </div>
+
+              <mat-error *ngIf="planningInfoGroup.get('depotTable').invalid">You must select depot</mat-error>
+              <button mat-raised-button matStepperNext color="primary" class="buttonPhase">Next</button>
 
             </form>
           </mat-step>
@@ -155,6 +159,7 @@
           <mat-step [stepControl]="clientFormGroup">
             <form [formGroup]="clientFormGroup">
               <ng-template matStepLabel>Select Clients</ng-template>
+              <!-- <button mat-raised-button color="primary" (click)="onAddClient()">Select</button> -->
 
               <mat-form-field floatPlaceholder="auto">
                 <input matInput placeholder='Filter by name' (keyup)='updateClientFilter($event)' />
@@ -164,7 +169,6 @@
                   You must select at least one client and not more than twenty five clients
                 </small>
               </span>
-
 
               <ngx-datatable #clientTable class="material expandable client-table" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
                 [rowHeight]="50" [reorderable]="false" [rows]="regularClients" [limit]="8" style="clear:both;" [selected]="selectedRegularClients"
@@ -178,10 +182,24 @@
 
                 <ngx-datatable-column prop="branchName" name="Branch"></ngx-datatable-column>
 
-                <ngx-datatable-column name="Capacity">
+                <ngx-datatable-column prop="demand">
                   <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                    <span *ngIf="!selectedRegularClients.includes(row)">
+                      {{value}}
+                    </span>
                     <mat-form-field floatPlaceholder="never" *ngIf="selectedRegularClients.includes(row)">
-                      <input matInput type="number" placeholder='Capacity' required>
+                      <input matInput [value]="value" type="number" placeholder='Demand' required (blur)="updateRegularClientCellValue($event, 'demand', rowIndex)">
+                    </mat-form-field>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Wait time (min)" prop="waitTime">
+                  <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                    <span *ngIf="!selectedRegularClients.includes(row)">
+                      {{value}}
+                    </span>
+                    <mat-form-field floatPlaceholder="never" *ngIf="selectedRegularClients.includes(row)">
+                      <input matInput type="number" [value]="value" placeholder='Wait Time' required (blur)="updateRegularClientCellValue($event, 'waitTime', rowIndex)">
                     </mat-form-field>
                   </ng-template>
                 </ngx-datatable-column>
@@ -198,53 +216,49 @@
                       {{value}}
                     </span>
                     <mat-form-field floatPlaceholder="never" *ngIf="editing[rowIndex+ '-location']">
-                      <input matInput autofocus (blur)="updateCasualClientCellValue($event, 'location', rowIndex)" type="text" [value]="value"
-                        placeholder="location name" />
+                      <input matInput autofocus [value]="value" (blur)="updateCasualClientCellValue($event, 'location', rowIndex)" type="text"
+                        [value]="value" placeholder="Location name" />
                     </mat-form-field>
                   </ng-template>
                 </ngx-datatable-column>
 
-                <ngx-datatable-column name="Capacity">
+                <ngx-datatable-column prop="demand">
                   <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
                     <mat-form-field floatPlaceholder="never">
-                      <input matInput type="number" placeholder='Capacity' required>
+                      <input matInput type="number" [value]="value" (blur)="updateCasualClientCellValue($event, 'capacity', rowIndex)" placeholder='Capacity' required>
                     </mat-form-field>
                   </ng-template>
                 </ngx-datatable-column>
 
-                <ngx-datatable-column name="Time">
-                  <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-row="row">
-
+                <ngx-datatable-column prop="waitTime">
+                  <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                    <mat-form-field floatPlaceholder="never">
+                      <input matInput type="number" [value]="value" placeholder='Wait Time' required (blur)="updateRegularClientCellValue($event, 'waitTime', rowIndex)" required>
+                    </mat-form-field>
                   </ng-template>
                 </ngx-datatable-column>
 
-                <ngx-datatable-column name="Edit" [maxWidth]="40">
+                <ngx-datatable-column [maxWidth]="40">
                   <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex">
-                    <span class="glyphicon glyphicon-trash" mat-raised-button color="primary" (click)="onDeleteCasualClient(rowIndex)"></span>
+                    <span class="glyphicon glyphicon-trash" mat-raised-button color="primary" (click)="onDeleteCasualClient(rowIndex)">x</span>
                   </ng-template>
                 </ngx-datatable-column>
 
               </ngx-datatable>
 
-              <div style="float: left;">
+              <!-- <div style="float: left;">
                 <mat-form-field class="clientTable-error">
                   <input matInput style="visibility: hidden;" formControlName="clientTable">
                 </mat-form-field>
-              </div>
+              </div> -->
 
               <div>
-                <button mat-raised-button matStepperNext color="primary" class="buttonPhase">Next</button>
+                <mat-error *ngIf="!isAllInputFill">Please fill all input</mat-error>
+                <mat-error *ngIf="!isCasualClientValid">Please complete casual client fields</mat-error>
+                <button mat-raised-button color="primary" [disabled]="!isAllInputFill || !isCasualClientValid || clientFormGroup.get('clientTable').invalid" class="buttonPhase" (click)="onSave()">Save</button>
                 <button mat-raised-button matStepperPrevious color="primary" class="buttonPhase">Back</button>
               </div>
             </form>
-          </mat-step>
-
-          <mat-step>
-            <ng-template matStepLabel>Done</ng-template>
-            You are now done.
-            <div>
-              <button mat-button matStepperPrevious>Back</button>
-            </div>
           </mat-step>
         </mat-horizontal-stepper>
       </div>

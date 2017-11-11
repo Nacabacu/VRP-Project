@@ -1,0 +1,27 @@
+<h1 mat-dialog-title>Select a client</h1>
+<div mat-dialog-content>
+  <ngx-datatable class="material" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="50" [reorderable]="false"
+    [rows]="clients" [limit]="5" style="clear:both;" [selected]="selectedClient" [selectionType]="'single'">
+    <ngx-datatable-column prop="companyName"></ngx-datatable-column>
+    <ngx-datatable-column prop="branchName"></ngx-datatable-column>
+    <ngx-datatable-column prop="coords" name="Coordinate"></ngx-datatable-column>
+  </ngx-datatable>
+  <mat-form-field floatPlaceholder="auto">
+    <input matInput placeholder="Capacity" type="number" min="0" tabindex="1" required [(ngModel)]="capacity">
+  </mat-form-field>
+  <label>Delivery Start Time: </label>
+  <mat-form-field class="timepicker">
+    <input matInput type="number" min="0" max="23" placeholder="Hour" [(ngModel)]="hour">
+    <!-- <mat-error *ngIf="planningInfoGroup.get('hour').hasError['required']">You must enter a value</mat-error> -->
+  </mat-form-field>
+
+  <mat-form-field class="timepicker">
+    <input matInput type="number" min="0" max="59" placeholder="Minute" [(ngModel)]="minute">
+    <!-- <mat-error *ngIf="planningInfoGroup.get('minute').hasError['required']">You must enter a value</mat-error> -->
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button color="primary" [disabled]="capacity === 0 || selectedClient.length === 0" (click)="onConfirm()"
+    tabindex="2">Confirm</button>
+  <button mat-button [mat-dialog-close]="false" tabindex="-1">Cancel</button>
+</div>

@@ -1,4 +1,3 @@
-import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { Headers, Http, RequestOptions } from '@angular/http';
 
@@ -9,7 +8,7 @@ export class DepotService {
 
     depotUrl = 'http://localhost:3000/api/depot';
 
-    constructor(private http: Http, private router: Router) { }
+    constructor(private http: Http) { }
 
     createDepot(depotData) {
         const headers = new Headers();
@@ -67,7 +66,7 @@ export class DepotService {
 
     updateDepot(depotData) {
         const headers = new Headers();
-        headers.set('Access-Control-Allow-Origin', ['http://localhost:4200']);
+        headers.set('Access-Control-Allow-Origin', 'http://localhost:4200');
         headers.set('Access-Control-Allow-Methods', "GET, POST, HEAD, OPTIONS, PUT, DELETE, PATCH");
         headers.set('Content-Type', 'application/json');
         const opts = new RequestOptions();

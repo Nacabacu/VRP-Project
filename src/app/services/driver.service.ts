@@ -1,17 +1,12 @@
-import { Observable } from 'rxjs/Observable';
-import { Router } from '@angular/router';
 import { Http, Response } from '@angular/http';
 import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/toPromise';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/operator/map';
 
 @Injectable()
 export class DriverService {
 
   constructor(
-    private http: Http,
-    private router: Router
+    private http: Http
   ) { }
 
   getDrivers(): Promise<any> {
@@ -24,7 +19,7 @@ export class DriverService {
   }
 
   private handleError(error: any): Promise<any> {
-    console.error('An error occurred', error); // for demo purposes only
+    console.error('An error occurred', error);
     return Promise.reject(error.message || error);
   }
 

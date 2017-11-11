@@ -51,7 +51,7 @@ router.post('/saveRoute', (req, res) => {
         coordinates.push(client.coordinate);
     });
 
-    googleMapClient.distanceMatrix({
+   googleMapClient.distanceMatrix({
             origins: coordinates,
             destinations: coordinates,
             departure_time: new Date(req.body.date).getTime()
@@ -91,9 +91,9 @@ router.post('/saveRoute', (req, res) => {
                 clients: req.body.clients
             });
 
-            planningResult.save(function (err) {
+            planningResult.save(function (err, response) {
                 if (err) errorHandler(err, res);
-                res.status(200).send(result);
+                res.status(200).send(response._id);
             });
         })
         .catch(function (err) {

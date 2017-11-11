@@ -31,7 +31,7 @@ export class DepotComponent implements OnInit {
 
   markers: Marker[] = [];
   temp = [];
-  selected = [];
+  selectedDepot = [];
   editing = {};
 
   @ViewChild("search") public searchElementRef: ElementRef;
@@ -147,8 +147,8 @@ export class DepotComponent implements OnInit {
   }
 
   onRowSelected() {
-    this.map.lat = this.selected[0].lat;
-    this.map.lng = this.selected[0].lng;
+    this.map.lat = this.selectedDepot[0].lat;
+    this.map.lng = this.selectedDepot[0].lng;
   }
 
   onSave() {

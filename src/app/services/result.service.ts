@@ -1,22 +1,21 @@
+import { IPlanning } from '../shared/planning';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { Result } from './../models/result';
-import { Router } from '@angular/router';
-import { Http, Response } from '@angular/http';
+import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class ResultService {
+
+  vrpUrl = 'http://localhost:3000/api/vrp';
   clearMapSubject = new Subject<boolean>();
 
-  constructor(
-    private http: Http,
-    private router: Router
-  ) { }
+  constructor(private http: Http) { }
 
   getResults(): Promise<any> {
-    return this.http.get('http://localhost:3000/api/vrp/getResults')
+    return this.http.get(this.vrpUrl + '/getResults')
       .toPromise()
       .then((response: Response) => {
         const results = new Array<Result>();
@@ -29,10 +28,26 @@ export class ResultService {
   }
 
   getResult(id): Promise<Result> {
-    return this.http.get('http://localhost:3000/api/vrp/getResult/' + id)
+    return this.http.get(this.vrpUrl + '/getResult/' + id)
       .toPromise()
       .then((response: Response) => {
         return this.createResultModel(response.json());
+      })
+      .catch(this.handleError);
+  }
+
+  createPlanning(planningData: IPlanning) {
+    const headers = new Headers();
+    headers.set('Access-Control-Allow-Origin', 'http://localhost:4200');
+    headers.set('Access-Control-Allow-Methods', "GET, POST, HEAD, OPTIONS, PUT, DELETE, PATCH");
+    headers.set('Content-Type', 'application/json');
+    const opts = new RequestOptions();
+    opts.headers = headers;
+    return this.http.post(this.vrpUrl + '/saveRoute', planningData)
+      .toPromise()
+      .then((response) => {
+        console.log(response);
+        return response;
       })
       .catch(this.handleError);
   }

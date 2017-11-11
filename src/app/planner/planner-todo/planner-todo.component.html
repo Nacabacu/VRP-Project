@@ -41,7 +41,8 @@
               </ng-template>
             </ngx-datatable-column>
 
-            <ngx-datatable-column [width]="50" [resizeable]="false" [sortable]="false" [draggable]="false" [minWidth]="30" [flexGrow]="0.2" *ngIf="isResponsive">
+            <ngx-datatable-column [width]="50" [resizeable]="false" [sortable]="false" [draggable]="false" [minWidth]="30" [flexGrow]="0.2"
+              *ngIf="isResponsive">
               <ng-template let-row="row" let-expanded="doingExpanded" ngx-datatable-cell-template>
                 <a (click)="doingExpanded = !doingExpanded" title="Expand/Collapse Row" (click)="toggleExpandDoing(row)">
                   <i [class]="doingExpanded ? 'fa fa-search-plus' : 'fa fa-search-minus'" aria-hidden="true"></i>
@@ -61,33 +62,34 @@
                 <button class="right" mat-raised-button color="primary" (click)="onView(row.id)" style="margin-left:5px;">View</button>
               </ng-template>
             </ngx-datatable-row-detail>
-          
+
             <ngx-datatable-column name="No." [minWidth]="30" [flexGrow]="0.3">
               <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex">
                 {{ rowIndex + 1 }}
               </ng-template>
             </ngx-datatable-column>
-          
+
             <ngx-datatable-column name="Date" [minWidth]="95" [flexGrow]="0.6"></ngx-datatable-column>
-          
+
             <ngx-datatable-column name="Time" [minWidth]="75" [flexGrow]="0.6"></ngx-datatable-column>
-          
+
             <ngx-datatable-column name="Depot" [minWidth]="90" [flexGrow]="0.8"></ngx-datatable-column>
-          
+
             <ngx-datatable-column *ngIf="!isResponsive" [minWidth]="200" [flexGrow]="1">
               <ng-template ngx-datatable-cell-template let-row="row">
                 <button mat-raised-button color="primary" (click)="onView(row.id)" style="margin-right:5px;">View</button>
               </ng-template>
             </ngx-datatable-column>
-          
-            <ngx-datatable-column [width]="50" [resizeable]="false" [sortable]="false" [draggable]="false" [minWidth]="30" [flexGrow]="0.2" *ngIf="isResponsive">
+
+            <ngx-datatable-column [width]="50" [resizeable]="false" [sortable]="false" [draggable]="false" [minWidth]="30" [flexGrow]="0.2"
+              *ngIf="isResponsive">
               <ng-template let-row="row" let-expanded="doneExpanded" ngx-datatable-cell-template>
                 <a (click)="doneExpanded = !doneExpanded" title="Expand/Collapse Row" (click)="toggleExpandDone(row)">
                   <i [class]="doneExpanded ? 'fa fa-search-plus' : 'fa fa-search-minus'" aria-hidden="true"></i>
                 </a>
               </ng-template>
             </ngx-datatable-column>
-          
+
           </ngx-datatable>
         </div>
       </mat-tab>

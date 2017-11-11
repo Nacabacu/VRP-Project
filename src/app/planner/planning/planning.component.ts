@@ -2,14 +2,19 @@ import { Component, OnInit, ViewChild, OnDestroy, ViewEncapsulation } from '@ang
 import { FormArray, FormBuilder, FormControl, FormGroup, NgModel, Validators } from '@angular/forms';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
 import { MatDialog } from '@angular/material';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
-import { DepotService } from '../../services/depot.service';
 
+import { ClientPickerDialogComponent } from './client-picker-dialog/client-picker-dialog.component';
+
+import { DepotService } from '../../services/depot.service';
 import { ClientService } from '../../services/client.service';
 import { DriverService } from './../../services/driver.service';
+import { ResultService } from '../../services/result.service';
 
+import { IPlanning } from '../../shared/planning';
 import { Marker } from '../../shared/marker';
 import { Map } from '../../shared/map';
 import { Client } from '../../shared/client';
@@ -40,6 +45,7 @@ export class PlanningComponent implements OnInit, OnDestroy {
   tempClients = [];
   casualClients = [];
   regularClients = [];
+  // dialogClients = [];
   selectedRegularClients = [];
   selectedCasualClient = [];
   regularClientMarkers: Marker[] = [];
@@ -47,6 +53,8 @@ export class PlanningComponent implements OnInit, OnDestroy {
   numOfSelectedClientSubject = new Subject<number>();
   numOfSelectedClientSubScription: Subscription;
   editing = {};
+  isAllInputFill = true;
+  isCasualClientValid = true;
   capacityCtrl: FormArray;
 
   planningInfoGroup: FormGroup;
@@ -55,7 +63,7 @@ export class PlanningComponent implements OnInit, OnDestroy {
 
   rows = [];
   temps = [];
-  selected = [];
+  selectedDepot = [];
   numOfSelectedDepotSubject = new Subject<number>();
   numOfSelectedDepotSubScription: Subscription;
 
@@ -64,10 +72,13 @@ export class PlanningComponent implements OnInit, OnDestroy {
     private driverService: DriverService,
     private clientService: ClientService,
     private depotService: DepotService,
+    private resultService: ResultService,
+    private router: Router,
     public dialog: MatDialog
   ) {
     // Planning
     this.planningInfoGroup = this.formBuilder.group({
+      dateTime: new FormControl(null, Validators.required),
       date: new FormControl(null, Validators.required),
       hour: new FormControl(null, Validators.required),
       minute: new FormControl(null, Validators.required),
@@ -107,8 +118,10 @@ export class PlanningComponent implements OnInit, OnDestroy {
           const regularClient: any = {};
           regularClient.companyName = client.companyName;
           regularClient.branchName = branch.branchName;
-          regularClient.coords = branch.coordinate;
-          regularClient.capacity = 0;
+          // regularClient.clientName = client.companyName + " - " + branch.branchName;
+          regularClient.coordinate = branch.coordinate;
+          regularClient.demand = 0;
+          regularClient.waitTime = 0;
           this.regularClients.push(regularClient);
         });
       });
@@ -155,7 +168,7 @@ export class PlanningComponent implements OnInit, OnDestroy {
   }
 
   checkDepotSelected(control: FormControl): { [s: string]: boolean } {
-    if (this.selected.length < 1) {
+    if (this.selectedDepot.length < 1) {
       return ({ selectedDepotError: true });
     } else {
       return (null);
@@ -171,7 +184,8 @@ export class PlanningComponent implements OnInit, OnDestroy {
   }
 
   checkClientSelected(control: FormControl): { [s: string]: boolean } {
-    if (this.selectedRegularClients.length < 1 || this.selectedRegularClients.length > 25) {
+    const selectedClient = this.selectedRegularClients.length + this.casualClients.length
+    if (selectedClient < 1 || selectedClient > 25) {
       return ({ selectedClientError: true });
     } else {
       return (null);
@@ -185,7 +199,7 @@ export class PlanningComponent implements OnInit, OnDestroy {
 
   onHourBlur(e) {
     if (e.target.valueAsNumber > 23) {
-      this.planningInfoGroup.get('hour').setValue(24);
+      this.planningInfoGroup.get('hour').setValue(0);
     }
   }
 
@@ -205,8 +219,8 @@ export class PlanningComponent implements OnInit, OnDestroy {
     const markers: Marker[] = [];
     dataset.map((data, index) => {
       markers.push({
-        lat: data.coords[0],
-        lng: data.coords[1],
+        lat: data.coordinate[0],
+        lng: data.coordinate[1],
         draggable: false
       });
     });
@@ -223,11 +237,15 @@ export class PlanningComponent implements OnInit, OnDestroy {
     });
     this.casualClients.push({
       coordinate: [latitude, longtitude],
-      location: "New Location"
+      location: "New Location",
+      demand: 0,
+      waitTime: 0
     });
     const lastIndex = this.casualClients.length - 1;
     this.casualClients[lastIndex].branchName = "";
     this.editing[lastIndex + '-location'] = true;
+    this.numOfSelectedClientSubject.next(this.casualClients.length);
+    this.validateCasualClient();
   }
 
   markerDragEnd(marker: Marker, event, index: number) {
@@ -236,9 +254,13 @@ export class PlanningComponent implements OnInit, OnDestroy {
   }
 
   onRegularClientSelected({ selected }) {
-    this.selectedRegularClients = selected;
-    this.regularClientMarkers = this.createMarkers(selected);
-    this.numOfSelectedClientSubject.next(selected.length);
+    this.checkAllInputFill();
+    if (selected) {
+      this.checkAllInputFill();
+      this.selectedRegularClients = selected;
+      this.regularClientMarkers = this.createMarkers(selected);
+      this.numOfSelectedClientSubject.next(selected.length);
+    }
   }
 
   onDeleteCasualClient(rowIndex) {
@@ -250,6 +272,8 @@ export class PlanningComponent implements OnInit, OnDestroy {
       if (result) {
         this.casualClientMarkers.splice(rowIndex, 1);
         this.casualClients.splice(rowIndex, 1);
+        this.numOfSelectedClientSubject.next(this.casualClients.length);
+        this.validateCasualClient();
       }
     });
   }
@@ -269,13 +293,60 @@ export class PlanningComponent implements OnInit, OnDestroy {
     if (event.target.value !== "") {
       this.editing[rowIndex + '-' + cell] = false;
       this.casualClients = [...this.casualClients];
+      this.validateCasualClient();
     }
   }
 
+  updateRegularClientCellValue(event, cell, rowIndex) {
+    if (event.target.value > 0) {
+      this.regularClients[rowIndex][cell] = event.target.value;
+      // this.selectedRegularClients[this.selectedRegularClients.length - 1][cell] = event.target.value;
+      // console.log(this.selectedRegularClients);
+      this.regularClients = [...this.regularClients];
+      this.checkAllInputFill();
+    }
+  }
+
+  checkAllInputFill() {
+    let isValid: boolean = true;
+    if (this.selectedRegularClients.length === 0) {
+      this.isAllInputFill = true;
+    };
+    this.selectedRegularClients.map((client, i) => {
+      if (client.demand < 1 || client.waitTime < 1) {
+        isValid = false;
+        this.isAllInputFill = false;
+      }
+      if (i === this.selectedRegularClients.length - 1) {
+        if (isValid) {
+          this.isAllInputFill = true;
+        }
+      }
+    });
+  }
+
+  validateCasualClient() {
+    console.log()
+    let isValid: boolean = true;
+    if (this.casualClients.length === 0) {
+      this.isCasualClientValid = true;
+    };
+    this.casualClients.map((client, i) => {
+      if (client.location.length < 1 || client.demand < 1 || client.waitTime < 0) {
+        isValid = false;
+        this.isCasualClientValid = false;
+      }
+      if (i === this.casualClients.length - 1) {
+        if (isValid) {
+          this.isCasualClientValid = true;
+        }
+      }
+    });
+  }
 
   onRowSelected({ selected }) {
-    this.map.lat = this.selected[0].lat;
-    this.map.lng = this.selected[0].lng;
+    this.map.lat = this.selectedDepot[0].lat;
+    this.map.lng = this.selectedDepot[0].lng;
     this.map.zoom = 16;
     this.numOfSelectedDepotSubject.next(selected.length);
   }
@@ -283,6 +354,24 @@ export class PlanningComponent implements OnInit, OnDestroy {
   test() {
     console.log("Lorem");
   }
+
+  // onAddClient(rowIndex: number) {
+  //   const dialogRef = this.dialog.open(ClientPickerDialogComponent, {
+  //     width: '80vw'
+  //   });
+
+  //   dialogRef.afterClosed().subscribe((result) => {
+  //     if (result) {
+  //       console.log(result);
+  //       this.dialogClients.push(result);
+  //       // this.client.branches.splice(rowIndex, 1);
+  //       // this.markers.splice(rowIndex, 1);
+  //       // this.temp = [...this.client.branches];
+  //       // this.renderMarkers();
+  //       // this.checkBranchName();
+  //     }
+  //   });
+  // }
 
   //FilterDepot
   updateFilterDepot(event) {
@@ -296,9 +385,49 @@ export class PlanningComponent implements OnInit, OnDestroy {
 
   }
 
+  onSave() {
+    const routeFixed = [];
+
+    this.regularClients.map((client) => {
+      client.demand = parseInt(client.demand);
+      client.waitTime = parseInt(client.waitTime) * 60;
+      client.clientName = client.companyName + " - " + client.branchName;
+    });
+
+    this.selectedCasualClient.map((client) => {
+      client.demand = parseInt(client.demand);
+      client.waitTime = parseInt(client.waitTime) * 60;
+      this.selectedRegularClients.push(client);
+    });
+
+    this.drivers.map(() => {
+      routeFixed.push([]);
+    });
+
+    this.selectedDepot[0].coordinate = [this.selectedDepot[0].lat, this.selectedDepot[0].lng];
+
+    const planningData: IPlanning = {
+      date: this.planningInfoGroup.value.dateTime,
+      method: this.planningInfoGroup.value.method,
+      workingHour: 8,
+      numVehicles: this.selectedDriver.length,
+      vehicleCapacity: this.driverFormGroup.value.capacity,
+      routeLocks: routeFixed,
+      depot: this.selectedDepot[0],
+      drivers: this.selectedDriver,
+      clients: this.selectedRegularClients
+    }
+    this.resultService.createPlanning(planningData).then((response) => {
+      console.log(response);
+      this.router.navigate(['/planner']);
+    });
+  }
+
   ngOnDestroy() {
     this.numOfDriversSubScription.unsubscribe();
     this.numOfSelectedDriverSubScription.unsubscribe();
+    this.numOfSelectedClientSubScription.unsubscribe();
+    this.numOfSelectedDepotSubScription.unsubscribe();
   }
 
 }
