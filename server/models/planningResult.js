@@ -64,7 +64,8 @@ var PlanningResult = mongoose.model('planningResults', {
                 require: true
             }
         },
-    ]
+    ],
+    times: [[Number]]
 }, 'planningResults');
 
 module.exports = { PlanningResult };

@@ -62,6 +62,7 @@ export class ResultService {
 
   private createResultModel(input): Result {
     const dateTime = new Date(input.date);
+    input.dateTime = input.date;
     input.date = `${dateTime.getDate()}/${dateTime.getMonth() + 1}/${dateTime.getFullYear()}`;
     input.time = /\d*:\d*/g.exec(dateTime.toString())[0];
 
