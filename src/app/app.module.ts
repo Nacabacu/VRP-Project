@@ -89,7 +89,8 @@ const MY_DATE_FORMATS = {
     HttpModule,
     NgxDatatableModule,
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyCMk-d92auJ7HbZaXajcpdXtqcBMoH4RUc'
+      apiKey: 'AIzaSyCMk-d92auJ7HbZaXajcpdXtqcBMoH4RUc',
+      libraries: ['places']
     }),
     AngularFontAwesomeModule
   ],

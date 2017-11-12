@@ -1,11 +1,51 @@
 .helpbox{
     color:red
 }
-
-.ngx-datatable.material { 
-    box-shadow: none; 
-}
-
 div#depotHeader {
     padding: 0px;
+}
+.btn{
+    top: 10px;
+
+}    
+.searchLocat{
+    width: 810px;
+    padding-left: 20px;
+}
+#table1 {
+    padding-top: 50px;
+    /* width: 880px; */
+    width: 47.30%;
+    /* padding: 0px 25px 25px; */
+    padding-left: 25px;
+    padding-top: 0px!important;
+
+}
+.btnSave{
+    bottom: -20px;
+    right: -23px;
+}
+.btnCancle{
+    bottom: -20px;
+    right: -23px;
+    left: -717px;
+
+}
+button#btnClear {
+    top: 10px;
+}
+/* .btnClear{
+    top: 10px!important;
+} */
+/* button.btnClear.mat-raised-button.mat-primary {
+    top: 10px!important;
+} */
+/* .textInput{
+    padding-top: 3px;
+} */
+/* #sections div[id^='txtInput'] {
+    padding-top: 3px;
+} */
+input#txtInput {
+    padding-top: 4px;
 }

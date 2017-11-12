@@ -7,23 +7,22 @@
         </div>
       </div>
     </div>
-  </div>
+  </div>  
   <div class="row">
     <div class="col-md-6">
-      <mat-form-field floatPlaceholder="never">
+      <mat-form-field floatPlaceholder="never" class="searchLocat">
         <input matInput placeholder="Search for location" #search [formControl]="searchControl">
       </mat-form-field>
-      <button mat-raised-button color="primary" (click)="onClear()" style="float: right;">Clear</button>
+      <button mat-raised-button color="primary" (click)="onClear()" style="float: right;" id="btnClear">Clear</button>
       <agm-map style="height: calc(100vh - 250px);" [latitude]="map?.lat" [longitude]="map?.lng" [zoom]="map?.zoom" (mapClick)="mapClicked($event)">
         <agm-marker *ngFor="let marker of markers; let i = index" [latitude]="marker.lat" [longitude]="marker.lng" [label]="marker.label"
           [markerDraggable]="marker.draggable" (dragEnd)="markerDragEnd(marker, $event, i)">
         </agm-marker>
       </agm-map>
     </div>
+    <div class="col-md-6" id="table1">
 
-    <div class="col-md-6">
-
-      <mat-form-field floatPlaceholder="auto">
+      <mat-form-field floatPlaceholder="auto" class="searchDepot">
         <input matInput placeholder='Search depot' (keyup)='updateFilter($event)' />
       </mat-form-field>
 
@@ -43,7 +42,7 @@
             </span>
             <mat-form-field floatPlaceholder="never" *ngIf="editing[rowIndex+ '-depotName']">
               <input matInput autofocus (blur)="updateValue($event, 'depotName', rowIndex)" type="text" [value]="value" placeholder="Branch name"
-              />
+              id="txtInput" class="textInput"/>
             </mat-form-field>
           </ng-template>
         </ngx-datatable-column>
@@ -60,9 +59,9 @@
       </ngx-datatable>
       <span *ngIf="!isDepotNameValid" class="helpbox">Please enter valid data!</span>
     </div>
-    <div>
-      <button mat-raised-button color="primary" (click)="onSave()" [disabled]="!isDepotNameValid">Save</button>
-      <button mat-raised-button (click)="onCancel()" style="float: right;">Cancel</button>
+    <div class="btnGroup">
+      <button mat-raised-button color="primary" (click)="onSave()" [disabled]="!isDepotNameValid" class="btnSave">Save</button>
+      <button mat-raised-button (click)="onCancel()" style="float: right;" class="btnCancle">Cancel</button>
     </div>
   </div>
 </div>

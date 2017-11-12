@@ -1,6 +1,13 @@
-<h1>Client</h1>
-<div>
-  <mat-card>
+<div class="col-xs-12" id="depotHeader">
+    <div class="title-container">
+      <div class="title">
+        <span>Client</span>
+      </div>
+    </div>
+  </div>
+<!-- <h1>Client</h1> -->
+<div id="ctn" class="ctnClient"> 
+  <!-- <mat-card> -->
     <mat-form-field floatPlaceholder="auto">
       <input matInput placeholder='Search company name' (keyup)='updateFilter($event)' />
     </mat-form-field>
@@ -29,6 +36,6 @@
         </ng-template>
       </ngx-datatable-column>
     </ngx-datatable>
-  </mat-card>
+  <!-- </mat-card> -->
 </div>
 <router-outlet></router-outlet>

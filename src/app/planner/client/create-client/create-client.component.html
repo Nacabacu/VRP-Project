@@ -6,23 +6,22 @@
           <span *ngIf="isNew">New Client</span>
           <span *ngIf="!isNew">Edit {{client?.companyName}}</span>
         </div>
-      </div>
+      </div>  
     </div>
   </div>
   <div class="row">
     <div class="col-md-6">
-      <mat-form-field floatPlaceholder="never">
+      <mat-form-field floatPlaceholder="never" class="searchLocat">
         <input matInput placeholder="Search for location" #search [formControl]="searchControl">
       </mat-form-field>
-      <button mat-raised-button color="primary" (click)="onClear()" style="float: right;">Clear</button>
+      <button mat-raised-button color="primary" (click)="onClear()" style="float: right;" class="btnClear">Clear</button>
       <agm-map style="height: calc(100vh - 250px);" [latitude]="map?.lat" [longitude]="map?.lng" [zoom]="map?.zoom" (mapClick)="mapClicked($event)">
         <agm-marker *ngFor="let marker of markers; let i = index" [latitude]="marker.lat" [longitude]="marker.lng" [label]="marker.label"
           [markerDraggable]="marker.draggable" (dragEnd)="markerDragEnd(marker, $event, i)">
         </agm-marker>
       </agm-map>
-    </div>
-
-    <div class="col-md-6">
+    </div>  
+    <div class="col-md-6" id="table1">
       <!-- <h3>Client Info</h3> -->
       <div>
         Company name :
@@ -34,9 +33,8 @@
           </mat-error>
         </mat-form-field>
       </div>
-
       <mat-form-field floatPlaceholder="auto" *ngIf="!isNew">
-        <input matInput placeholder='Search branch name' (keyup)='updateFilter($event)' />
+        <input matInput placeholder='Search branch name' (keyup)='updateFilter($event)'/>
       </mat-form-field>
 
       <ngx-datatable #table class='material' columnMode="flex" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [limit]="7"
@@ -55,7 +53,7 @@
             </span>
             <mat-form-field floatPlaceholder="never" *ngIf="editing[rowIndex+ '-branchName']">
               <input matInput autofocus (blur)="updateValue($event, 'branchName', rowIndex)" type="text" [value]="value" placeholder="Branch name"
-              />
+              id="txtInput" class="textInput"/>
             </mat-form-field>
           </ng-template>
         </ngx-datatable-column>
@@ -74,9 +72,10 @@
 
       </ngx-datatable>
       <span *ngIf="!isBranchNameValid || companyNameInput.hasError('required')" class="helpbox">Please enter valid data!</span>
-      <div>
-        <button mat-raised-button color="primary" (click)="onSave()" [disabled]="!isBranchNameValid || companyNameInput.hasError('required')">Save</button>
-        <button mat-raised-button color="warn" (click)="onDeleteAll()">Delete</button>
+      <div class="btnGroup">
+        <button mat-raised-button color="primary" (click)="onSave()" [disabled]="!isBranchNameValid || companyNameInput.hasError('required')" class=".btnSave{
+          ">Save</button>
+        <button mat-raised-button color="warn" (click)="onDeleteAll()" class="btnDelete">Delete</button>
         <button mat-raised-button (click)="onCancel()" style="float: right;">Cancel</button>
       </div>
     </div>
