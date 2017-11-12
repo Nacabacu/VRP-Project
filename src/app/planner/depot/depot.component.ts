@@ -47,6 +47,7 @@ export class DepotComponent implements OnInit {
 
   ngOnInit() {
     this.depotService.getAllDepots().then((response) => {
+      console.log(response)
       this.depots = response;
       this.temp = [...this.depots];
       this.renderMarkers();
@@ -86,8 +87,7 @@ export class DepotComponent implements OnInit {
     const latitude: number = $event.coords.lat;
     const longtitude: number = $event.coords.lng;
     this.depots.push({
-      lat: latitude,
-      lng: longtitude
+      coordinate: [latitude, longtitude]
     });
     this.renderMarkers();
     const lastIndex = this.depots.length - 1;
@@ -138,8 +138,8 @@ export class DepotComponent implements OnInit {
     this.markers = [];
     this.depots.map((depot, index) => {
       this.markers.push({
-        lat: depot.lat,
-        lng: depot.lng,
+        lat: depot.coordinate[0],
+        lng: depot.coordinate[1],
         label: (index + 1).toString(),
         draggable: true
       });
@@ -153,9 +153,13 @@ export class DepotComponent implements OnInit {
 
   onSave() {
     this.depots = this.temp;
-    // this.depotService.updateDepot(this.depots).then((response) => {
-    //   this.router.navigate(['/planner']);
-    // });
+    this.depots.map(function (depot) {
+      if (depot._id) {
+        this.depotService.updateDepot(depot)
+      } else {
+        this.depotService.createDepot(depot)
+      }
+    }.bind(this));
   }
 
   onDelete(rowIndex: number) {
@@ -165,6 +169,7 @@ export class DepotComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
+        this.depotService.deleteDepot(this.depots[rowIndex]._id);
         this.depots.splice(rowIndex, 1);
         this.markers.splice(rowIndex, 1);
         this.temp = [...this.depots];

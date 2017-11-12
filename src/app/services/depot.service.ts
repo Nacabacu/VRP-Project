@@ -16,7 +16,7 @@ export class DepotService {
         headers.set('Content-Type', 'application/json');
         const opts = new RequestOptions();
         opts.headers = headers;
-        const body = { client: depotData };
+        const body = { depot: depotData };
         return this.http.post(this.depotUrl + '/create/', JSON.stringify(body), opts)
             .toPromise()
             .then((response) => {

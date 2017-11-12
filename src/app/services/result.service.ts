@@ -46,7 +46,6 @@ export class ResultService {
     return this.http.post(this.vrpUrl + '/saveRoute', planningData)
       .toPromise()
       .then((response) => {
-        console.log(response);
         return response;
       })
       .catch(this.handleError);

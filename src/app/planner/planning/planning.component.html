@@ -30,22 +30,22 @@
               <ng-template matStepLabel>Planning Info</ng-template>
 
               <div class="col-sm-12 col-md-8 col-md-offset-2">
-                <label>Delivery Date and Time : </label>
+                <!-- <label>Delivery Date and Time : </label>
                 <mat-form-field floatPlaceholder="never">
                   <input matInput type="datetime-local" placrholder="Choose Date and Time" formControlName="dateTime">
                   <mat-error *ngIf="planningInfoGroup.get('dateTime').hasError['required']">You must enter a value</mat-error>
-                </mat-form-field>
+                </mat-form-field> -->
 
-                <!-- <label>Delivery Date: </label>
+                <label>Delivery Date: </label>
                 <mat-form-field>
                   <input matInput [matDatepickerFilter]="dateFilter" [matDatepicker]="picker" placeholder="Choose a date" formControlName="date">
                   <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                   <mat-datepicker #picker></mat-datepicker>
                   <mat-error *ngIf="planningInfoGroup.get('date').hasError['required']">You must enter a value</mat-error>
                   <mat-error *ngIf="planningInfoGroup.get('date').hasError['matDatepickerFilter']">You must select correct date</mat-error>
-                </mat-form-field> -->
+                </mat-form-field>
 
-                <!-- <br>
+                <br>
                 <label>Delivery Start Time: </label>
                 <mat-form-field class="timepicker">
                   <input matInput type="number" min="0" max="23" placeholder="Hour" formControlName="hour" (blur)="onHourBlur($event)">
@@ -55,7 +55,7 @@
                 <mat-form-field class="timepicker">
                   <input matInput type="number" min="0" max="59" placeholder="Minute" formControlName="minute" (blur)="onMinuteBlur($event)">
                   <mat-error *ngIf="planningInfoGroup.get('minute').hasError['required']">You must enter a value</mat-error>
-                </mat-form-field> -->
+                </mat-form-field>
                 <br>
                 <div style="margin-top:13.5px;">
                   <label>Method : </label>
@@ -81,17 +81,16 @@
                   </ngx-datatable-column>
 
                   <ngx-datatable-column prop="depotName" [flexGrow]="3"></ngx-datatable-column>
-
-
-                  <ngx-datatable-column name="Lat" [flexGrow]="3">
+                  
+                  <ngx-datatable-column prop="coordinate" name="Lat" [flexGrow]="3">
                     <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
-                      {{value}}
+                      {{ value[0] | number: '1.6-6' }}
                     </ng-template>
                   </ngx-datatable-column>
 
-                  <ngx-datatable-column name="Lng" [flexGrow]="3">
+                  <ngx-datatable-column prop="coordinate" name="Lng" [flexGrow]="3">
                     <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
-                      {{value}}
+                      {{ value[1] | number: '1.6-6' }}
                     </ng-template>
                   </ngx-datatable-column>
 
@@ -164,18 +163,19 @@
               <mat-form-field floatPlaceholder="auto">
                 <input matInput placeholder='Filter by name' (keyup)='updateClientFilter($event)' />
               </mat-form-field>
-              <span *ngIf="clientFormGroup.get('clientTable').invalid" style="color: red;">
-                <small>
-                  You must select at least one client and not more than twenty five clients
-                </small>
-              </span>
 
               <ngx-datatable #clientTable class="material expandable client-table" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
-                [rowHeight]="50" [reorderable]="false" [rows]="regularClients" [limit]="8" style="clear:both;" [selected]="selectedRegularClients"
+                [rowHeight]="50" [reorderable]="false" [rows]="regularClients" [limit]="5" style="clear:both;" [selected]="selectedRegularClients"
                 [selectionType]="'checkbox'" (select)='onRegularClientSelected($event)'>
 
-                <ngx-datatable-column [width]="30" [sortable]="false" [canAutoResize]="false" [draggable]="false" [resizeable]="false" [headerCheckboxable]="true"
+                <ngx-datatable-column [width]="30" [sortable]="false" [canAutoResize]="false" [draggable]="false" [resizeable]="false" [headerCheckboxable]="false"
                   [checkboxable]="true">
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="No." [maxWidth]="30">
+                  <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                    {{rowIndex + 1}}
+                  </ng-template>
                 </ngx-datatable-column>
 
                 <ngx-datatable-column prop="companyName"></ngx-datatable-column>
@@ -210,14 +210,14 @@
               <ngx-datatable #casualClientTable class="material expandable client-table" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
                 [rowHeight]="50" [reorderable]="false" [rows]="casualClients" [limit]="2" style="clear:both;">
 
-                <ngx-datatable-column prop="location">
+                <ngx-datatable-column prop="clientName">
                   <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
-                    <span title="Double click to edit" (dblclick)="editing[rowIndex + '-location'] = true" *ngIf="!editing[rowIndex + '-location']">
+                    <span title="Double click to edit" (dblclick)="editing[rowIndex + '-clientName'] = true" *ngIf="!editing[rowIndex + '-clientName']">
                       {{value}}
                     </span>
-                    <mat-form-field floatPlaceholder="never" *ngIf="editing[rowIndex+ '-location']">
-                      <input matInput autofocus [value]="value" (blur)="updateCasualClientCellValue($event, 'location', rowIndex)" type="text"
-                        [value]="value" placeholder="Location name" />
+                    <mat-form-field floatPlaceholder="never" *ngIf="editing[rowIndex+ '-clientName']">
+                      <input matInput autofocus [value]="value" (blur)="updateCasualClientCellValue($event, 'clientName', rowIndex)" type="text"
+                        [value]="value" placeholder="Client name" />
                     </mat-form-field>
                   </ng-template>
                 </ngx-datatable-column>
@@ -225,15 +225,17 @@
                 <ngx-datatable-column prop="demand">
                   <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
                     <mat-form-field floatPlaceholder="never">
-                      <input matInput type="number" [value]="value" (blur)="updateCasualClientCellValue($event, 'capacity', rowIndex)" placeholder='Capacity' required>
+                      <input matInput type="number" [value]="value" (blur)="updateCasualClientCellValue($event, 'demand', rowIndex)" placeholder='Demand'
+                        required>
                     </mat-form-field>
                   </ng-template>
                 </ngx-datatable-column>
 
-                <ngx-datatable-column prop="waitTime">
+                <ngx-datatable-column name="Wait Time (min)" prop="waitTime">
                   <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
                     <mat-form-field floatPlaceholder="never">
-                      <input matInput type="number" [value]="value" placeholder='Wait Time' required (blur)="updateRegularClientCellValue($event, 'waitTime', rowIndex)" required>
+                      <input matInput type="number" [value]="value" placeholder='Wait Time' (blur)="updateCasualClientCellValue($event, 'waitTime', rowIndex)"
+                        required>
                     </mat-form-field>
                   </ng-template>
                 </ngx-datatable-column>
@@ -253,9 +255,13 @@
               </div> -->
 
               <div>
+                <mat-error *ngIf="clientFormGroup.get('clientTable').invalid">
+                  You must select at least one client and not more than twenty five clients
+                </mat-error>
                 <mat-error *ngIf="!isAllInputFill">Please fill all input</mat-error>
                 <mat-error *ngIf="!isCasualClientValid">Please complete casual client fields</mat-error>
-                <button mat-raised-button color="primary" [disabled]="!isAllInputFill || !isCasualClientValid || clientFormGroup.get('clientTable').invalid" class="buttonPhase" (click)="onSave()">Save</button>
+                <button mat-raised-button color="primary" [disabled]="!isAllInputFill || !isCasualClientValid || clientFormGroup.get('clientTable').invalid"
+                  class="buttonPhase" (click)="onSave()">Save</button>
                 <button mat-raised-button matStepperPrevious color="primary" class="buttonPhase">Back</button>
               </div>
             </form>

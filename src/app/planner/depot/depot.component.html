@@ -16,7 +16,7 @@
       <button mat-raised-button color="primary" (click)="onClear()" style="float: right;">Clear</button>
       <agm-map style="height: calc(100vh - 250px);" [latitude]="map?.lat" [longitude]="map?.lng" [zoom]="map?.zoom" (mapClick)="mapClicked($event)">
         <agm-marker *ngFor="let marker of markers; let i = index" [latitude]="marker.lat" [longitude]="marker.lng" [label]="marker.label"
-          [markerDraggable]="marker.draggable" (dragEnd)="markerDragEnd(marker, $event, i)">
+          [markerDraggable]="marker.draggable" (dragEnd)="markerDragEnd(marker, $event, i)" [iconUrl]="'../../assets/depot_marker.png'">
         </agm-marker>
       </agm-map>
     </div>
@@ -48,8 +48,11 @@
           </ng-template>
         </ngx-datatable-column>
 
-        <ngx-datatable-column prop="lat" name="Latitude" [flexGrow]="2"></ngx-datatable-column>
-        <ngx-datatable-column prop="lng" name="Longtitude" [flexGrow]="2"></ngx-datatable-column>
+        <ngx-datatable-column prop="coordinate" name="Lat | Lng" [flexGrow]="3">
+          <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+            {{ value[0] | number: '1.6-6' }} | {{ value[1] | number: '1.6-6'}}
+          </ng-template>
+        </ngx-datatable-column>
 
         <ngx-datatable-column name="Edit" [flexGrow]="2">
           <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-row="row" let-value="value">

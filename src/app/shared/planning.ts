@@ -1,7 +1,7 @@
 import { IDriver } from './driver';
 
 export interface IPlanning {
-    date: DateTimeFormat,
+    date: string,
     method: string,
     workingHour: number,
     numVehicles: number,

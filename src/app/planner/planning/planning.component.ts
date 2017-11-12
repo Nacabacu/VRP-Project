@@ -199,7 +199,7 @@ export class PlanningComponent implements OnInit, OnDestroy {
 
   onHourBlur(e) {
     if (e.target.valueAsNumber > 23) {
-      this.planningInfoGroup.get('hour').setValue(0);
+      this.planningInfoGroup.get('hour').setValue(23);
     }
   }
 
@@ -237,13 +237,12 @@ export class PlanningComponent implements OnInit, OnDestroy {
     });
     this.casualClients.push({
       coordinate: [latitude, longtitude],
-      location: "New Location",
+      clientName: "New client",
       demand: 0,
       waitTime: 0
     });
     const lastIndex = this.casualClients.length - 1;
-    this.casualClients[lastIndex].branchName = "";
-    this.editing[lastIndex + '-location'] = true;
+    this.editing[lastIndex + '-clientName'] = true;
     this.numOfSelectedClientSubject.next(this.casualClients.length);
     this.validateCasualClient();
   }
@@ -289,6 +288,7 @@ export class PlanningComponent implements OnInit, OnDestroy {
   }
 
   updateCasualClientCellValue(event, cell, rowIndex) {
+    console.log(this.casualClients[rowIndex][cell], event.target.value);
     this.casualClients[rowIndex][cell] = event.target.value;
     if (event.target.value !== "") {
       this.editing[rowIndex + '-' + cell] = false;
@@ -326,13 +326,13 @@ export class PlanningComponent implements OnInit, OnDestroy {
   }
 
   validateCasualClient() {
-    console.log()
+    console.log(this.casualClients)
     let isValid: boolean = true;
     if (this.casualClients.length === 0) {
       this.isCasualClientValid = true;
     };
     this.casualClients.map((client, i) => {
-      if (client.location.length < 1 || client.demand < 1 || client.waitTime < 0) {
+      if (client.clientName.length < 1 || client.demand < 1 || client.waitTime < 1) {
         isValid = false;
         this.isCasualClientValid = false;
       }
@@ -345,8 +345,8 @@ export class PlanningComponent implements OnInit, OnDestroy {
   }
 
   onRowSelected({ selected }) {
-    this.map.lat = this.selectedDepot[0].lat;
-    this.map.lng = this.selectedDepot[0].lng;
+    this.map.lat = this.selectedDepot[0].coordinate[0];
+    this.map.lng = this.selectedDepot[0].coordinate[1];
     this.map.zoom = 16;
     this.numOfSelectedDepotSubject.next(selected.length);
   }
@@ -387,27 +387,23 @@ export class PlanningComponent implements OnInit, OnDestroy {
 
   onSave() {
     const routeFixed = [];
+    const dateTime = new Date(new Date(this.planningInfoGroup.value.date)
+                      .setHours(this.planningInfoGroup.value.hour, this.planningInfoGroup.value.minute))
+                      .toISOString();
 
-    this.regularClients.map((client) => {
+    const clients = this.selectedRegularClients.concat(this.casualClients).map((client) => {
       client.demand = parseInt(client.demand);
       client.waitTime = parseInt(client.waitTime) * 60;
-      client.clientName = client.companyName + " - " + client.branchName;
-    });
-
-    this.selectedCasualClient.map((client) => {
-      client.demand = parseInt(client.demand);
-      client.waitTime = parseInt(client.waitTime) * 60;
-      this.selectedRegularClients.push(client);
+      client.clientName = client.clientName || client.companyName + " - " + client.branchName;
+      return client;
     });
 
     this.drivers.map(() => {
       routeFixed.push([]);
     });
 
-    this.selectedDepot[0].coordinate = [this.selectedDepot[0].lat, this.selectedDepot[0].lng];
-
     const planningData: IPlanning = {
-      date: this.planningInfoGroup.value.dateTime,
+      date: dateTime,
       method: this.planningInfoGroup.value.method,
       workingHour: 8,
       numVehicles: this.selectedDriver.length,
@@ -415,11 +411,11 @@ export class PlanningComponent implements OnInit, OnDestroy {
       routeLocks: routeFixed,
       depot: this.selectedDepot[0],
       drivers: this.selectedDriver,
-      clients: this.selectedRegularClients
+      clients: clients
     }
-    this.resultService.createPlanning(planningData).then((response) => {
-      console.log(response);
-      this.router.navigate(['/planner']);
+    this.resultService.createPlanning(planningData).then((planningId) => {
+      console.log(planningId)
+      this.router.navigate(['/planner/result', planningId]);
     });
   }
 
