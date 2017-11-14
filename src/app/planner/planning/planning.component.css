@@ -53,3 +53,17 @@ label {
 .driverTable-error .mat-input-subscript-wrapper {
     margin-top: 10px
 }
+div#mat-step-content-0-0 {
+    padding-left: 1%;
+    padding-right: 1%;
+}
+div#mat-step-content-0-2 {
+    padding-left: 1%;
+    padding-right: 1%;
+}
+.ngx-datatable.material.single-selection .datatable-body-row.active, .ngx-datatable.material.single-selection .datatable-body-row.active .datatable-row-group, .ngx-datatable.material.multi-selection .datatable-body-row.active, .ngx-datatable.material.multi-selection .datatable-body-row.active .datatable-row-group, .ngx-datatable.material.multi-click-selection .datatable-body-row.active, .ngx-datatable.material.multi-click-selection .datatable-body-row.active .datatable-row-group {
+    background-color: #b9c3ff!important;
+}
+
+
+
