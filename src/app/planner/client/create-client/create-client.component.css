@@ -2,6 +2,30 @@
     color:red
 }
 
-.ngx-datatable.material { 
-    box-shadow: none; 
-} 
+.searchLocat{
+    width: 810px;
+    padding-left: 20px;
+}
+
+.btnClear{
+    top: 10px;
+}
+
+#table1 {
+    padding-top: 50px;
+    width: 47.30%;  
+    padding-left: 25px;
+    padding-top: 0px!important;
+}
+
+.btnDelete{
+    right: -7px;
+}
+
+.btnGroup {
+    padding-top: 20px;
+}
+
+input#txtInput {
+    padding-top: 4px;
+}

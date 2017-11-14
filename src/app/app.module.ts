@@ -82,6 +82,9 @@ const MY_DATE_FORMATS = {
     BrowserAnimationsModule,
     HttpModule,
     MaterialModule,
+    FormsModule,
+    ReactiveFormsModule,
+    HttpModule,
     NgxDatatableModule,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyCMk-d92auJ7HbZaXajcpdXtqcBMoH4RUc',
@@ -100,7 +103,9 @@ const MY_DATE_FORMATS = {
     DepotService,
     { provide: DateAdapter, useClass: MyDateAdapter },
     { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
-    GoogleMapsAPIWrapper
+    GoogleMapsAPIWrapper,
+    DepotService,
+    ClientService
   ]
 })
 

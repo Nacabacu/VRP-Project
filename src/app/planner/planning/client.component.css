@@ -4,6 +4,7 @@
     max-height: 500px;
     min-width: 300px;
 }
+
 .table-header {
     min-height: 64px;
     display: flex;
@@ -24,12 +25,6 @@
     max-height: 500px;
 }
 
-/* .ngx-datatable.material {
+.ngx-datatable.material {
     box-shadow: none;
-} */
-
-div#ctn {
-    padding-left: 17%;
-    padding-right: 17%;
 }
-

@@ -22,8 +22,7 @@
       </agm-map>
     </div>
 
-    <div class="col-md-6">
-      <!-- <h3>Client Info</h3> -->
+    <div class="col-md-6" id="table1">
       <div>
         Company name :
         <mat-form-field floatPlaceholder="never">
@@ -36,7 +35,7 @@
       </div>
 
       <mat-form-field floatPlaceholder="auto" *ngIf="!isNew">
-        <input matInput placeholder='Search branch name' (keyup)='updateFilter($event)' />
+        <input matInput placeholder='Search branch name' (keyup)='updateFilter($event)'/>
       </mat-form-field>
 
       <ngx-datatable #table class='material' columnMode="flex" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [limit]="7"
@@ -55,7 +54,7 @@
             </span>
             <mat-form-field floatPlaceholder="never" *ngIf="editing[rowIndex+ '-branchName']">
               <input matInput autofocus (blur)="updateValue($event, 'branchName', rowIndex)" type="text" [value]="value" placeholder="Branch name"
-              />
+              id="txtInput" class="textInput"/>
             </mat-form-field>
           </ng-template>
         </ngx-datatable-column>
@@ -74,9 +73,9 @@
 
       </ngx-datatable>
       <span *ngIf="!isBranchNameValid || companyNameInput.hasError('required')" class="helpbox">Please enter valid data!</span>
-      <div>
-        <button mat-raised-button color="primary" (click)="onSave()" [disabled]="!isBranchNameValid || companyNameInput.hasError('required')">Save</button>
-        <button mat-raised-button color="warn" (click)="onDeleteAll()">Delete</button>
+      <div class="btnGroup">
+        <button mat-raised-button color="primary" (click)="onSave()" [disabled]="!isBranchNameValid || companyNameInput.hasError('required')" class=".btnSave">Save</button>
+        <button mat-raised-button color="warn" (click)="onDeleteAll()" class="btnDelete">Delete</button>
         <button mat-raised-button (click)="onCancel()" style="float: right;">Cancel</button>
       </div>
     </div>
