@@ -7,7 +7,7 @@
         </div>
       </div>
     </div>
-  </div>  
+  </div>
   <div class="row">
     <div class="col-md-6">
       <mat-form-field floatPlaceholder="never" class="searchLocat">
@@ -27,10 +27,10 @@
       </mat-form-field>
 
       <ngx-datatable #table class='material' columnMode="flex" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [limit]="7"
-        [rows]='depots' [selected]="selected" [selectionType]="'single'" (select)='onRowSelected()'>
+        [rows]='depots' [selected]="selectedDepot" [selectionType]="'single'" (select)='onRowSelected()'>
 
         <ngx-datatable-column name="No." [flexGrow]="1">
-          <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+          <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex">
             {{rowIndex + 1}}
           </ng-template>
         </ngx-datatable-column>
@@ -42,17 +42,20 @@
             </span>
             <mat-form-field floatPlaceholder="never" *ngIf="editing[rowIndex+ '-depotName']">
               <input matInput autofocus (blur)="updateValue($event, 'depotName', rowIndex)" type="text" [value]="value" placeholder="Branch name"
-              id="txtInput" class="textInput"/>
+                id="txtInput" class="textInput" />
             </mat-form-field>
           </ng-template>
         </ngx-datatable-column>
-
-        <ngx-datatable-column prop="lat" name="Latitude" [flexGrow]="2"></ngx-datatable-column>
-        <ngx-datatable-column prop="lng" name="Longtitude" [flexGrow]="2"></ngx-datatable-column>
+        
+        <ngx-datatable-column prop="coordinate" name="Latitude | Longtitude" [flexGrow]="3">
+          <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+            {{ value[0] | number: '1.6-6' }} | {{ value[1] | number: '1.6-6'}}
+          </ng-template>
+        </ngx-datatable-column>
 
         <ngx-datatable-column name="Edit" [flexGrow]="2">
           <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-row="row" let-value="value">
-            <button mat-raised-button color="primary" (click)="onDelete(rowIndex)">Delete</button>
+            <button mat-raised-button color="warn" (click)="onDelete(rowIndex)">Delete</button>
           </ng-template>
         </ngx-datatable-column>
 
@@ -62,66 +65,6 @@
     <div class="btnGroup">
       <button mat-raised-button color="primary" (click)="onSave()" [disabled]="!isDepotNameValid" class="btnSave">Save</button>
       <button mat-raised-button (click)="onCancel()" style="float: right;" class="btnCancle">Cancel</button>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-6">
-      <mat-form-field floatPlaceholder="never">
-        <input matInput placeholder="Search for location" #search [formControl]="searchControl">
-      </mat-form-field>
-      <button mat-raised-button color="primary" (click)="onClear()" style="float: right;">Clear</button>
-      <agm-map style="height: calc(100vh - 250px);" [latitude]="map?.lat" [longitude]="map?.lng" [zoom]="map?.zoom" (mapClick)="mapClicked($event)">
-        <agm-marker *ngFor="let marker of markers; let i = index" [latitude]="marker.lat" [longitude]="marker.lng" [label]="marker.label"
-          [markerDraggable]="marker.draggable" (dragEnd)="markerDragEnd(marker, $event, i)" [iconUrl]="'../../assets/depot_marker.png'">
-        </agm-marker>
-      </agm-map>
-    </div>
-
-    <div class="col-md-6">
-
-      <mat-form-field floatPlaceholder="auto">
-        <input matInput placeholder='Search depot' (keyup)='updateFilter($event)' />
-      </mat-form-field>
-
-      <ngx-datatable #table class='material' columnMode="flex" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [limit]="7"
-        [rows]='depots' [selected]="selectedDepot" [selectionType]="'single'" (select)='onRowSelected()'>
-
-        <ngx-datatable-column name="No." [flexGrow]="1">
-          <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
-            {{rowIndex + 1}}
-          </ng-template>
-        </ngx-datatable-column>
-
-        <ngx-datatable-column prop="depotName" [flexGrow]="2">
-          <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
-            <span title="Double click to edit" (dblclick)="editing[rowIndex + '-depotName'] = true" *ngIf="!editing[rowIndex + '-depotName']">
-              {{value}}
-            </span>
-            <mat-form-field floatPlaceholder="never" *ngIf="editing[rowIndex+ '-depotName']">
-              <input matInput autofocus (blur)="updateValue($event, 'depotName', rowIndex)" type="text" [value]="value" placeholder="Branch name"
-              />
-            </mat-form-field>
-          </ng-template>
-        </ngx-datatable-column>
-
-        <ngx-datatable-column prop="coordinate" name="Latitude | Longtitude" [flexGrow]="3">
-          <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
-            {{ value[0] | number: '1.6-6' }} | {{ value[1] | number: '1.6-6'}}
-          </ng-template>
-        </ngx-datatable-column>
-
-        <ngx-datatable-column name="Edit" [flexGrow]="2">
-          <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-row="row" let-value="value">
-            <button mat-raised-button color="primary" (click)="onDelete(rowIndex)">Delete</button>
-          </ng-template>
-        </ngx-datatable-column>
-
-      </ngx-datatable>
-      <span *ngIf="!isDepotNameValid" class="helpbox">Please enter valid data!</span>
-    </div>
-    <div>
-      <button mat-raised-button color="primary" (click)="onSave()" [disabled]="!isDepotNameValid">Save</button>
-      <button mat-raised-button (click)="onCancel()" style="float: right;">Cancel</button>
     </div>
   </div>
 </div>

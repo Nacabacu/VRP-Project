@@ -30,8 +30,8 @@ label {
     float: right;
 }
 
-.mat-horizontal-content-container {
-    padding: 0 12px 12px;
+.mat-horizontal-stepper-header-container {
+    padding: 0px 30px;
 }
 
 .driverTable-error {

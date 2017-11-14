@@ -1,4 +1,4 @@
-.helpbox{
+.helpbox {
     color:red
 }
 
@@ -6,29 +6,29 @@ div#depotHeader {
     padding: 0px;
 }
 
-.btn{
+.btn {
     top: 10px;
 
 }    
 
-.searchLocat{
+.searchLocation {
     width: 810px;
     padding-left: 20px;
 }
+
 #table1 {
     padding-top: 50px;
     width: 47.30%;
     padding-left: 25px;
     padding-top: 0px!important;
-
 }
 
-.btnSave{
+.btnSave {
     bottom: -20px;
     right: -23px;
 }
 
-.btnCancle{
+.btnCancle {
     bottom: -20px;
     right: -23px;
     left: -717px;

@@ -55,14 +55,14 @@ export class PlanningComponent implements OnInit, OnDestroy {
   editing = {};
   isAllInputFill = true;
   isCasualClientValid = true;
-  capacityCtrl: FormArray;
 
   planningInfoGroup: FormGroup;
   driverFormGroup: FormGroup;
   clientFormGroup: FormGroup;
 
-  rows = [];
-  temps = [];
+  depots = [];
+  tempDepot = [];
+  depotMarker: Marker;
   selectedDepot = [];
   numOfSelectedDepotSubject = new Subject<number>();
   numOfSelectedDepotSubScription: Subscription;
@@ -78,7 +78,6 @@ export class PlanningComponent implements OnInit, OnDestroy {
   ) {
     // Planning
     this.planningInfoGroup = this.formBuilder.group({
-      dateTime: new FormControl(null, Validators.required),
       date: new FormControl(null, Validators.required),
       hour: new FormControl(null, Validators.required),
       minute: new FormControl(null, Validators.required),
@@ -101,8 +100,8 @@ export class PlanningComponent implements OnInit, OnDestroy {
   ngOnInit() {
     //Depot
     this.depotService.getAllDepots().then((response) => {
-      this.rows = response;
-      this.temps = [...this.rows];
+      this.depots = response;
+      this.tempDepot = [...this.depots];
     });
 
     this.driverService.getDrivers().then((response) => {
@@ -160,7 +159,7 @@ export class PlanningComponent implements OnInit, OnDestroy {
     this.driverTable.offset = 0;
   }
 
-  onSelect({ selected }) {
+  onDriverSelect({ selected }) {
     const numOfSelected = !this.selectedDriver ? 0 : this.selectedDriver.length;
     this.numOfSelectedDriverSubject.next(numOfSelected);
     this.selectedDriver.splice(0, this.selectedDriver.length);
@@ -344,10 +343,15 @@ export class PlanningComponent implements OnInit, OnDestroy {
     });
   }
 
-  onRowSelected({ selected }) {
-    this.map.lat = this.selectedDepot[0].coordinate[0];
-    this.map.lng = this.selectedDepot[0].coordinate[1];
-    this.map.zoom = 16;
+  onDepotSelected({ selected }) {
+    this.depotMarker = {
+      lat: selected[0].coordinate[0],
+      lng: selected[0].coordinate[1],
+      draggable: false
+    }
+    this.map.lat = selected[0].coordinate[0];
+    this.map.lng = selected[0].coordinate[1];
+    this.map.zoom = 15;
     this.numOfSelectedDepotSubject.next(selected.length);
   }
 
@@ -376,13 +380,12 @@ export class PlanningComponent implements OnInit, OnDestroy {
   //FilterDepot
   updateFilterDepot(event) {
     const valSearch = event.target.value.toLowerCase();
-    const tempSearch = this.temps.filter((data) => {
+    const tempSearch = this.tempDepot.filter((data) => {
       return data.depotName.toLowerCase().indexOf(valSearch) !== -1 || !valSearch;
     });
 
-    // update the rows
-    this.rows = tempSearch;
-
+    // update the depot
+    this.depots = tempSearch;
   }
 
   onSave() {

@@ -11,10 +11,10 @@
   </div>
   <div class="row">
     <div class="col-md-6">
-      <mat-form-field floatPlaceholder="never">
+      <mat-form-field floatPlaceholder="never" class="searchLocation">
         <input matInput placeholder="Search for location" #search [formControl]="searchControl">
       </mat-form-field>
-      <button mat-raised-button color="primary" (click)="onClear()" style="float: right;">Clear</button>
+      <button mat-raised-button color="primary" class="btnClear" (click)="onClear()" style="float: right;">Clear</button>
       <agm-map style="height: calc(100vh - 250px);" [latitude]="map?.lat" [longitude]="map?.lng" [zoom]="map?.zoom" (mapClick)="mapClicked($event)">
         <agm-marker *ngFor="let marker of markers; let i = index" [latitude]="marker.lat" [longitude]="marker.lng" [label]="marker.label"
           [markerDraggable]="marker.draggable" (dragEnd)="markerDragEnd(marker, $event, i)">
@@ -59,7 +59,7 @@
           </ng-template>
         </ngx-datatable-column>
 
-        <ngx-datatable-column prop="coordinate" name="Lat | Lng" [flexGrow]="3">
+        <ngx-datatable-column prop="coordinate" name="Latitude | Longtitude" [flexGrow]="3">
           <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
             {{ value[0] | number: '1.6-6' }} | {{ value[1] | number: '1.6-6'}}
           </ng-template>
@@ -67,7 +67,7 @@
 
         <ngx-datatable-column name="Edit" [flexGrow]="2">
           <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-row="row" let-value="value">
-            <button mat-raised-button color="primary" (click)="onDelete(rowIndex)">Delete</button>
+            <button mat-raised-button color="warn" (click)="onDelete(rowIndex)">Delete</button>
           </ng-template>
         </ngx-datatable-column>
 

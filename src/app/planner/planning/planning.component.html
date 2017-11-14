@@ -19,22 +19,17 @@
           <agm-marker *ngFor="let marker of casualClientMarkers; let i = index" [latitude]="marker.lat" [longitude]="marker.lng" [label]="marker.label"
             [markerDraggable]="true" (dragEnd)="markerDragEnd(marker, $event, i)" [iconUrl]="'http://maps.google.com/mapfiles/ms/icons/green-dot.png'">
           </agm-marker>
-          <agm-marker [latitude]="map?.lat" [longitude]="map?.lng" [markerDraggable]="false" [iconUrl]="'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'">
+          <agm-marker [latitude]="depotMarker?.lat" [longitude]="depotMarker?.lng" [markerDraggable]="false" [iconUrl]="'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'">
           </agm-marker>
         </agm-map>
       </div>
       <div class="col-xs-12 col-md-6">
         <mat-horizontal-stepper [linear]="false">
           <mat-step [stepControl]="planningInfoGroup">
-            <form [formGroup]="planningInfoGroup" (ngSubmit)="test()">
+            <form [formGroup]="planningInfoGroup">
               <ng-template matStepLabel>Planning Info</ng-template>
 
               <div class="col-sm-12 col-md-8 col-md-offset-2">
-                <!-- <label>Delivery Date and Time : </label>
-                <mat-form-field floatPlaceholder="never">
-                  <input matInput type="datetime-local" placrholder="Choose Date and Time" formControlName="dateTime">
-                  <mat-error *ngIf="planningInfoGroup.get('dateTime').hasError['required']">You must enter a value</mat-error>
-                </mat-form-field> -->
 
                 <label>Delivery Date: </label>
                 <mat-form-field>
@@ -46,7 +41,7 @@
                 </mat-form-field>
 
                 <br>
-                <label>Delivery Start Time: </label>
+                <label>Start Time: </label>
                 <mat-form-field class="timepicker">
                   <input matInput type="number" min="0" max="23" placeholder="Hour" formControlName="hour" (blur)="onHourBlur($event)">
                   <mat-error *ngIf="planningInfoGroup.get('hour').hasError['required']">You must enter a value</mat-error>
@@ -71,10 +66,10 @@
                   <input matInput placeholder='Search depot name' (keyup)='updateFilterDepot($event)' />
                 </mat-form-field>
 
-                <ngx-datatable #depotTable class='material' columnMode="flex" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'"
-                  [limit]="5" [rows]='rows' [selected]="selectedDepot" [selectionType]="'single'" (select)='onRowSelected($event)'>
+                <ngx-datatable #depotTable class='material' columnMode="force" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'"
+                  [limit]="5" [rows]='depots' [selected]="selectedDepot" [selectionType]="'single'" (select)='onDepotSelected($event)'>
 
-                  <ngx-datatable-column name="Index" [flexGrow]="1">
+                  <ngx-datatable-column name="No." [maxWidth]="40">
                     <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
                       {{rowIndex + 1}}
                     </ng-template>
@@ -82,13 +77,13 @@
 
                   <ngx-datatable-column prop="depotName" [flexGrow]="3"></ngx-datatable-column>
                   
-                  <ngx-datatable-column prop="coordinate" name="Lat" [flexGrow]="3">
+                  <ngx-datatable-column prop="coordinate" name="Latitude" [flexGrow]="3">
                     <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
                       {{ value[0] | number: '1.6-6' }}
                     </ng-template>
                   </ngx-datatable-column>
 
-                  <ngx-datatable-column prop="coordinate" name="Lng" [flexGrow]="3">
+                  <ngx-datatable-column prop="coordinate" name="Longtitude" [flexGrow]="3">
                     <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
                       {{ value[1] | number: '1.6-6' }}
                     </ng-template>
@@ -127,7 +122,7 @@
 
               <ngx-datatable #driverTable class="material expandable driver-table" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
                 [rowHeight]="50" [reorderable]="false" [rows]="drivers" [limit]="8" style="clear:both;" [selected]="selectedDriver"
-                [selectionType]="'multiClick'" (select)='onSelect($event)'>
+                [selectionType]="'multiClick'" (select)='onDriverSelect($event)'>
 
                 <ngx-datatable-column name="No." [maxWidth]="40">
                   <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex">
@@ -165,14 +160,14 @@
               </mat-form-field>
 
               <ngx-datatable #clientTable class="material expandable client-table" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
-                [rowHeight]="50" [reorderable]="false" [rows]="regularClients" [limit]="5" style="clear:both;" [selected]="selectedRegularClients"
+                [rowHeight]="50" [reorderable]="false" [rows]="regularClients" [limit]="4" style="clear:both;" [selected]="selectedRegularClients"
                 [selectionType]="'checkbox'" (select)='onRegularClientSelected($event)'>
 
                 <ngx-datatable-column [width]="30" [sortable]="false" [canAutoResize]="false" [draggable]="false" [resizeable]="false" [headerCheckboxable]="false"
                   [checkboxable]="true">
                 </ngx-datatable-column>
 
-                <ngx-datatable-column name="No." [maxWidth]="30">
+                <ngx-datatable-column name="No." [maxWidth]="40">
                   <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
                     {{rowIndex + 1}}
                   </ng-template>
@@ -188,7 +183,7 @@
                       {{value}}
                     </span>
                     <mat-form-field floatPlaceholder="never" *ngIf="selectedRegularClients.includes(row)">
-                      <input matInput [value]="value" type="number" placeholder='Demand' required (blur)="updateRegularClientCellValue($event, 'demand', rowIndex)">
+                      <input matInput type="number" placeholder='Demand' required (blur)="updateRegularClientCellValue($event, 'demand', rowIndex)">
                     </mat-form-field>
                   </ng-template>
                 </ngx-datatable-column>
@@ -199,7 +194,7 @@
                       {{value}}
                     </span>
                     <mat-form-field floatPlaceholder="never" *ngIf="selectedRegularClients.includes(row)">
-                      <input matInput type="number" [value]="value" placeholder='Wait Time' required (blur)="updateRegularClientCellValue($event, 'waitTime', rowIndex)">
+                      <input matInput type="number" placeholder='Wait Time' required (blur)="updateRegularClientCellValue($event, 'waitTime', rowIndex)">
                     </mat-form-field>
                   </ng-template>
                 </ngx-datatable-column>
@@ -208,7 +203,13 @@
 
               <br>
               <ngx-datatable #casualClientTable class="material expandable client-table" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
-                [rowHeight]="50" [reorderable]="false" [rows]="casualClients" [limit]="2" style="clear:both;">
+                [rowHeight]="50" [reorderable]="false" [rows]="casualClients" [limit]="4" style="clear:both;">
+
+                <ngx-datatable-column name="No." [maxWidth]="40">
+                  <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                    {{rowIndex + 1}}
+                  </ng-template>
+                </ngx-datatable-column>
 
                 <ngx-datatable-column prop="clientName">
                   <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
