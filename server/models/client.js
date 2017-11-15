@@ -10,7 +10,7 @@ var Client = mongoose.model('clients', {
         require: true,
         trim: true
     },
-    coordinates: {
+    coordinate: {
         type: [Number],
         require: true
     }
