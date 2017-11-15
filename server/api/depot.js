@@ -6,9 +6,7 @@ const _ = require('lodash');
 const { Depot } = require('../models/depot');
 
 const errorHandler = (err, res) => {
-    res.status = 501;
-    res.message = typeof err == 'object' ? err.message : err;
-    res.status(501).json(res);
+    res.status(501).send(err);
 };
 
 // Depots

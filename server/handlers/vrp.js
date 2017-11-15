@@ -91,14 +91,14 @@ var vrpSolver = function (request, distances) {
             };
 
             VRP.Solve(vrpSearchOpts, function (err, solution) {
-                if (err) reject(err);
+                if (err) reject('Unable to find a solution');
                 resolve({
                     solution,
                     duration: results.duration
                 });
             });
         }).catch(function (err) {
-            reject(err);
+            reject('Unable to get distance matrix');
         });
     });
 };
