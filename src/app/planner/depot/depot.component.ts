@@ -147,8 +147,8 @@ export class DepotComponent implements OnInit {
   }
 
   onRowSelected() {
-    this.map.lat = this.selectedDepot[0].lat;
-    this.map.lng = this.selectedDepot[0].lng;
+    this.map.lat = this.selectedDepot[0].coordinate[0];
+    this.map.lng = this.selectedDepot[0].coordinate[1];
   }
 
   onSave() {
@@ -169,7 +169,9 @@ export class DepotComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.depotService.deleteDepot(this.depots[rowIndex]._id);
+        if (this.depots[rowIndex]._id) {
+          this.depotService.deleteDepot(this.depots[rowIndex]._id);
+        }
         this.depots.splice(rowIndex, 1);
         this.markers.splice(rowIndex, 1);
         this.temp = [...this.depots];

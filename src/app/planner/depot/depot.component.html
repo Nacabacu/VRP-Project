@@ -10,7 +10,7 @@
   </div>
   <div class="row">
     <div class="col-md-6">
-      <mat-form-field floatPlaceholder="never" class="searchLocat">
+      <mat-form-field floatPlaceholder="never" class="searchLocation">
         <input matInput placeholder="Search for location" #search [formControl]="searchControl">
       </mat-form-field>
       <button mat-raised-button color="primary" (click)="onClear()" style="float: right;" id="btnClear">Clear</button>
@@ -26,10 +26,10 @@
         <input matInput placeholder='Search depot' (keyup)='updateFilter($event)' />
       </mat-form-field>
 
-      <ngx-datatable #table class='material' columnMode="flex" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [limit]="7"
+      <ngx-datatable #table class='material' columnMode="force" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [limit]="7"
         [rows]='depots' [selected]="selectedDepot" [selectionType]="'single'" (select)='onRowSelected()'>
 
-        <ngx-datatable-column name="No." [flexGrow]="1">
+        <ngx-datatable-column name="No." [maxWidth]="60">
           <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex">
             {{rowIndex + 1}}
           </ng-template>
@@ -46,16 +46,23 @@
             </mat-form-field>
           </ng-template>
         </ngx-datatable-column>
-        
-        <ngx-datatable-column prop="coordinate" name="Latitude | Longtitude" [flexGrow]="3">
+
+        <ngx-datatable-column prop="coordinate" name="Latitude" [flexGrow]="3">
           <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
-            {{ value[0] | number: '1.6-6' }} | {{ value[1] | number: '1.6-6'}}
+            {{ value[0] | number: '1.6-6' }}
           </ng-template>
         </ngx-datatable-column>
 
-        <ngx-datatable-column name="Edit" [flexGrow]="2">
+        <ngx-datatable-column prop="coordinate" name="Longtitude" [flexGrow]="3">
+          <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+            {{ value[1] | number: '1.6-6'}}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column [maxWidth]="80">
           <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-row="row" let-value="value">
-            <button mat-raised-button color="warn" (click)="onDelete(rowIndex)">Delete</button>
+            <!-- <button mat-raised-button color="warn" (click)="onDelete(rowIndex)">Delete</button> -->
+            <i class="fa fa-trash-o fa-lg " aria-hidden="true" (click)="onDelete(rowIndex)"></i>
           </ng-template>
         </ngx-datatable-column>
 

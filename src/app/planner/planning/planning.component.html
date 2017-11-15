@@ -92,7 +92,7 @@
                 </ngx-datatable>
               </div>
 
-              <mat-error *ngIf="planningInfoGroup.get('depotTable').invalid">You must select depot</mat-error>
+              <mat-error *ngIf="planningInfoGroup.get('depotTable').invalid"><small>You must select depot</small></mat-error>
               <button mat-raised-button matStepperNext color="primary" class="buttonPhase">Next</button>
 
             </form>
@@ -241,9 +241,9 @@
                   </ng-template>
                 </ngx-datatable-column>
 
-                <ngx-datatable-column [maxWidth]="40">
+                <ngx-datatable-column [maxWidth]="60">
                   <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex">
-                    <span class="glyphicon glyphicon-trash" mat-raised-button color="primary" (click)="onDeleteCasualClient(rowIndex)">x</span>
+                    <i class="fa fa-trash-o fa-lg " aria-hidden="true" (click)="onDeleteCasualClient(rowIndex)"></i>
                   </ng-template>
                 </ngx-datatable-column>
 
@@ -257,10 +257,10 @@
 
               <div>
                 <mat-error *ngIf="clientFormGroup.get('clientTable').invalid">
-                  You must select at least one client and not more than twenty five clients
+                  <small>You must select at least one client and not more than twenty five clients</small>
                 </mat-error>
-                <mat-error *ngIf="!isAllInputFill">Please fill all input</mat-error>
-                <mat-error *ngIf="!isCasualClientValid">Please complete casual client fields</mat-error>
+                <mat-error *ngIf="!isAllInputFill"><small>Please fill all input</small></mat-error>
+                <mat-error *ngIf="!isCasualClientValid"><small>Please complete casual client fields</small></mat-error>
                 <button mat-raised-button color="primary" [disabled]="!isAllInputFill || !isCasualClientValid || clientFormGroup.get('clientTable').invalid"
                   class="buttonPhase" (click)="onSave()">Save</button>
                 <button mat-raised-button matStepperPrevious color="primary" class="buttonPhase">Back</button>
