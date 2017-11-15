@@ -29,6 +29,25 @@
     width: 100vw;
 }
 
+.mat-tab-body {
+    height: 100%;
+}
+
+.mat-tab-body-content {
+    padding: 0 12px;
+}
+
+.menu-label {
+    height: 50px;
+    background-color: #3f51b5;
+}
+
+@media screen and (max-width: 768px) {
+    .mat-tab-body-content {
+        padding: 0;
+    }
+}
+
 @media screen and (min-width: 768px) {
     .datatable-row-detail {
         display: none;
