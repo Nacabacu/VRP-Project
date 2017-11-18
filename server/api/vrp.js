@@ -3,6 +3,7 @@ const router = express.Router();
 const ObjectID = require('mongodb').ObjectID;
 const nodeOrTools = require('node_or_tools');
 const vrpHandler = require('../handlers/vrp');
+const _ = require('lodash');
 
 var googleMapClient = require('@google/maps').createClient({
     key: 'AIzaSyCMk-d92auJ7HbZaXajcpdXtqcBMoH4RUc',
@@ -10,11 +11,10 @@ var googleMapClient = require('@google/maps').createClient({
 });
 
 const { PlanningResult } = require('../models/planningResult');
+const { Client } = require('../models/client');
 
 const errorHandler = (err, res) => {
-    res.status = 501;
-    res.message = typeof err == 'object' ? err.message : err;
-    res.status(501).json(res);
+    res.status(501).send(err);
 };
 
 router.get('/getresult/:id', (req, res) => {
@@ -89,6 +89,15 @@ router.post('/saveRoute', (req, res) => {
                 vehicles: vehicles,
                 clients: req.body.clients,
                 times: result.duration
+            });
+
+            req.body.clients.forEach((client) => {
+                var telNum = client.telNum;
+                var pickedClient = _.pick(client, ['clientName', 'telNum', 'coordinate']);
+
+                Client.findOneAndUpdate({ telNum }, { $set: pickedClient }, { upsert: true }).catch((err) => {
+                    errorHandler(err, res);
+                });
             });
 
             planningResult.save(function (err, planning) {
