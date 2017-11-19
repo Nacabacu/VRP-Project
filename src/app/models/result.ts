@@ -3,14 +3,14 @@ export class Result {
     public date;
     public time;
     public dateTime;
-    public clients = new Array<{
+    public clients: {
         index: number,
         clientName: string,
         demand: number,
         waitTime: number,
         coordinate: [number]
-    }>();
-    public vehicles = new Array<{
+    }[];
+    public vehicles: {
         loadWeight: number,
         isCompleted: boolean,
         route: [number],
@@ -20,7 +20,7 @@ export class Result {
             vehicleNo: string
         },
         color: string
-    }>();
+    }[];
     public depot = {
         depotName: String,
         coordinate: []

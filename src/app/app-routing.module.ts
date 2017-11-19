@@ -42,10 +42,6 @@ const appRoutes: Routes = [
         component: ClientComponent
       },
       {
-        path: 'client/create',
-        component: CreateClientComponent
-      },
-      {
         path: 'depot',
         component: DepotComponent
       }

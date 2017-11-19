@@ -7,8 +7,6 @@ import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
 
-import { ClientPickerDialogComponent } from './client-picker-dialog/client-picker-dialog.component';
-
 import { DepotService } from '../../services/depot.service';
 import { ClientService } from '../../services/client.service';
 import { DriverService } from './../../services/driver.service';
@@ -19,6 +17,7 @@ import { Marker } from '../../shared/marker';
 import { Map } from '../../shared/map';
 import { Client } from '../../shared/client';
 import { DeleteDialogComponent } from '../../shared/delete-dialog/delete-dialog.component';
+import { ClientPickerDialogComponent } from '../../shared/client-picker-dialog/client-picker-dialog.component';
 
 @Component({
   selector: 'app-planning',
@@ -45,7 +44,6 @@ export class PlanningComponent implements OnInit, OnDestroy {
   tempClients = [];
   casualClients = [];
   regularClients = [];
-  // dialogClients = [];
   selectedRegularClients = [];
   selectedCasualClient = [];
   regularClientMarkers: Marker[] = [];
@@ -112,19 +110,19 @@ export class PlanningComponent implements OnInit, OnDestroy {
     });
 
     this.clientService.getAllClients().then((response) => {
-      response.map((client) => {
-        client.branches.map((branch) => {
-          const regularClient: any = {};
-          regularClient.companyName = client.companyName;
-          regularClient.branchName = branch.branchName;
-          // regularClient.clientName = client.companyName + " - " + branch.branchName;
-          regularClient.coordinate = branch.coordinate;
-          regularClient.demand = 0;
-          regularClient.waitTime = 0;
-          this.regularClients.push(regularClient);
-        });
-      });
-      this.tempClients = [...this.regularClients];
+      // response.map((client) => {
+      //   client.branches.map((branch) => {
+      //     const regularClient: any = {};
+      //     regularClient.companyName = client.companyName;
+      //     regularClient.branchName = branch.branchName;
+      //     // regularClient.clientName = client.companyName + " - " + branch.branchName;
+      //     regularClient.coordinate = branch.coordinate;
+      //     regularClient.demand = 0;
+      //     regularClient.waitTime = 0;
+      //     this.regularClients.push(regularClient);
+      //   });
+      // });
+      // this.tempClients = [...this.regularClients];
     });
 
     this.numOfSelectedDepotSubScription = this.numOfSelectedDepotSubject.subscribe((value) => {
@@ -359,23 +357,35 @@ export class PlanningComponent implements OnInit, OnDestroy {
     console.log("Lorem");
   }
 
-  // onAddClient(rowIndex: number) {
-  //   const dialogRef = this.dialog.open(ClientPickerDialogComponent, {
-  //     width: '80vw'
-  //   });
+  onAddClient(rowIndex: number) {
+    const dialogRef = this.dialog.open(ClientPickerDialogComponent, {
+      width: '80vw',
+      data: {}
+    });
 
-  //   dialogRef.afterClosed().subscribe((result) => {
-  //     if (result) {
-  //       console.log(result);
-  //       this.dialogClients.push(result);
-  //       // this.client.branches.splice(rowIndex, 1);
-  //       // this.markers.splice(rowIndex, 1);
-  //       // this.temp = [...this.client.branches];
-  //       // this.renderMarkers();
-  //       // this.checkBranchName();
-  //     }
-  //   });
-  // }
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        console.log(result);
+        const dialogRef1 = this.dialog.open(ClientPickerDialogComponent, {
+          width: '80vw',
+          data: result
+        });
+        dialogRef1.afterClosed().subscribe((result) => {
+          if (result) {
+
+          }
+        });
+
+
+        // this.dialogClients.push(result);
+        // this.client.branches.splice(rowIndex, 1);
+        // this.markers.splice(rowIndex, 1);
+        // this.temp = [...this.client.branches];
+        // this.renderMarkers();
+        // this.checkBranchName();
+      }
+    });
+  }
 
   //FilterDepot
   updateFilterDepot(event) {
@@ -391,8 +401,8 @@ export class PlanningComponent implements OnInit, OnDestroy {
   onSave() {
     const routeFixed = [];
     const dateTime = new Date(new Date(this.planningInfoGroup.value.date)
-                      .setHours(this.planningInfoGroup.value.hour, this.planningInfoGroup.value.minute))
-                      .toISOString();
+      .setHours(this.planningInfoGroup.value.hour, this.planningInfoGroup.value.minute))
+      .toISOString();
 
     const clients = this.selectedRegularClients.concat(this.casualClients).map((client) => {
       client.demand = parseInt(client.demand);
@@ -417,7 +427,6 @@ export class PlanningComponent implements OnInit, OnDestroy {
       clients: clients
     }
     this.resultService.createPlanning(planningData).then((planningId) => {
-      console.log(planningId)
       this.router.navigate(['/planner/result', planningId]);
     });
   }

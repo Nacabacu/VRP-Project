@@ -1,15 +1,10 @@
-import { BehaviorSubject } from 'rxjs/Rx';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit,  } from '@angular/core';
 import { DataSource } from '@angular/cdk/collections';
-import { MatPaginator, MatButton, MatFormField, MatFormFieldControl } from '@angular/material';
-import { NavigationExtras, Router } from '@angular/router';
 
+import { Marker } from '../../shared/marker';
+import { Map } from '../../shared/map';
 import { Client } from '../../shared/client';
 import { ClientService } from '../../services/client.service';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/observable/merge';
-import 'rxjs/add/operator/map';
 
 @Component({
   selector: 'app-client',
@@ -18,28 +13,44 @@ import 'rxjs/add/operator/map';
 })
 export class ClientComponent implements OnInit {
   clients: Client[];
-  temp = [];
+  tempCleint = [];
+  selectedClients = [];
 
-  constructor(private clientService: ClientService, private router: Router) { }
+  map = new Map();
+  markers: Marker[] = [];
+
+  constructor(private clientService: ClientService) { }
 
   ngOnInit() {
     this.clientService.getAllClients().then((response) => {
       this.clients = response;
-      this.temp = [...this.clients];
+      this.tempCleint = [...this.clients];
+      this.renderMarkers();
     });
   }
 
   updateFilter(event) {
     const val = event.target.value.toLowerCase();
-    const temp = this.temp.filter((data) => {
-      return data.companyName.toLowerCase().indexOf(val) !== -1 || !val;
+    const temp = this.tempCleint.filter((data) => {
+      return data.telNum.toLowerCase().indexOf(val) !== -1 || !val;
     });
-
-    // update the rows
     this.clients = temp;
   }
 
-  onEdit(clientId) {
-    this.router.navigate(['/planner/client/create'], { queryParams: { companyId: clientId } });
+  renderMarkers() {
+    this.markers = [];
+    this.clients.map((client, index) => {
+      this.markers.push({
+        lat: client.coordinate[0],
+        lng: client.coordinate[1],
+        label: (index + 1).toString()
+      });
+    });
+  }
+
+  onClientSelected(event) {
+    this.map.lat = this.selectedClients[0].coordinate[0];
+    this.map.lng = this.selectedClients[0].coordinate[1];
+    this.map.zoom = 15;
   }
 }

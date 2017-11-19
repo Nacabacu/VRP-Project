@@ -3,5 +3,5 @@ export interface Marker {
     lng: number;
     label?: string;
     iconUrl?: string;
-    draggable: boolean;
+    draggable?: boolean;
 }

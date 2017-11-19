@@ -30,7 +30,7 @@
               <ng-template matStepLabel>Planning Info</ng-template>
 
               <div class="col-sm-12 col-md-8 col-md-offset-2">
-
+                  <button mat-raised-button color="primary" (click)="onAddClient()">Select</button>
                 <label>Delivery Date: </label>
                 <mat-form-field>
                   <input matInput [matDatepickerFilter]="dateFilter" [matDatepicker]="picker" placeholder="Choose a date" formControlName="date">
@@ -153,7 +153,7 @@
           <mat-step [stepControl]="clientFormGroup">
             <form [formGroup]="clientFormGroup">
               <ng-template matStepLabel>Select Clients</ng-template>
-              <!-- <button mat-raised-button color="primary" (click)="onAddClient()">Select</button> -->
+              <button mat-raised-button color="primary" (click)="onAddClient()">Select</button>
 
               <mat-form-field floatPlaceholder="auto">
                 <input matInput placeholder='Filter by name' (keyup)='updateClientFilter($event)' />

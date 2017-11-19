@@ -14,7 +14,6 @@ export class ClientService {
 
     createClient(companyData: Client) {
         const headers = new Headers();
-        headers.set('Access-Control-Allow-Origin', 'http://localhost:4200');
         headers.set('Content-Type', 'application/json');
         const opts = new RequestOptions();
         opts.headers = headers;
@@ -27,12 +26,8 @@ export class ClientService {
             .catch(this.handleError);
     }
 
-    deleteClient(companyId) {
-        const headers = new Headers();
-        headers.set('Access-Control-Allow-Origin', 'http://localhost:4200');
-        const opts = new RequestOptions();
-        opts.headers = headers;
-        return this.http.delete(this.clientUrl + '/delete/' + companyId, opts)
+    deleteClient(clientId) {
+        return this.http.delete(this.clientUrl + '/delete/' + clientId)
             .toPromise()
             .then((response) => {
                 this.router.navigate(['/planner/client']);
@@ -40,12 +35,8 @@ export class ClientService {
             .catch(this.handleError);
     }
 
-    getClient(companyId) {
-        const headers = new Headers();
-        headers.set('Access-Control-Allow-Origin', ['http://localhost:4200']);
-        const opts = new RequestOptions();
-        opts.headers = headers;
-        return this.http.get(this.clientUrl + '/get/' + companyId, opts)
+    getClient(telNum) {
+        return this.http.get(this.clientUrl + '/get/' + telNum)
             .toPromise()
             .then((response) => {
                 return response.json();
@@ -54,11 +45,7 @@ export class ClientService {
     }
 
     getAllClients(): Promise<Client[]> {
-        const headers = new Headers();
-        headers.set('Access-Control-Allow-Origin', 'http://localhost:4200');
-        const opts = new RequestOptions();
-        opts.headers = headers;
-        return this.http.get(this.clientUrl + '/get', opts)
+        return this.http.get(this.clientUrl + '/get')
             .toPromise()
             .then((response) => {
                 return response.json().clients;
@@ -68,8 +55,6 @@ export class ClientService {
 
     updateClient(companyData) {
         const headers = new Headers();
-        headers.set('Access-Control-Allow-Origin', ['http://localhost:4200']);
-        headers.set('Access-Control-Allow-Methods', "GET, POST, HEAD, OPTIONS, PUT, DELETE, PATCH");
         headers.set('Content-Type', 'application/json');
         const opts = new RequestOptions();
         opts.headers = headers;

@@ -1,7 +1,8 @@
-import { ClientBranch } from './client-branch';
-
 export interface Client {
-    companyName: string;
-    branches: ClientBranch[];
+    _id?: string;
+    clientName: string;
+    address: string,
+    telNum: string;
+    coordinate: [number, number];
     __v?: number;
 }

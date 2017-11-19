@@ -1,38 +1,56 @@
-<div class="col-xs-12" id="depotHeader">
-    <div class="title-container">
-      <div class="title">
-        <span>Client</span>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xs-12" id="depotHeader">
+      <div class="title-container">
+        <div class="title">
+          <span>Client</span>
+        </div>
       </div>
     </div>
   </div>
-<div id="ctn" class="ctnClient"> 
-    <mat-form-field floatPlaceholder="auto">
-      <input matInput placeholder='Search company name' (keyup)='updateFilter($event)' />
-    </mat-form-field>
-    <button mat-raised-button color="primary" (click)="onEdit()">New client</button>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="col-xs-12 col-md-6">
+        <agm-map style="height: calc(100vh - 150px);" [latitude]="map?.lat" [longitude]="map?.lng" [zoom]="map?.zoom">
+          <agm-marker *ngFor="let marker of markers; let i = index" [latitude]="marker.lat" [longitude]="marker.lng" [label]="marker.label"
+            [markerDraggable]="false">
+          </agm-marker>
+        </agm-map>
+      </div>
 
-    <ngx-datatable #table class='material' columnMode="flex" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [limit]="10"
-      [rows]='clients'>
+      <div class="col-xs-12 col-md-6">
+        <mat-form-field floatPlaceholder="auto">
+          <input matInput placeholder='Filter by phone number' (keyup)='updateFilter($event)'/>
+        </mat-form-field>
 
-      <ngx-datatable-column name="Index" [flexGrow]="1">
-        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
-          {{rowIndex + 1}}
-        </ng-template>
-      </ngx-datatable-column>
+        <ngx-datatable #table class='material' columnMode="flex" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [limit]="10"
+          [rows]='clients' [selected]="selectedClients" [selectionType]="'radio'" (select)='onClientSelected($event)'>
 
-      <ngx-datatable-column prop="companyName" [flexGrow]="3"></ngx-datatable-column>
+          <ngx-datatable-column name="View" [maxWidth]="50">
+            <ng-template ngx-datatable-cell-template let-row="row">
+              <span *ngIf="selectedClients.includes(row)">
+                <i class="fa fa-address-book fa-lg" aria-hidden="true"></i>
+              </span>
+              <span *ngIf="!selectedClients.includes(row)">
+                <i class="fa fa-address-book-o fa-lg" aria-hidden="true"></i>
+              </span>
+            </ng-template>
+          </ngx-datatable-column>
 
-      <ngx-datatable-column name="Branches" [flexGrow]="3">
-        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
-          {{value.length}}
-        </ng-template>
-      </ngx-datatable-column>
+          <ngx-datatable-column name="No." [maxWidth]="50">
+            <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex">
+              {{rowIndex + 1}}
+            </ng-template>
+          </ngx-datatable-column>
 
-      <ngx-datatable-column name="Edit" [flexGrow]="2">
-        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-row="row" let-value="value">
-          <button mat-raised-button color="primary" (click)="onEdit(row._id)">Edit</button>
-        </ng-template>
-      </ngx-datatable-column>
-    </ngx-datatable>
+          <ngx-datatable-column prop="clientName" [flexGrow]="1"></ngx-datatable-column>
+
+          <ngx-datatable-column prop="address" [flexGrow]="2"></ngx-datatable-column>
+
+          <ngx-datatable-column prop="telNum" name="Phone Number" [flexGrow]="1"></ngx-datatable-column>
+
+        </ngx-datatable>
+      </div>
+    </div>
+  </div>
 </div>
-<router-outlet></router-outlet>

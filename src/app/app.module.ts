@@ -38,7 +38,7 @@ import { DriverService } from './services/driver.service';
 import { DirectionDirective } from './directives/direction.directive';
 
 import { DeleteDialogComponent } from './shared/delete-dialog/delete-dialog.component';
-import { ClientPickerDialogComponent } from './planner/planning/client-picker-dialog/client-picker-dialog.component';
+import { ClientPickerDialogComponent } from './shared/client-picker-dialog/client-picker-dialog.component';
 
 const MY_DATE_FORMATS = {
   parse: {

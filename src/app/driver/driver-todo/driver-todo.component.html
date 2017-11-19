@@ -3,7 +3,7 @@
     <div class="col-xs-12">
       <div class="title-container">
         <div class="title">
-          <span>Planning History</span>
+          <span>Driving History</span>
         </div>
       </div>
     </div>
@@ -11,10 +11,10 @@
 
   <div class="row">
     <mat-tab-group>
-      <mat-tab label="Doing">
+      <mat-tab label="To Do">
         <div class="col-sm-12 col-md-8 col-md-offset-2">
           <ngx-datatable #doingTable class="material expandable" [columnMode]="'flex'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="50"
-            [reorderable]="false" [rows]="doing" [limit]="10">
+            [reorderable]="false" [rows]="todoDriver" [limit]="10">
             <ngx-datatable-row-detail [rowHeight]="60" style="width:768px">
               <ng-template let-row="row" let-expanded="doingExpanded" ngx-datatable-row-detail-template>
                 <button class="right" mat-raised-button color="primary" (click)="onView(row.id)" style="margin-left:5px;">View</button>

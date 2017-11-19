@@ -1,0 +1,16 @@
+agm-map {
+    height: calc(100vh - 150px);
+}
+
+.driver-table {
+    margin: 0 12px 12px;
+}
+
+.clear-btn {
+    margin-left: calc(100% - 140px);
+}
+
+.info {
+   overflow: auto;
+   max-height: calc(100vh - 150px);
+}

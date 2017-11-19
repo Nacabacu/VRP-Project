@@ -18,14 +18,10 @@ router.get('/get', (req, res) => {
     });
 });
 
-router.get('/get/:id', (req, res) => {
-    var id = req.params.id;
+router.get('/get/:telNo', (req, res) => {
+    var telNo = req.params.telNo;
 
-    if (!ObjectID.isValid(id)) {
-        return res.status(404).send();
-    }
-
-    Client.findById(id).then((client) => {
+    Client.find({ telNum: telNo }).then((client) => {
         if (!client) {
             return res.status(404).send();
         }
@@ -36,10 +32,10 @@ router.get('/get/:id', (req, res) => {
     });
 });
 
-router.patch('/updates', (req, res) => {
-    req.body.clients.forEach(function(client) {
+router.put('/updates', (req, res) => {
+    req.body.clients.forEach(function (client) {
         var telNum = client.telNum;
-        Client.findOneAndUpdate({ telNum }, { $set: client}, {upsert: true}).then((client) => {
+        Client.findOneAndUpdate({ telNum }, { $set: client }, { upsert: true }).then((client) => {
             if (!client) {
                 res.status(404).send();
             }
