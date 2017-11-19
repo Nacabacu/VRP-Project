@@ -2,13 +2,21 @@ agm-map {
     height: calc(100vh - 150px);
 }
 
-label {
-    margin-right: 6px;
+.searchLocationInput {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 10px;
 }
 
 .btn-container {
     float: right;
     margin-top: 20px;
+}
+
+.btn-client {
+    float: left;
+    margin-top: 10px;
+    margin-left: 5px;
 }
 
 .input-form {
@@ -22,6 +30,7 @@ label {
 }
 
 .table {
+    clear: both;
     margin: 6px;
 }
 

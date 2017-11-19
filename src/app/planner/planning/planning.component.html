@@ -12,9 +12,16 @@
   <div class="row">
     <div class="col-xs-12">
       <div class="col-xs-12 col-md-6">
+        <mat-form-field class="searchLocationInput">
+          <input matInput placeholder="Search for location" #searchMap [(ngModel)]="searchLocationInput">
+          <button mat-button *ngIf="searchLocationInput" matSuffix mat-icon-button aria-label="Clear" (click)="searchLocationInput=''">
+            <i class="fa fa-times"></i>
+          </button>
+        </mat-form-field>
         <agm-map [latitude]="map?.lat" [longitude]="map?.lng" [zoom]="map?.zoom">
-          <agm-marker [latitude]="depotMarker?.lat" [longitude]="depotMarker?.lng" [markerDraggable]="false" [iconUrl]="'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'">
-          </agm-marker>
+          <agm-marker [latitude]="depotMarker?.lat" [longitude]="depotMarker?.lng" [markerDraggable]="false" [iconUrl]="'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'"></agm-marker>
+          <agm-marker [latitude]="searchMarker?.lat" [longitude]="searchMarker?.lng" [markerDraggable]="false" [iconUrl]="'http://maps.google.com/mapfiles/kml/pal3/icon28.png'"></agm-marker>
+          <agm-marker *ngFor="let client of clients; let i=index" [latitude]="client?.coordinate[0]" [longitude]="client?.coordinate[1]" [markerDraggable]="false" [label]="(i + 1).toString()"></agm-marker>
         </agm-map>
       </div>
       <div class="col-xs-12 col-md-6">
@@ -23,9 +30,9 @@
             <form [formGroup]="planningInfoGroup" (ngSubmit)="test()">
               <ng-template matStepLabel>Planning Info</ng-template>
 
-              <div class="col-sm-12 col-md-8 col-md-offset-2">
+              <div class="col-sm-12 col-md-10 col-md-offset-1">
 
-                <div class="col-xs-6 col-md-12 col-lg-6">
+                <div class="col-xs-6">
                   <mat-form-field class="input-form">
                     <input matInput [matDatepickerFilter]="dateFilter" [matDatepicker]="picker" placeholder="Choose delivery date" formControlName="date">
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
@@ -35,7 +42,7 @@
                   </mat-form-field>
                 </div>
 
-                <div class="col-xs-6 col-md-12 col-lg-6">
+                <div class="col-xs-6">
                   <mat-form-field class="input-form">
                     <mat-select placeholder="Select start time" formControlName="time">
                       <mat-option value="9">9:00</mat-option>
@@ -45,7 +52,7 @@
                   </mat-form-field>
                 </div>
                 
-                <div class="col-xs-6 col-md-12 col-lg-6">
+                <div class="col-xs-6">
                   <mat-form-field class="input-form">
                     <mat-select placeholder="Select available drivers" formControlName="numOfDrivers">
                       <mat-option value="1">1</mat-option>
@@ -59,7 +66,7 @@
                   </mat-form-field>
                 </div>
 
-                <div class="col-xs-6 col-md-12 col-lg-6">
+                <div class="col-xs-6">
                   <mat-form-field class="input-form">
                     <input matInput placeholder="Enter vehicle capacity" formControlName="capacity">
                     <mat-error *ngIf="planningInfoGroup.get('date').hasError('required')">You must enter vehicle capacity</mat-error>
@@ -86,13 +93,17 @@
           <mat-step [stepControl]="depotGroup">
             <form [formGroup]="depotGroup">
               <ng-template matStepLabel>Select a Depot</ng-template>
-              
+
+              <mat-form-field class="input-filter">
+                <input matInput type='text' placeholder='Filter by depot name' (keyup)='updateDepotFilter($event)'>
+              </mat-form-field>
+
               <ngx-datatable class="material table" columnMode="flex" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'"
                 [limit]="5" [selected]="selectedDepot" [rows]="depots" [selectionType]="'single'" (select)='onDepotSelected($event)'>
               
                 <ngx-datatable-column name="No." [flexGrow]="1">
                   <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex">
-                    {{rowIndex + 1}}
+                    {{ rowIndex + 1 }}
                   </ng-template>
                 </ngx-datatable-column>
               
@@ -110,11 +121,11 @@
                   </ng-template>
                 </ngx-datatable-column>
 
-                <ngx-datatable-footer>
+                <!-- <ngx-datatable-footer>
                   <ng-template ngx-datatable-footer-template>
                     <span style="padding-left:10px;">Select a depot by clicking on row</span>
                   </ng-template>
-                </ngx-datatable-footer>
+                </ngx-datatable-footer> -->
               
               </ngx-datatable>
 
@@ -135,36 +146,29 @@
           <mat-step [stepControl]="clientGroup">
             <form [formGroup]="clientGroup">
               <ng-template matStepLabel>Select clients</ng-template>
+
+              <button mat-raised-button color="primary" class="btn-client">Add Client</button>
+              <button mat-raised-button color="primary" class="btn-client" (click)="addMockClient()">Add Mock Client</button>
+
+              <mat-form-field class="input-filter">
+                <input matInput type='text' placeholder='Filter by client name' (keyup)='updateClientFilter($event)'>
+              </mat-form-field>
             
               <ngx-datatable class="material table" columnMode="flex" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'"
-                [limit]="5" [selected]="selectedClient" [rows]="depots" [selectionType]="'single'" (select)='onDepotSelected($event)'>
+                [limit]="5" [selected]="selectedClient" [rows]="clients" [selectionType]="'single'" (select)='onDepotSelected($event)'>
             
                 <ngx-datatable-column name="No." [flexGrow]="1">
                   <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex">
-                    {{rowIndex + 1}}
+                    {{ rowIndex + 1 }}
                   </ng-template>
                 </ngx-datatable-column>
             
-                <ngx-datatable-column prop="depotName" [flexGrow]="2"></ngx-datatable-column>
+                <ngx-datatable-column prop="clientName" [flexGrow]="2"></ngx-datatable-column>
             
-                <ngx-datatable-column prop="coordinate" name="Latitude" [flexGrow]="2">
-                  <ng-template ngx-datatable-cell-template let-value="value">
-                    {{ value[0] | number: '1.6-6' }}
-                  </ng-template>
-                </ngx-datatable-column>
+                <ngx-datatable-column prop="telephoneNumber" [flexGrow]="2"></ngx-datatable-column>
             
-                <ngx-datatable-column prop="coordinate" name="Longtitude" [flexGrow]="2">
-                  <ng-template ngx-datatable-cell-template let-value="value">
-                    {{ value[1] | number: '1.6-6' }}
-                  </ng-template>
-                </ngx-datatable-column>
-            
-                <ngx-datatable-footer>
-                  <ng-template ngx-datatable-footer-template>
-                    <span style="padding-left:10px;">Select a depot by clicking on row</span>
-                  </ng-template>
-                </ngx-datatable-footer>
-            
+                <ngx-datatable-column prop="address" [flexGrow]="4"></ngx-datatable-column>
+        
               </ngx-datatable>
             
               <div style="float: left;">
@@ -174,8 +178,10 @@
                 </mat-form-field>
               </div>
             
-              <button mat-raised-button matStepperNext color="primary" class="buttonPhase">Save</button>
-              <button mat-raised-button matStepperPrevious color="primary" class="buttonPhase">Back</button>
+              <div class="btn-container">
+                <button mat-raised-button matStepperPrevious color="primary">Back</button>
+                <button mat-raised-button matStepperNext color="primary">Save</button>
+              </div>
             </form>
           </mat-step>
         </mat-horizontal-stepper>
