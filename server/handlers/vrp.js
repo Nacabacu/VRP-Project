@@ -38,6 +38,7 @@ var vrpSolver = function (request, distances) {
             var timeWindows = new Array(numNodes);
             var demands = new Array(numNodes);
             var waitTime = new Array(numNodes);
+            var routeLocks = [];
 
             // set timeWindows as full day working
             for (var at = 0; at < numNodes; ++at) {
@@ -69,6 +70,11 @@ var vrpSolver = function (request, distances) {
                 }
             }
 
+            // Building route locking
+            for (var index = 0; index < request.numVehicles; index++) {
+                routeLocks.push([]);
+            }
+
             var solverOpts = {
                 numNodes: numNodes,
                 costs: request.method === 'distance' ? results.distance : results.duration,
@@ -85,7 +91,7 @@ var vrpSolver = function (request, distances) {
                 depotNode: depotIndex,
                 timeHorizon: 12 * 60 * 60,
                 vehicleCapacity: request.vehicleCapacity,
-                routeLocks: request.routeLocks,
+                routeLocks: routeLocks,
                 pickups: [],
                 deliveries: []
             };
