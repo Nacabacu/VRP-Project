@@ -17,18 +17,6 @@ import { Map } from '../../shared/map';
   encapsulation: ViewEncapsulation.None
 })
 export class PlanningComponent implements OnInit, OnDestroy {
-  @ViewChild(DatatableComponent) driverTable: DatatableComponent;
-  // numOfDrivers = 2;
-  // numOfDriversSubject = new Subject<number>();
-  // numOfDriversSubScription: Subscription;
-
-  // selectedDriver = [];
-  // numOfSelectedDriverSubject = new Subject<number>();
-  // numOfSelectedDriverSubScription: Subscription;
-
-  // drivers = [];
-  // tempDrivers = [];
-
   map = new Map;
   
   depots = [];
@@ -36,11 +24,16 @@ export class PlanningComponent implements OnInit, OnDestroy {
   depotMarker: Marker;
   numOfSelectedDepotSubject = new Subject<number>();
   numOfSelectedDepotSubScription: Subscription;
+  
+  clients = [];
+  selectedClient = [];
+  clientMarker: Marker;
+  numOfSelectedClienttSubject = new Subject<number>();
+  numOfSelectedClientSubScription: Subscription;
 
   planningInfoGroup: FormGroup;
   depotGroup: FormGroup;
-  driverFormGroup: FormGroup;
-  secondFormGroup: FormGroup;
+  clientGroup: FormGroup;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -49,13 +42,6 @@ export class PlanningComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    // this.driverService.getDrivers().then((response) => {
-      // response.drivers.forEach((driver) => {
-      //   this.drivers.push(driver);
-      // });
-      // this.tempDrivers = [...this.drivers];
-    // });
-
     this.depotService.getAllDepots().then((response) => {
       this.depots = response;
     });
@@ -74,67 +60,28 @@ export class PlanningComponent implements OnInit, OnDestroy {
       depotTable: new FormControl(null, this.checkDepotSelected.bind(this))
     })
 
-    // Drivers
-    // this.driverFormGroup = this.formBuilder.group({
-    //   capacity: new FormControl(null, [Validators.required]),
-    //   driverTable: new FormControl(null, this.checkDriverSelected.bind(this))
-    // });
-
-    // this.numOfDriversSubScription = this.numOfDriversSubject.subscribe((value) => {
-    //   this.driverFormGroup.get('driverTable').setValidators(this.checkDriverSelected.bind(this));
-    //   this.driverFormGroup.get('driverTable').updateValueAndValidity();
-    // });
-
-    // this.numOfSelectedDriverSubScription = this.numOfSelectedDriverSubject.subscribe((value) => {
-    //   this.driverFormGroup.get('driverTable').setValidators(this.checkDriverSelected.bind(this));
-    //   this.driverFormGroup.get('driverTable').updateValueAndValidity();
-    // });
+    // Clients
+    this.clientGroup = this.formBuilder.group({
+      clientTable: new FormControl(null, this.checkClientSelected.bind(this))
+    });
 
     this.numOfSelectedDepotSubScription = this.numOfSelectedDepotSubject.subscribe((value) => {
       this.depotGroup.get('depotTable').setValidators(this.checkDepotSelected.bind(this));
       this.depotGroup.get('depotTable').updateValueAndValidity();
     });
-
-    // Clients
-    this.secondFormGroup = this.formBuilder.group({
-      secondCtrl: ['', Validators.required]
-    });
   }
-
-  // updateFilter(e) {
-  //   const val = e.target.value.toLowerCase();
-
-  //   const temp = this.tempDrivers.filter((data) => {
-  //     return data.name.toLowerCase().indexOf(val) !== -1 || !val;
-  //   });
-
-  //   this.drivers = temp;
-  //   this.driverTable.offset = 0;
-  // }
-
-  // onSelect({ selected }) {
-  //   const numOfSelected = !this.selectedDriver ? 0 : this.selectedDriver.length;
-  //   this.numOfSelectedDriverSubject.next(numOfSelected);
-  //   this.selectedDriver.splice(0, this.selectedDriver.length);
-  //   this.selectedDriver.push(...selected);
-  // }
-
-  // checkDriverSelected(control: FormControl): {[s: string]: boolean} {
-  //   if (this.numOfDrivers !== this.selectedDriver.length) {
-  //     return({selectedDriverError: true});
-  //   } else {
-  //     return(null);
-  //   }
-  // }
-
-  // onDriverSliderChange(e) {
-  //   this.numOfDrivers = e.value;
-  //   this.numOfDriversSubject.next(e.value);
-  // }
 
   checkDepotSelected(control: FormControl): { [s: string]: boolean } {
     if (this.selectedDepot.length !== 1) {
       return { selectedDepotError: true };
+    } else {
+      return null;
+    }
+  }
+
+  checkClientSelected(control: FormControl): { [s: string]: boolean } {
+    if (this.selectedClient.length !== 1) {
+      return { selectedClientError: true };
     } else {
       return null;
     }
@@ -157,19 +104,13 @@ export class PlanningComponent implements OnInit, OnDestroy {
     this.map.zoom = 15;
     this.numOfSelectedDepotSubject.next(selected.length);
   }
-
-  test2() {
-    console.log(this.depotGroup)
-  }
-  test3() {
-    console.log(this.planningInfoGroup)
-  }
-
+  
   test() {
 
   }
 
   ngOnDestroy() {
+    this.numOfSelectedDepotSubScription.unsubscribe();
     // this.numOfDriversSubScription.unsubscribe();
     // this.numOfSelectedDriverSubScription.unsubscribe();
   }

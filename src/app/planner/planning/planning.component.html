@@ -24,25 +24,29 @@
               <ng-template matStepLabel>Planning Info</ng-template>
 
               <div class="col-sm-12 col-md-8 col-md-offset-2">
-                <mat-form-field>
-                  <input matInput [matDatepickerFilter]="dateFilter" [matDatepicker]="picker" placeholder="Choose delivery date" formControlName="date">
-                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                  <mat-datepicker #picker></mat-datepicker>
-                  <mat-error *ngIf="planningInfoGroup.get('date').hasError('required')">You must enter a date</mat-error>
-                  <mat-error *ngIf="planningInfoGroup.get('date').hasError('matDatepickerFilter')">You must select correct date</mat-error>
-                </mat-form-field>
-                
-                <mat-form-field style="margin-left:20px;">
-                  <mat-select placeholder="Select start time" formControlName="time">
-                    <mat-option value="9">9:00</mat-option>
-                    <mat-option value="12">12:00</mat-option>
-                    <mat-option value="15">15:00</mat-option>
-                  </mat-select>
-                </mat-form-field>
 
-                <br>
-                <div style="margin-top:16px;">
-                  <mat-form-field>
+                <div class="col-xs-6 col-md-12 col-lg-6">
+                  <mat-form-field class="input-form">
+                    <input matInput [matDatepickerFilter]="dateFilter" [matDatepicker]="picker" placeholder="Choose delivery date" formControlName="date">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                    <mat-error *ngIf="planningInfoGroup.get('date').hasError('required')">You must enter a date</mat-error>
+                    <mat-error *ngIf="planningInfoGroup.get('date').hasError('matDatepickerFilter')">You must select correct date</mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-xs-6 col-md-12 col-lg-6">
+                  <mat-form-field class="input-form">
+                    <mat-select placeholder="Select start time" formControlName="time">
+                      <mat-option value="9">9:00</mat-option>
+                      <mat-option value="12">12:00</mat-option>
+                      <mat-option value="15">15:00</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                
+                <div class="col-xs-6 col-md-12 col-lg-6">
+                  <mat-form-field class="input-form">
                     <mat-select placeholder="Select available drivers" formControlName="numOfDrivers">
                       <mat-option value="1">1</mat-option>
                       <mat-option value="2">2</mat-option>
@@ -53,8 +57,10 @@
                       <mat-option value="7">7</mat-option>
                     </mat-select>
                   </mat-form-field>
+                </div>
 
-                  <mat-form-field style="margin-left:20px;">
+                <div class="col-xs-6 col-md-12 col-lg-6">
+                  <mat-form-field class="input-form">
                     <input matInput placeholder="Enter vehicle capacity" formControlName="capacity">
                     <mat-error *ngIf="planningInfoGroup.get('date').hasError('required')">You must enter vehicle capacity</mat-error>
                   </mat-form-field>
@@ -69,68 +75,19 @@
                   </mat-radio-group>
                 </div>
                 
-                <button mat-raised-button matStepperNext color="primary" class="buttonPhase" (click)="test3()">Next</button>
+                <div class="btn-container">
+                  <button mat-raised-button matStepperNext color="primary">Next</button>
+                </div>
               </div>
 
             </form>
           </mat-step>
 
-          <!-- <mat-step [stepControl]="driverFormGroup">
-            <form [formGroup]="driverFormGroup">
-              <ng-template matStepLabel>Select Drivers</ng-template>
-
-              <div style="margin-top:16px;">
-                <label>Number of Drivers: </label>
-                <mat-slider class="driver-slider" color="primary" [value]="2" [min]="2" [max]="10" [step]="1" [thumb-label]="true" (change)="onDriverSliderChange($event)"></mat-slider>
-                {{ numOfDrivers }} Drivers
-              </div>
-
-              <div style="float:left;">
-                <label>Truck Capacity: </label>
-                <mat-form-field>
-                  <input matInput type="number" min="1" placeholder="Capacity" formControlName="capacity">
-                  <mat-error *ngIf="driverFormGroup.get('capacity').hasError['required']">You must enter a value</mat-error>
-                </mat-form-field>
-              </div>
-
-              <mat-form-field class="input-filter">
-                <input matInput type='text' placeholder='Filter by name' (keyup)='updateFilter($event)'>
-              </mat-form-field>
-
-              <ngx-datatable #driverTable class="material expandable driver-table" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="50"
-                [reorderable]="false" [rows]="drivers" [limit]="8" style="clear:both;" [selected]="selectedDriver" [selectionType]="'multiClick'"
-                (select)='onSelect($event)'>
-
-                <ngx-datatable-column name="No." [maxWidth]="40">
-                  <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex">
-                    {{ rowIndex + 1 }}
-                  </ng-template>
-                </ngx-datatable-column>
-              
-                <ngx-datatable-column name="Name"></ngx-datatable-column>
-              
-                <ngx-datatable-column name="LicenseNo"></ngx-datatable-column>
-              
-                <ngx-datatable-column name="VehicleNo"></ngx-datatable-column>
-              </ngx-datatable>
-
-              <div style="float: left;">
-              <mat-form-field class="driverTable-error">
-                <input matInput disabled formControlName="driverTable">
-                <mat-error *ngIf="driverFormGroup.get('driverTable').invalid">You must select drivers equal number of drivers</mat-error>
-              </mat-form-field>
-              </div>
-
-              <button mat-raised-button matStepperNext color="primary" class="buttonPhase">Next</button>
-              <button mat-raised-button matStepperPrevious color="primary" class="buttonPhase">Back</button>
-            </form>
-          </mat-step> -->
-
-          <mat-step [stepControl]="secondFormGroup">
-            <form [formGroup]="secondFormGroup">
+          <mat-step [stepControl]="depotGroup">
+            <form [formGroup]="depotGroup">
               <ng-template matStepLabel>Select a Depot</ng-template>
               
-              <ngx-datatable #depotTable class="material table" columnMode="flex" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'"
+              <ngx-datatable class="material table" columnMode="flex" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'"
                 [limit]="5" [selected]="selectedDepot" [rows]="depots" [selectionType]="'single'" (select)='onDepotSelected($event)'>
               
                 <ngx-datatable-column name="No." [flexGrow]="1">
@@ -160,22 +117,66 @@
                 </ngx-datatable-footer>
               
               </ngx-datatable>
-              
-              <div class="tableError" *ngIf="this.depotGroup.get('depotTable').hasError('selectedDepotError')">
-                 You must select depot
+
+              <div style="float: left;">
+                <mat-form-field class="table-error">
+                  <input matInput disabled formControlName="depotTable">
+                  <mat-error *ngIf="this.depotGroup.get('depotTable').hasError('selectedDepotError')">You must select depot</mat-error>
+                </mat-form-field>
               </div>
 
-              <button mat-raised-button matStepperNext color="primary" class="buttonPhase" (click)="test2()">Next</button>
-              <button mat-raised-button matStepperPrevious color="primary" class="buttonPhase">Back</button>
+              <div class="btn-container">
+                <button mat-raised-button matStepperPrevious color="primary">Back</button>
+                <button mat-raised-button matStepperNext color="primary">Next</button>
+              </div>
             </form>
           </mat-step>
 
-          <mat-step>
-            <ng-template matStepLabel>Select Clients</ng-template>
-            You are now done.
-            <div>
-              <button mat-button matStepperPrevious>Save</button>
-            </div>
+          <mat-step [stepControl]="clientGroup">
+            <form [formGroup]="clientGroup">
+              <ng-template matStepLabel>Select clients</ng-template>
+            
+              <ngx-datatable class="material table" columnMode="flex" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'"
+                [limit]="5" [selected]="selectedClient" [rows]="depots" [selectionType]="'single'" (select)='onDepotSelected($event)'>
+            
+                <ngx-datatable-column name="No." [flexGrow]="1">
+                  <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex">
+                    {{rowIndex + 1}}
+                  </ng-template>
+                </ngx-datatable-column>
+            
+                <ngx-datatable-column prop="depotName" [flexGrow]="2"></ngx-datatable-column>
+            
+                <ngx-datatable-column prop="coordinate" name="Latitude" [flexGrow]="2">
+                  <ng-template ngx-datatable-cell-template let-value="value">
+                    {{ value[0] | number: '1.6-6' }}
+                  </ng-template>
+                </ngx-datatable-column>
+            
+                <ngx-datatable-column prop="coordinate" name="Longtitude" [flexGrow]="2">
+                  <ng-template ngx-datatable-cell-template let-value="value">
+                    {{ value[1] | number: '1.6-6' }}
+                  </ng-template>
+                </ngx-datatable-column>
+            
+                <ngx-datatable-footer>
+                  <ng-template ngx-datatable-footer-template>
+                    <span style="padding-left:10px;">Select a depot by clicking on row</span>
+                  </ng-template>
+                </ngx-datatable-footer>
+            
+              </ngx-datatable>
+            
+              <div style="float: left;">
+                <mat-form-field class="table-error">
+                  <input matInput disabled formControlName="clientTable">
+                  <mat-error *ngIf="this.clientGroup.get('clientTable').hasError('selectedClientError')">You must select at least 1 client</mat-error>
+                </mat-form-field>
+              </div>
+            
+              <button mat-raised-button matStepperNext color="primary" class="buttonPhase">Save</button>
+              <button mat-raised-button matStepperPrevious color="primary" class="buttonPhase">Back</button>
+            </form>
           </mat-step>
         </mat-horizontal-stepper>
       </div>

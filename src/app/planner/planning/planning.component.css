@@ -6,10 +6,13 @@ label {
     margin-right: 6px;
 }
 
-.buttonPhase {
+.btn-container {
     float: right;
     margin-top: 20px;
-    margin-left: 10px;
+}
+
+.input-form {
+    width: 90%;
 }
 
 .driver-slider {
@@ -30,9 +33,22 @@ label {
     padding: 0 12px 12px;
 }
 
-.tableError {
-    float: left;
-    padding-top: 25px;
-    padding-left: 7px;
-    color: red;
+.table-error {
+    width: 300px;
+}
+
+.table-error .mat-input-flex {
+    display: none !important;
+}
+
+.table-error .mat-input-underline {
+    height: 0 !important;
+}
+
+.table-error .mat-input-ripple {
+    height: 0 !important;
+}
+
+.table-error .mat-input-subscript-wrapper {
+    margin-top: 10px
 }
