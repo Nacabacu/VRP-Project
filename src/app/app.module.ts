@@ -1,3 +1,5 @@
+import { DeleteDialogComponent } from './shared/delete-dialog/delete-dialog.component';
+import { DepotService } from './services/depot.service';
 import { DriverService } from './services/driver.service';
 import { NgModule, Directive } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -67,8 +69,10 @@ const MY_DATE_FORMATS = {
     HeaderComponent,
     PlannerTodoComponent,
     DriverTodoComponent,
-    DirectionDirective
+    DirectionDirective,
+    DeleteDialogComponent
   ],
+  entryComponents: [DeleteDialogComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -79,7 +83,8 @@ const MY_DATE_FORMATS = {
     HttpModule,
     NgxDatatableModule,
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyCMk-d92auJ7HbZaXajcpdXtqcBMoH4RUc'
+      apiKey: 'AIzaSyCMk-d92auJ7HbZaXajcpdXtqcBMoH4RUc',
+      libraries: ['places']
     }),
     AngularFontAwesomeModule
   ],
@@ -88,6 +93,7 @@ const MY_DATE_FORMATS = {
     AuthService,
     ResultService,
     DriverService,
+    DepotService,
     { provide: DateAdapter, useClass: MyDateAdapter },
     { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
     GoogleMapsAPIWrapper

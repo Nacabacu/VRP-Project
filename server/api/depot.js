@@ -63,6 +63,24 @@ router.patch('/update/:id', (req, res) => {
     });
 });
 
+router.put('/updates', (req, res) => {
+    req.body.depots.forEach((depot) => {
+        var id = depot._id;
+        Depot.findOneAndUpdate({ _id: id }, { $set: depot }).then((result) => {
+            if (!result) {
+                var newDepot = new Depot(depot);
+
+                newDepot.save(function (err) {
+                    if (err) errorHandler(err, res);
+                });
+            }
+        }).catch((err) => {
+            errorHandler(err, res);
+        });
+    });
+    res.status(200).send('update depot successfully');
+});
+
 router.delete('/delete/:id', (req, res) => {
     var id = req.params.id;
 

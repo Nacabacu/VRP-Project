@@ -14,8 +14,6 @@ import { Observable } from 'rxjs/Observable';
 })
 export class PlanningComponent implements OnInit, OnDestroy {
   @ViewChild(DatatableComponent) driverTable: DatatableComponent;
-  lat: number = 51.678418;
-  lng: number = 7.809007;
   numOfDrivers = 2;
   numOfDriversSubject = new Subject<number>();
   numOfDriversSubScription: Subscription;

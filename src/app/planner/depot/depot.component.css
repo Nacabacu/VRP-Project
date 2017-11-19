@@ -1,0 +1,30 @@
+agm-map {
+    height: calc(100vh - 216px);
+}
+
+.searchLocationInput {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 10px;
+}
+
+.depotFilterInput {
+    float: right;
+    padding-right: 24px;
+}
+
+.depotTable {
+    clear: both;
+    padding: 0 24px;
+}
+
+.btn-group {
+    float: right;
+    margin-top: 12px;
+}
+
+.validateText {
+    float: left;
+    color: red;
+    margin-top: 20px;
+}
