@@ -6,9 +6,7 @@ const _ = require('lodash');
 const { Depot } = require('../models/depot');
 
 const errorHandler = (err, res) => {
-    res.status = 501;
-    res.message = typeof err == 'object' ? err.message : err;
-    res.status(501).json(res);
+    res.status(501).send(err);
 };
 
 // Depots
@@ -63,6 +61,24 @@ router.patch('/update/:id', (req, res) => {
     }).catch((err) => {
         errorHandler(err, res);
     });
+});
+
+router.put('/updates', (req, res) => {
+    req.body.depots.forEach((depot) => {
+        var id = depot._id;
+        Depot.findOneAndUpdate({ _id: id }, { $set: depot }).then((result) => {
+            if (!result) {
+                var newDepot = new Depot(depot);
+
+                newDepot.save(function (err) {
+                    if (err) errorHandler(err, res);
+                });
+            }
+        }).catch((err) => {
+            errorHandler(err, res);
+        });
+    });
+    res.status(200).send('update depot successfully');
 });
 
 router.delete('/delete/:id', (req, res) => {
