@@ -14,16 +14,16 @@ import { Observable } from 'rxjs/Observable';
 })
 export class PlanningComponent implements OnInit, OnDestroy {
   @ViewChild(DatatableComponent) driverTable: DatatableComponent;
-  numOfDrivers = 2;
-  numOfDriversSubject = new Subject<number>();
-  numOfDriversSubScription: Subscription;
+  // numOfDrivers = 2;
+  // numOfDriversSubject = new Subject<number>();
+  // numOfDriversSubScription: Subscription;
 
-  selectedDriver = [];
-  numOfSelectedDriverSubject = new Subject<number>();
-  numOfSelectedDriverSubScription: Subscription;
+  // selectedDriver = [];
+  // numOfSelectedDriverSubject = new Subject<number>();
+  // numOfSelectedDriverSubScription: Subscription;
 
-  drivers = [];
-  tempDrivers = [];
+  // drivers = [];
+  // tempDrivers = [];
 
   planningInfoGroup: FormGroup;
   driverFormGroup: FormGroup;
@@ -35,36 +35,37 @@ export class PlanningComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.driverService.getDrivers().then((response) => {
-      response.drivers.forEach((driver) => {
-        this.drivers.push(driver);
-      });
-      this.tempDrivers = [...this.drivers];
-    });
+    // this.driverService.getDrivers().then((response) => {
+      // response.drivers.forEach((driver) => {
+      //   this.drivers.push(driver);
+      // });
+      // this.tempDrivers = [...this.drivers];
+    // });
 
     // Planning
     this.planningInfoGroup = this.formBuilder.group({
       date: new FormControl(null, Validators.required),
-      hour: new FormControl(null, Validators.required),
-      minute: new FormControl(null, Validators.required),
+      time: new FormControl(null, Validators.required),
+      numOfDrivers: new FormControl(null, Validators.required),
+      capacity: new FormControl(null, Validators.required),
       method: new FormControl('distance'),
     });
 
     // Drivers
-    this.driverFormGroup = this.formBuilder.group({
-      capacity: new FormControl(null, [Validators.required]),
-      driverTable: new FormControl(null, this.checkDriverSelected.bind(this))
-    });
+    // this.driverFormGroup = this.formBuilder.group({
+    //   capacity: new FormControl(null, [Validators.required]),
+    //   driverTable: new FormControl(null, this.checkDriverSelected.bind(this))
+    // });
 
-    this.numOfDriversSubScription = this.numOfDriversSubject.subscribe((value) => {
-      this.driverFormGroup.get('driverTable').setValidators(this.checkDriverSelected.bind(this));
-      this.driverFormGroup.get('driverTable').updateValueAndValidity();
-    });
+    // this.numOfDriversSubScription = this.numOfDriversSubject.subscribe((value) => {
+    //   this.driverFormGroup.get('driverTable').setValidators(this.checkDriverSelected.bind(this));
+    //   this.driverFormGroup.get('driverTable').updateValueAndValidity();
+    // });
 
-    this.numOfSelectedDriverSubScription = this.numOfSelectedDriverSubject.subscribe((value) => {
-      this.driverFormGroup.get('driverTable').setValidators(this.checkDriverSelected.bind(this));
-      this.driverFormGroup.get('driverTable').updateValueAndValidity();
-    });
+    // this.numOfSelectedDriverSubScription = this.numOfSelectedDriverSubject.subscribe((value) => {
+    //   this.driverFormGroup.get('driverTable').setValidators(this.checkDriverSelected.bind(this));
+    //   this.driverFormGroup.get('driverTable').updateValueAndValidity();
+    // });
 
     // Clients
     this.secondFormGroup = this.formBuilder.group({
@@ -72,48 +73,36 @@ export class PlanningComponent implements OnInit, OnDestroy {
     });
   }
 
-  updateFilter(e) {
-    const val = e.target.value.toLowerCase();
+  // updateFilter(e) {
+  //   const val = e.target.value.toLowerCase();
 
-    const temp = this.tempDrivers.filter((data) => {
-      return data.name.toLowerCase().indexOf(val) !== -1 || !val;
-    });
+  //   const temp = this.tempDrivers.filter((data) => {
+  //     return data.name.toLowerCase().indexOf(val) !== -1 || !val;
+  //   });
 
-    this.drivers = temp;
-    this.driverTable.offset = 0;
-  }
+  //   this.drivers = temp;
+  //   this.driverTable.offset = 0;
+  // }
 
-  onSelect({ selected }) {
-    const numOfSelected = !this.selectedDriver ? 0 : this.selectedDriver.length;
-    this.numOfSelectedDriverSubject.next(numOfSelected);
-    this.selectedDriver.splice(0, this.selectedDriver.length);
-    this.selectedDriver.push(...selected);
-  }
+  // onSelect({ selected }) {
+  //   const numOfSelected = !this.selectedDriver ? 0 : this.selectedDriver.length;
+  //   this.numOfSelectedDriverSubject.next(numOfSelected);
+  //   this.selectedDriver.splice(0, this.selectedDriver.length);
+  //   this.selectedDriver.push(...selected);
+  // }
 
-  checkDriverSelected(control: FormControl): {[s: string]: boolean} {
-    if (this.numOfDrivers !== this.selectedDriver.length) {
-      return({selectedDriverError: true});
-    } else {
-      return(null);
-    }
-  }
+  // checkDriverSelected(control: FormControl): {[s: string]: boolean} {
+  //   if (this.numOfDrivers !== this.selectedDriver.length) {
+  //     return({selectedDriverError: true});
+  //   } else {
+  //     return(null);
+  //   }
+  // }
 
-  onDriverSliderChange(e) {
-    this.numOfDrivers = e.value;
-    this.numOfDriversSubject.next(e.value);
-  }
-
-  onHourBlur(e) {
-    if (e.target.valueAsNumber > 24) {
-      this.planningInfoGroup.get('hour').setValue(24);
-    }
-  }
-
-  onMinuteBlur(e) {
-    if (e.target.valueAsNumber > 59) {
-      this.planningInfoGroup.get('minute').setValue(59);
-    }
-  }
+  // onDriverSliderChange(e) {
+  //   this.numOfDrivers = e.value;
+  //   this.numOfDriversSubject.next(e.value);
+  // }
 
   dateFilter(date: Date): boolean {
     const currentDate = new Date();
@@ -122,12 +111,12 @@ export class PlanningComponent implements OnInit, OnDestroy {
   }
 
   test() {
-    
+
   }
 
   ngOnDestroy() {
-    this.numOfDriversSubScription.unsubscribe();
-    this.numOfSelectedDriverSubScription.unsubscribe();
+    // this.numOfDriversSubScription.unsubscribe();
+    // this.numOfSelectedDriverSubScription.unsubscribe();
   }
 
 }
