@@ -13,12 +13,12 @@
     <div class="col-xs-12">
       <div class="col-xs-12 col-md-6">
         <agm-map [hidden]="!showAll" [latitude]="result.depot.coordinate[0]" [longitude]="result.depot.coordinate[1]" [zoom]="15">
-          <agm-marker [iconUrl]="depotMarker" [latitude]="result.depot.coordinate[0]" [longitude]="result.depot.coordinate[1]"></agm-marker>
+          <agm-marker [iconUrl]="'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'" [latitude]="result.depot.coordinate[0]" [longitude]="result.depot.coordinate[1]"></agm-marker>
           <agm-marker *ngFor="let client of result.clients;" [label]="client.index.toString()" [latitude]="client.coordinate[0]" [longitude]="client.coordinate[1]"></agm-marker>
           <agm-direction *ngFor="let vehicle of result.vehicles; let i=index" [subRoute]="false" [index]="i" [showAll]="true" [color]="vehicle.color" [route]="vehicle.route" [result]="result"></agm-direction>
         </agm-map>
         <agm-map *ngIf="!showAll" [latitude]="result.depot.coordinate[0]" [longitude]="result.depot.coordinate[1]" [zoom]="15">
-          <agm-marker [iconUrl]="depotMarker" [latitude]="result.depot.coordinate[0]" [longitude]="result.depot.coordinate[1]"></agm-marker>
+          <agm-marker [iconUrl]="'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'" [latitude]="result.depot.coordinate[0]" [longitude]="result.depot.coordinate[1]"></agm-marker>
           <agm-marker *ngFor="let client of selectedClient;" [label]="client.index.toString()" [latitude]="client.coordinate[0]" [longitude]="client.coordinate[1]"></agm-marker>
           <agm-direction *ngFor="let vehicle of selectedResult; let i=index" [subRoute]="subRoute" [index]="i" [showAll]="false" [color]="vehicle.color" [route]="vehicle.route" [result]="result"></agm-direction>
         </agm-map>

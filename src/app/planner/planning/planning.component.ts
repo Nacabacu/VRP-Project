@@ -1,3 +1,4 @@
+import { DepotService } from './../../services/depot.service';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
 import { DriverService } from './../../services/driver.service';
@@ -5,6 +6,9 @@ import { Component, OnInit, ViewChild, OnDestroy, ViewEncapsulation } from '@ang
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
 import { Observable } from 'rxjs/Observable';
+
+import { Marker } from '../../shared/marker';
+import { Map } from '../../shared/map';
 
 @Component({
   selector: 'app-planning',
@@ -25,13 +29,23 @@ export class PlanningComponent implements OnInit, OnDestroy {
   // drivers = [];
   // tempDrivers = [];
 
+  map = new Map;
+  
+  depots = [];
+  selectedDepot = [];
+  depotMarker: Marker;
+  numOfSelectedDepotSubject = new Subject<number>();
+  numOfSelectedDepotSubScription: Subscription;
+
   planningInfoGroup: FormGroup;
+  depotGroup: FormGroup;
   driverFormGroup: FormGroup;
   secondFormGroup: FormGroup;
 
   constructor(
     private formBuilder: FormBuilder,
-    private driverService: DriverService
+    private driverService: DriverService,
+    private depotService: DepotService
   ) { }
 
   ngOnInit() {
@@ -42,6 +56,10 @@ export class PlanningComponent implements OnInit, OnDestroy {
       // this.tempDrivers = [...this.drivers];
     // });
 
+    this.depotService.getAllDepots().then((response) => {
+      this.depots = response;
+    });
+
     // Planning
     this.planningInfoGroup = this.formBuilder.group({
       date: new FormControl(null, Validators.required),
@@ -50,6 +68,11 @@ export class PlanningComponent implements OnInit, OnDestroy {
       capacity: new FormControl(null, Validators.required),
       method: new FormControl('distance'),
     });
+
+    // Depot
+    this.depotGroup = this.formBuilder.group({
+      depotTable: new FormControl(null, this.checkDepotSelected.bind(this))
+    })
 
     // Drivers
     // this.driverFormGroup = this.formBuilder.group({
@@ -66,6 +89,11 @@ export class PlanningComponent implements OnInit, OnDestroy {
     //   this.driverFormGroup.get('driverTable').setValidators(this.checkDriverSelected.bind(this));
     //   this.driverFormGroup.get('driverTable').updateValueAndValidity();
     // });
+
+    this.numOfSelectedDepotSubScription = this.numOfSelectedDepotSubject.subscribe((value) => {
+      this.depotGroup.get('depotTable').setValidators(this.checkDepotSelected.bind(this));
+      this.depotGroup.get('depotTable').updateValueAndValidity();
+    });
 
     // Clients
     this.secondFormGroup = this.formBuilder.group({
@@ -104,10 +132,37 @@ export class PlanningComponent implements OnInit, OnDestroy {
   //   this.numOfDriversSubject.next(e.value);
   // }
 
+  checkDepotSelected(control: FormControl): { [s: string]: boolean } {
+    if (this.selectedDepot.length !== 1) {
+      return { selectedDepotError: true };
+    } else {
+      return null;
+    }
+  }
+
   dateFilter(date: Date): boolean {
     const currentDate = new Date();
     currentDate.setDate(currentDate.getDate() - 1);
     return date >= currentDate;
+  }
+
+  onDepotSelected({ selected }) {
+    this.depotMarker = {
+      lat: selected[0].coordinate[0],
+      lng: selected[0].coordinate[1],
+      draggable: false
+    }
+    this.map.lat = selected[0].coordinate[0];
+    this.map.lng = selected[0].coordinate[1];
+    this.map.zoom = 15;
+    this.numOfSelectedDepotSubject.next(selected.length);
+  }
+
+  test2() {
+    console.log(this.depotGroup)
+  }
+  test3() {
+    console.log(this.planningInfoGroup)
   }
 
   test() {
