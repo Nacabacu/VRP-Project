@@ -1,0 +1,38 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xs-12 col-md-6">
+      <mat-form-field floatPlaceholder="never" class="searchLocationInput">
+        <input matInput placeholder="Search for location" #search>
+      </mat-form-field>
+
+      <agm-map style="height: 600px;" [latitude]="map?.lat" [longitude]="map?.lng" [zoom]="map?.zoom" (mapClick)="onMapClicked($event)">
+        <agm-marker [latitude]="searchMarker?.lat" [longitude]="searchMarker?.lng" [label]="searchMarker?.label" [iconUrl]="'http://maps.google.com/mapfiles/kml/pal3/icon28.png'">
+        </agm-marker>
+      </agm-map>
+    </div>
+
+    <div class="col-xs-12 col-md-6">
+      <div class="form-container">
+        <h2 style="text-align:center;">{{ header }}</h2>
+        <div class="col-xs-8 col-xs-offset-2" *ngIf="!searched">
+          <mat-form-field class="phoneInput">
+            <input matInput type="tel" placeholder="Search Phone Number" maxlength="10" [(ngModel)]="telNum">
+          </mat-form-field>
+          <!-- [disabled]="telNum && telNum.length < 9 " -->
+          <button mat-raised-button color="primary" style="margin-left:10px;" (click)="onTelNumSearch()">Search</button>
+        </div>
+
+        <form [formGroup]="clientFormGroup">
+          <div class="col-xs-10 col-xs-offset-1" *ngIf="searched">
+            <mat-form-field>
+              <input matInput type="text" placeholder="Client Name" formControlName="clientName">
+            </mat-form-field>
+            <mat-form-field>
+              <input matInput type="tel" placeholder="Phone Number" formControlName="telNum">
+            </mat-form-field>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

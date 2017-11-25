@@ -18,14 +18,10 @@ router.get('/get', (req, res) => {
     });
 });
 
-router.get('/get/:id', (req, res) => {
-    var id = req.params.id;
+router.get('/get/:telNum', (req, res) => {
+    var telNum = req.params.telNum;
 
-    if (!ObjectID.isValid(id)) {
-        return res.status(404).send();
-    }
-
-    Client.findById(id).then((client) => {
+    Client.findOne({ telNum }).then((client) => {
         if (!client) {
             return res.status(404).send();
         }

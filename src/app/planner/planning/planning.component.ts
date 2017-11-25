@@ -1,3 +1,4 @@
+import { MatDialog } from '@angular/material';
 import { Component, OnInit, ViewChild, OnDestroy, ViewEncapsulation, NgZone, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 
@@ -15,6 +16,8 @@ import { } from 'googlemaps';
 import { Marker } from '../../shared/marker';
 import { Map } from '../../shared/map';
 
+import { ClientPickerDialogComponent } from '../../shared/client-picker-dialog/client-picker-dialog.component';
+
 @Component({
   selector: 'app-planning',
   templateUrl: './planning.component.html',
@@ -22,21 +25,21 @@ import { Map } from '../../shared/map';
   encapsulation: ViewEncapsulation.None
 })
 export class PlanningComponent implements OnInit, OnDestroy {
-  @ViewChild(DatatableComponent) depotTable: DatatableComponent; 
-  @ViewChild(DatatableComponent) clientTable: DatatableComponent; 
+  @ViewChild(DatatableComponent) depotTable: DatatableComponent;
+  @ViewChild(DatatableComponent) clientTable: DatatableComponent;
   @ViewChild("searchMap") public searchElementRef: ElementRef;
 
   map = new Map;
   searchLocationInput;
   offset = 0;
-  
+
   depots = [];
   tempDepots = [];
   selectedDepot = [];
   depotMarker: Marker;
   numOfSelectedDepotSubject = new Subject<number>();
   numOfSelectedDepotSubScription: Subscription;
-  
+
   clients = [];
   tempClients = [];
   selectedClient = [];
@@ -56,6 +59,7 @@ export class PlanningComponent implements OnInit, OnDestroy {
     private depotService: DepotService,
     private mapsAPILoader: MapsAPILoader,
     private ngZone: NgZone,
+    public dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -139,23 +143,23 @@ export class PlanningComponent implements OnInit, OnDestroy {
   updateDepotFilter(e) {
     const val = e.target.value.toLowerCase();
 
-    const temp = this.tempDepots.filter((data) => { 
-      return data.depotName.toLowerCase().indexOf(val) !== -1 || !val; 
-    }); 
+    const temp = this.tempDepots.filter((data) => {
+      return data.depotName.toLowerCase().indexOf(val) !== -1 || !val;
+    });
 
-    this.depots = temp; 
-    this.depotTable.offset = 0; 
+    this.depots = temp;
+    this.depotTable.offset = 0;
   }
 
   updateClientFilter(e) {
     const val = e.target.value.toLowerCase();
 
-    const temp = this.tempClients.filter((data) => { 
-      return data.telephoneNumber.toLowerCase().indexOf(val) !== -1 || !val; 
-    }); 
+    const temp = this.tempClients.filter((data) => {
+      return data.telephoneNumber.toLowerCase().indexOf(val) !== -1 || !val;
+    });
 
-    this.clients = temp; 
-    this.clientTable.offset = 0; 
+    this.clients = temp;
+    this.clientTable.offset = 0;
   }
 
   removeClient(e) {
@@ -187,17 +191,49 @@ export class PlanningComponent implements OnInit, OnDestroy {
     this.map.zoom = 15;
   }
 
+  onAddClient(rowIndex: number) {
+    const dialogRef = this.dialog.open(ClientPickerDialogComponent, {
+      width: '80vw',
+      data: {}
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        console.log(result);
+        const dialogRef1 = this.dialog.open(ClientPickerDialogComponent, {
+          width: '80vw',
+          data: result
+        });
+        dialogRef1.afterClosed().subscribe((result) => {
+          if (result) {
+
+          }
+        });
+
+
+        // this.dialogClients.push(result);
+        // this.client.branches.splice(rowIndex, 1);
+        // this.markers.splice(rowIndex, 1);
+        // this.temp = [...this.client.branches];
+        // this.renderMarkers();
+        // this.checkBranchName();
+      }
+    });
+  }
+
   addMockClient() {
     this.offset += 0.01
     this.clients.push({
       clientName: 'test Name',
       telephoneNumber: '1231564',
       address: 'test address',
+      demand: 1,
+      waitTime: 30,
       coordinate: [13.6526 + this.offset, 100.486328 + this.offset]
     })
     this.tempClients = this.clients;
   }
-  
+
   test() {
 
   }
