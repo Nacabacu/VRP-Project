@@ -366,17 +366,19 @@ export class PlanningComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         console.log(result);
-        const dialogRef1 = this.dialog.open(ClientPickerDialogComponent, {
-          width: '80vw',
-          data: result
-        });
-        dialogRef1.afterClosed().subscribe((result) => {
-          if (result) {
+        
+        // reopen with same data (view only)
+        // const dialogRef1 = this.dialog.open(ClientPickerDialogComponent, {
+        //   width: '80vw',
+        //   data: result
+        // });
+        // dialogRef1.afterClosed().subscribe((result) => {
+        //   if (result) {
 
-          }
-        });
+        //   }
+        // });
 
-
+        // push data to table
         // this.dialogClients.push(result);
         // this.client.branches.splice(rowIndex, 1);
         // this.markers.splice(rowIndex, 1);

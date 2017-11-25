@@ -1,4 +1,9 @@
-#telNumFilter{
+#telNumFilter {
     float: right;
-    padding-right: 15px;
+    padding-right: 2%;
+}
+
+#clientTable {
+    width: 96%;
+    margin: 0px 2%;
 }

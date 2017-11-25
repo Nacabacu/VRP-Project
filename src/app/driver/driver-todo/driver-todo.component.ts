@@ -14,6 +14,7 @@ export class DriverTodoComponent implements OnInit {
   doingExpanded: any = {};
   doneExpanded: any = {};
   todoDriver = [];
+  selectedDriver = [];
   done = [];
   licenseId: string;
   isResponsive: boolean;
@@ -57,6 +58,12 @@ export class DriverTodoComponent implements OnInit {
 
   onView(id: string) {
     this.router.navigate(['/driver/result', id]);
+  }
+
+  onDriverSelected({ selected }) {
+    this.todoDriver.findIndex(function(todo) {
+      return todo === selected[selected.length - 1];
+    });
   }
 
   toggleExpandDoing(row) {

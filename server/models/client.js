@@ -10,6 +10,10 @@ var Client = mongoose.model('clients', {
         require: true,
         trim: true
     },
+    address: {
+        type: String,
+        require: true,
+    },
     coordinate: {
         type: [Number],
         require: true

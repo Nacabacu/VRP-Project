@@ -19,12 +19,12 @@
       </div>
 
       <div class="col-xs-12 col-md-6">
-        <mat-form-field floatPlaceholder="auto">
-          <input matInput placeholder='Filter by phone number' (keyup)='updateFilter($event)'/>
+        <mat-form-field floatPlaceholder="auto" id="telNumFilter">
+          <input matInput placeholder='Filter by phone number' (keyup)='updateFilter($event)' />
         </mat-form-field>
 
-        <ngx-datatable #table class='material' columnMode="flex" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [limit]="10"
-          [rows]='clients' [selected]="selectedClients" [selectionType]="'radio'" (select)='onClientSelected($event)'>
+        <ngx-datatable #table id="clientTable" class='material' columnMode="flex" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'"
+          [limit]="10" [rows]='clients' [selected]="selectedClients" [selectionType]="'radio'" (select)='onClientSelected($event)'>
 
           <ngx-datatable-column name="View" [maxWidth]="50">
             <ng-template ngx-datatable-cell-template let-row="row">
@@ -43,11 +43,11 @@
             </ng-template>
           </ngx-datatable-column>
 
-          <ngx-datatable-column prop="clientName" [flexGrow]="1"></ngx-datatable-column>
+          <ngx-datatable-column prop="clientName" [flexGrow]="0.1"></ngx-datatable-column>
 
-          <ngx-datatable-column prop="address" [flexGrow]="2"></ngx-datatable-column>
+          <ngx-datatable-column prop="address" [flexGrow]="0.25"></ngx-datatable-column>
 
-          <ngx-datatable-column prop="telNum" name="Phone Number" [flexGrow]="1"></ngx-datatable-column>
+          <ngx-datatable-column prop="telNum" name="Phone Number" [flexGrow]="0.2"></ngx-datatable-column>
 
         </ngx-datatable>
       </div>

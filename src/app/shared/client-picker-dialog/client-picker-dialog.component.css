@@ -3,10 +3,6 @@ table#clientInfo tr {
     padding: 10px 10px;
 }
 
-table#clientInfo  {
-    padding-bottom: 35%;
-}
-
 table#clientInfo tr td:nth-child(2) {
     width: 70%;
 }
@@ -28,6 +24,6 @@ div#searchPhoneNumber {
 }
 
 mat-form-field#telNumInput {
-    padding: 0px 15px 30px;
+    padding: 0px 15px;
     width: calc(23vw - 128px);
 }
