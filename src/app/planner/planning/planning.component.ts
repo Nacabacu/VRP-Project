@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, OnDestroy, ViewEncapsulation, NgZone, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { MatSnackBar } from '@angular/material';
 
 import { DepotService } from './../../services/depot.service';
 import { DriverService } from './../../services/driver.service';
@@ -56,6 +57,7 @@ export class PlanningComponent implements OnInit, OnDestroy {
     private depotService: DepotService,
     private mapsAPILoader: MapsAPILoader,
     private ngZone: NgZone,
+    private snackBar: MatSnackBar
   ) { }
 
   ngOnInit() {
@@ -187,6 +189,12 @@ export class PlanningComponent implements OnInit, OnDestroy {
     this.map.zoom = 15;
   }
 
+  openErrorBar() {
+    this.snackBar.open("Got the error, should implement with real error.", "Error", {
+      duration: 5000,
+    });
+  }
+
   addMockClient() {
     this.offset += 0.01
     this.clients.push({
@@ -199,7 +207,7 @@ export class PlanningComponent implements OnInit, OnDestroy {
   }
   
   test() {
-
+    this.openErrorBar();
   }
 
   ngOnDestroy() {

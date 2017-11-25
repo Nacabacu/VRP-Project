@@ -1,5 +1,7 @@
-import { ResultService } from './../../services/result.service';
 import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
+
+import { ResultService } from './../../services/result.service';
 
 @Component({
   selector: 'app-driver-todo',
@@ -12,13 +14,15 @@ export class DriverTodoComponent implements OnInit {
   @ViewChild('doneTable') doneTable: any;
   doingExpanded: any = {};
   doneExpanded: any = {};
-  doing = [];
+  todoDriver = [];
+  selectedDriver = [];
   done = [];
   licenseId: string;
   isResponsive: boolean;
 
   constructor(
-    private resultService: ResultService
+    private resultService: ResultService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -29,20 +33,20 @@ export class DriverTodoComponent implements OnInit {
     });
     this.licenseId = JSON.stringify(JSON.parse(localStorage.getItem('currentUser')).licenseId).replace(/\"/g, '');
     this.resultService.getResults().then((response) => {
-      response.results.forEach((result) => {
+      response.forEach((result) => {
         result.vehicles.forEach((vehicle) => {
-          if (vehicle.driver.licenseId === this.licenseId) {
+          if (vehicle.driver.licenseNo === this.licenseId) {
             if (vehicle.isCompleted) {
               this.done.push({
-                date: result.date.replace(/T.+/g, ''),
-                time: /T(.+)\./g.exec(result.date)[1],
+                date: result.date,
+                time: new Date(result.dateTime).toTimeString().split(" ")[0].slice(0, 5),
                 depot: result.depot.depotName,
                 id: result._id
               });
             } else {
-              this.doing.push({
-                date: result.date.replace(/T.+/g, ''),
-                time: /T(.+)\./g.exec(result.date)[1],
+              this.todoDriver.push({
+                date: result.date,
+                time: new Date(result.dateTime).toTimeString().split(" ")[0].slice(0, 5),
                 depot: result.depot.depotName,
                 id: result._id
               });
@@ -54,7 +58,13 @@ export class DriverTodoComponent implements OnInit {
   }
 
   onView(id: string) {
-    this.resultService.getResult(id).then(res => console.log(res));
+    this.router.navigate(['/driver/result', id]);
+  }
+
+  onDriverSelected({ selected }) {
+    this.todoDriver.findIndex(function(todo) {
+      return todo === selected[selected.length - 1];
+    });
   }
 
   toggleExpandDoing(row) {
@@ -72,5 +82,4 @@ export class DriverTodoComponent implements OnInit {
       this.isResponsive = false;
     }
   }
-
 }

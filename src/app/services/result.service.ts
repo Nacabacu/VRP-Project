@@ -8,6 +8,8 @@ import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class ResultService {
+
+  vrpUrl = 'http://localhost:3000/api/vrp';
   clearMapSubject = new Subject<boolean>();
 
   constructor(
@@ -16,7 +18,7 @@ export class ResultService {
   ) { }
 
   getResults(): Promise<any> {
-    return this.http.get('http://localhost:3000/api/vrp/getResults')
+    return this.http.get(this.vrpUrl + '/getResults')
       .toPromise()
       .then((response: Response) => {
         const results = new Array<Result>();
@@ -29,7 +31,7 @@ export class ResultService {
   }
 
   getResult(id): Promise<Result> {
-    return this.http.get('http://localhost:3000/api/vrp/getResult/' + id)
+    return this.http.get(this.vrpUrl + '/getResult/' + id)
       .toPromise()
       .then((response: Response) => {
         return this.createResultModel(response.json());

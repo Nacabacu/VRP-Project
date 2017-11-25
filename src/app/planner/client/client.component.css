@@ -1,0 +1,19 @@
+#telNumFilter {
+    float: right;
+    padding-right: 24px;
+}
+
+#clientTable {
+    clear: both;
+    padding: 0 24px;
+}
+
+agm-map {
+    height: calc(100vh - 216px);
+}
+
+.searchLocationInput {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 10px;
+}

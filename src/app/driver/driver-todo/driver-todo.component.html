@@ -3,7 +3,7 @@
     <div class="col-xs-12">
       <div class="title-container">
         <div class="title">
-          <span>Planning History</span>
+          <span>Driving History</span>
         </div>
       </div>
     </div>
@@ -11,34 +11,38 @@
 
   <div class="row">
     <mat-tab-group>
-      <mat-tab label="Doing">
+      <mat-tab label="To Do">
         <div class="col-sm-12 col-md-8 col-md-offset-2">
-          <ngx-datatable #doingTable class="material expandable" [columnMode]="'flex'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="50"
-            [reorderable]="false" [rows]="doing" [limit]="10">
-            <ngx-datatable-row-detail [rowHeight]="60" style="width:768px">
+          <ngx-datatable #doingTable class="material " [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="50"
+            [rows]="todoDriver" [limit]="10" [selected]="selectedDriver" [selectionType]="'checkbox'" (select)='onDriverSelected($event)'>
+            <ngx-datatable-row-detail [rowHeight]="60">
               <ng-template let-row="row" let-expanded="doingExpanded" ngx-datatable-row-detail-template>
                 <button class="right" mat-raised-button color="primary" (click)="onView(row.id)" style="margin-left:5px;">View</button>
               </ng-template>
             </ngx-datatable-row-detail>
-          
-            <ngx-datatable-column name="No." [minWidth]="30" [flexGrow]="0.3">
+
+            <ngx-datatable-column [width]="30" [sortable]="false" [canAutoResize]="false" [draggable]="false" [resizeable]="false" [headerCheckboxable]="false"
+              [checkboxable]="true">
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="No." [maxWidth]="60">
               <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex">
                 {{ rowIndex + 1 }}
               </ng-template>
             </ngx-datatable-column>
-          
-            <ngx-datatable-column name="Date" [minWidth]="95" [flexGrow]="0.6"></ngx-datatable-column>
-          
-            <ngx-datatable-column name="Time" [minWidth]="75" [flexGrow]="0.6"></ngx-datatable-column>
-          
-            <ngx-datatable-column name="Depot" [minWidth]="90" [flexGrow]="0.8"></ngx-datatable-column>
-          
-            <ngx-datatable-column *ngIf="!isResponsive" [minWidth]="200" [flexGrow]="0.6">
+
+            <ngx-datatable-column name="Date"></ngx-datatable-column>
+
+            <ngx-datatable-column name="Time"></ngx-datatable-column>
+
+            <ngx-datatable-column name="Depot"></ngx-datatable-column>
+
+            <ngx-datatable-column *ngIf="!isResponsive" [minWidth]="200">
               <ng-template ngx-datatable-cell-template let-row="row">
                 <button mat-raised-button color="primary" (click)="onView(row.id)" style="margin-right:5px;">View</button>
               </ng-template>
             </ngx-datatable-column>
-          
+
             <ngx-datatable-column [width]="50" [resizeable]="false" [sortable]="false" [draggable]="false" [minWidth]="30" [flexGrow]="0.2"
               *ngIf="isResponsive">
               <ng-template let-row="row" let-expanded="doingExpanded" ngx-datatable-cell-template>
@@ -47,7 +51,7 @@
                 </a>
               </ng-template>
             </ngx-datatable-column>
-          
+
           </ngx-datatable>
         </div>
       </mat-tab>
@@ -60,25 +64,25 @@
                 <button class="right" mat-raised-button color="primary" (click)="onView(row.id)" style="margin-left:5px;">View</button>
               </ng-template>
             </ngx-datatable-row-detail>
-          
+
             <ngx-datatable-column name="No." [minWidth]="30" [flexGrow]="0.3">
               <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex">
                 {{ rowIndex + 1 }}
               </ng-template>
             </ngx-datatable-column>
-          
+
             <ngx-datatable-column name="Date" [minWidth]="95" [flexGrow]="0.6"></ngx-datatable-column>
-          
+
             <ngx-datatable-column name="Time" [minWidth]="75" [flexGrow]="0.6"></ngx-datatable-column>
-          
+
             <ngx-datatable-column name="Depot" [minWidth]="90" [flexGrow]="0.8"></ngx-datatable-column>
-          
+
             <ngx-datatable-column *ngIf="!isResponsive" [minWidth]="200" [flexGrow]="0.6">
               <ng-template ngx-datatable-cell-template let-row="row">
                 <button mat-raised-button color="primary" (click)="onView(row.id)" style="margin-right:5px;">View</button>
               </ng-template>
             </ngx-datatable-column>
-          
+
             <ngx-datatable-column [width]="50" [resizeable]="false" [sortable]="false" [draggable]="false" [minWidth]="30" [flexGrow]="0.2"
               *ngIf="isResponsive">
               <ng-template let-row="row" let-expanded="doneExpanded" ngx-datatable-cell-template>
@@ -87,7 +91,7 @@
                 </a>
               </ng-template>
             </ngx-datatable-column>
-          
+
           </ngx-datatable>
         </div>
       </mat-tab>
