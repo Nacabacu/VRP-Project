@@ -155,7 +155,7 @@
               </mat-form-field>
             
               <ngx-datatable class="material table" columnMode="flex" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'"
-                [limit]="5" [selected]="selectedClient" [rows]="clients" [selectionType]="'single'" (select)='onDepotSelected($event)'>
+                [limit]="5" [selected]="selectedClient" [rows]="clients" [selectionType]="'single'" (select)='onClientSelected($event)'>
             
                 <ngx-datatable-column name="No." [flexGrow]="1">
                   <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex">
@@ -167,7 +167,13 @@
             
                 <ngx-datatable-column prop="telephoneNumber" [flexGrow]="2"></ngx-datatable-column>
             
-                <ngx-datatable-column prop="address" [flexGrow]="4"></ngx-datatable-column>
+                <ngx-datatable-column prop="address" [flexGrow]="3"></ngx-datatable-column>
+
+                <ngx-datatable-column name="Remove" [flexGrow]="1">
+                  <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex">
+                    <i class="fa fa-times" (click)="removeClient(rowIndex)"></i>
+                  </ng-template>
+                </ngx-datatable-column>
         
               </ngx-datatable>
             

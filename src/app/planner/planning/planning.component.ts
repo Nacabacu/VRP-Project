@@ -150,12 +150,17 @@ export class PlanningComponent implements OnInit, OnDestroy {
   updateClientFilter(e) {
     const val = e.target.value.toLowerCase();
 
-    const temp = this.tempDepots.filter((data) => { 
-      return data.depotName.toLowerCase().indexOf(val) !== -1 || !val; 
+    const temp = this.tempClients.filter((data) => { 
+      return data.telephoneNumber.toLowerCase().indexOf(val) !== -1 || !val; 
     }); 
 
     this.clients = temp; 
     this.clientTable.offset = 0; 
+  }
+
+  removeClient(e) {
+    this.clients.splice(e, 1);
+    this.tempClients = this.clients;
   }
 
   dateFilter(date: Date): boolean {
@@ -176,6 +181,12 @@ export class PlanningComponent implements OnInit, OnDestroy {
     this.numOfSelectedDepotSubject.next(selected.length);
   }
 
+  onClientSelected({ selected }) {
+    this.map.lat = selected[0].coordinate[0];
+    this.map.lng = selected[0].coordinate[1];
+    this.map.zoom = 15;
+  }
+
   addMockClient() {
     this.offset += 0.01
     this.clients.push({
@@ -184,6 +195,7 @@ export class PlanningComponent implements OnInit, OnDestroy {
       address: 'test address',
       coordinate: [13.6526 + this.offset, 100.486328 + this.offset]
     })
+    this.tempClients = this.clients;
   }
   
   test() {
