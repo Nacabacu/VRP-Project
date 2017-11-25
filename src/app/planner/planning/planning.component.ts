@@ -1,4 +1,5 @@
-import { MatDialog } from '@angular/material';
+import { ResultService } from './../../services/result.service';
+import { MatDialog, MatSnackBar } from '@angular/material';
 import { Component, OnInit, ViewChild, OnDestroy, ViewEncapsulation, NgZone, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 
@@ -57,9 +58,11 @@ export class PlanningComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private driverService: DriverService,
     private depotService: DepotService,
+    private resultService: ResultService,
     private mapsAPILoader: MapsAPILoader,
     private ngZone: NgZone,
-    public dialog: MatDialog
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar
   ) { }
 
   ngOnInit() {
@@ -133,7 +136,7 @@ export class PlanningComponent implements OnInit, OnDestroy {
   }
 
   checkClientSelected(control: FormControl): { [s: string]: boolean } {
-    if (this.selectedClient.length !== 1) {
+    if (this.clients.length === 0) {
       return { selectedClientError: true };
     } else {
       return null;
@@ -155,7 +158,7 @@ export class PlanningComponent implements OnInit, OnDestroy {
     const val = e.target.value.toLowerCase();
 
     const temp = this.tempClients.filter((data) => {
-      return data.telephoneNumber.toLowerCase().indexOf(val) !== -1 || !val;
+      return data.phoneNumber.toLowerCase().indexOf(val) !== -1 || data.clientName.toLowerCase().indexOf(val) !== -1 || !val;
     });
 
     this.clients = temp;
@@ -199,24 +202,9 @@ export class PlanningComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        console.log(result);
-        const dialogRef1 = this.dialog.open(ClientPickerDialogComponent, {
-          width: '80vw',
-          data: result
-        });
-        dialogRef1.afterClosed().subscribe((result) => {
-          if (result) {
-
-          }
-        });
-
-
-        // this.dialogClients.push(result);
-        // this.client.branches.splice(rowIndex, 1);
-        // this.markers.splice(rowIndex, 1);
-        // this.temp = [...this.client.branches];
-        // this.renderMarkers();
-        // this.checkBranchName();
+        this.clients.push(result);
+        this.tempClients = this.clients;
+        this.numOfSelectedClientSubject.next(this.clients.length);
       }
     });
   }
@@ -225,7 +213,7 @@ export class PlanningComponent implements OnInit, OnDestroy {
     this.offset += 0.01
     this.clients.push({
       clientName: 'test Name',
-      telephoneNumber: '1231564',
+      phoneNumber: '1231564',
       address: 'test address',
       demand: 1,
       waitTime: 30,
@@ -234,8 +222,33 @@ export class PlanningComponent implements OnInit, OnDestroy {
     this.tempClients = this.clients;
   }
 
-  test() {
-
+  onSubmit() {
+    if (this.planningInfoGroup.valid && this.depotGroup.valid && this.clientGroup.valid) {
+      var date = new Date(this.planningInfoGroup.value.date);
+      var time = (parseInt(this.planningInfoGroup.value.time) - 7).toString();
+      if (parseInt(time) < 10) {
+        time = '0' + time;
+      }
+      const request = {
+        date: date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + 'T' + time + ':00:00.000Z',
+        method: this.planningInfoGroup.value.method,
+        numVehicles: this.planningInfoGroup.value.numOfDrivers,
+        vehicleCapacity: this.planningInfoGroup.value.capacity,
+        depot: {
+          depotName: this.selectedDepot[0].depotName,
+          coordinate: this.selectedDepot[0].coordinate
+        },
+        clients: this.clients
+      }
+      this.resultService.saveResult(request).then((res) => {
+        console.log(res);
+      });
+    }
+    else {
+      this.snackBar.open('Please valid planning form', 'close', {
+        duration: 2000,
+      });
+    }
   }
 
   ngOnDestroy() {

@@ -5,10 +5,14 @@ var Client = mongoose.model('clients', {
         type: String,
         require: true,
     },
-    telNum: {
+    phoneNumber: {
         type: String,
         require: true,
         trim: true
+    },
+    address: {
+        type: String,
+        require: true,
     },
     coordinate: {
         type: [Number],

@@ -35,8 +35,8 @@ export class ClientService {
             .catch(this.handleError);
     }
 
-    getClient(telNum) {
-        return this.http.get(this.clientUrl + '/get/' + telNum)
+    getClient(phoneNumber) {
+        return this.http.get(this.clientUrl + '/get/' + phoneNumber)
             .toPromise()
             .then((response) => {
                 return response.json();

@@ -1,9 +1,11 @@
+import { Subscription } from 'rxjs/Subscription';
+import { Subject } from 'rxjs/Subject';
 import { MapsAPILoader } from '@agm/core';
 import { Marker } from '../marker';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Map } from '../map';
-import { Component, ElementRef, Inject, NgZone, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA, MatInput } from '@angular/material';
+import { Component, ElementRef, Inject, NgZone, OnInit, ViewChild, ViewEncapsulation, OnDestroy } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA, MatInput, MatSnackBar } from '@angular/material';
 import { ClientService } from '../../services/client.service';
 
 @Component({
@@ -12,15 +14,18 @@ import { ClientService } from '../../services/client.service';
   styleUrls: ['./client-picker-dialog.component.css'],
   encapsulation: ViewEncapsulation.None
 })
-export class ClientPickerDialogComponent implements OnInit {
+export class ClientPickerDialogComponent implements OnInit, OnDestroy {
   map = new Map();
   searchMarker: Marker;
   marker: Marker;
 
   header;
-  searched = false;
-  telNum: Number;
+  isSearched = false;
+  phoneNumber: Number;
+
   clientFormGroup: FormGroup;
+  SelectedCoordinateSubject = new Subject<any[]>();
+  SelectedCoordinateSubScription: Subscription;
 
   @ViewChild("search") private searchElementRef: ElementRef;
 
@@ -30,7 +35,8 @@ export class ClientPickerDialogComponent implements OnInit {
     private clientService: ClientService,
     private formBuilder: FormBuilder,
     private ngZone: NgZone,
-    private dialogRef: MatDialogRef<ClientPickerDialogComponent>
+    private dialogRef: MatDialogRef<ClientPickerDialogComponent>,
+    private snackBar: MatSnackBar
   ) { }
 
   ngOnInit() {
@@ -38,10 +44,16 @@ export class ClientPickerDialogComponent implements OnInit {
 
     this.clientFormGroup = this.formBuilder.group({
       clientName: new FormControl(null, Validators.required),
-      telNum: new FormControl(null, Validators.required),
+      phoneNumber: new FormControl(null, Validators.required),
       address: new FormControl(null, Validators.required),
+      coordinate: new FormControl(null, this.checkCoordinateSelected.bind(this)),
       demand: new FormControl(null, Validators.required),
       waitTime: new FormControl(null, Validators.required)
+    });
+
+    this.SelectedCoordinateSubScription = this.SelectedCoordinateSubject.subscribe((value) => {
+      this.clientFormGroup.get('coordinate').setValidators(this.checkCoordinateSelected.bind(this));
+      this.clientFormGroup.get('coordinate').updateValueAndValidity();
     });
 
     this.mapsAPILoader.load().then(() => {
@@ -64,25 +76,87 @@ export class ClientPickerDialogComponent implements OnInit {
           this.searchMarker = {
             lat: this.map.lat,
             lng: this.map.lng,
-            draggable: true
+            draggable: false
           };
         });
       });
     });
   }
 
-  onTelNumSearch() {
-    if (this.telNum) {
-      this.clientService.getClient(this.telNum).then((client) => {
+  checkCoordinateSelected(control: FormControl): { [s: string]: boolean } {
+    if (!this.marker) {
+      return { selectedCoordinateError: true };
+    } else {
+      return null;
+    }
+  }
+
+  onPhoneNumberSearch() {
+    if (this.phoneNumber) {
+      this.clientService.getClient(this.phoneNumber).then((client) => {
+        this.isSearched = true;
+        
         if (client === 'not found') {
           this.header = 'New Client';
-          this.searched = true;
+          client = {
+            clientName: '',
+            address: '',
+            coordinate: '',
+            phoneNumber: this.phoneNumber
+          }
         }
         else {
           this.header = 'Found Client';
-          this.searched = true;
+          this.marker = {
+            lat: client.coordinate[0],
+            lng: client.coordinate[1],
+            draggable: true
+          }
         }
+        
+        this.clientFormGroup.controls.clientName.setValue(client.clientName);
+        this.clientFormGroup.controls.address.setValue(client.address);
+        this.clientFormGroup.controls.phoneNumber.setValue(client.phoneNumber);
+        this.clientFormGroup.controls.coordinate.setValue(client.coordinate);
       });
     }
+  }
+
+  onMapClicked(event) {
+    if (this.isSearched) {
+      this.marker = {
+        lat: event.coords.lat,
+        lng: event.coords.lng,
+        draggable: true
+      };
+      this.clientFormGroup.controls.coordinate.setValue([event.coords.lat, event.coords.lng]);
+      this.SelectedCoordinateSubject.next([event.coords.lat, event.coords.lng]);
+    }
+  }
+
+  onDragEnd(event) {
+    this.clientFormGroup.controls.coordinate.setValue([event.coords.lat, event.coords.lng]);
+  }
+
+  onClientAdded() {
+    if (this.clientFormGroup.valid) {
+      this.dialogRef.close({
+        clientName: this.clientFormGroup.value.clientName,
+        phoneNumber: this.clientFormGroup.value.phoneNumber,
+        address: this.clientFormGroup.value.address,
+        coordinate: this.clientFormGroup.value.coordinate,
+        demand: this.clientFormGroup.value.demand,
+        waitTime: this.clientFormGroup.value.waitTime
+      });
+    }
+    else {
+      this.snackBar.open('Please valid the form', 'close', {
+        duration: 2000
+      });
+    }
+  }
+
+  ngOnDestroy() {
+    this.SelectedCoordinateSubScription.unsubscribe();
   }
 }

@@ -26,8 +26,8 @@
       </div>
       <div class="col-xs-12 col-md-6">
         <mat-horizontal-stepper> <!-- linear -->
-          <!-- <mat-step [stepControl]="planningInfoGroup">
-            <form [formGroup]="planningInfoGroup" (ngSubmit)="test()">
+          <mat-step [stepControl]="planningInfoGroup">
+            <form [formGroup]="planningInfoGroup">
               <ng-template matStepLabel>Planning Info</ng-template>
 
               <div class="col-sm-12 col-md-10 col-md-offset-1">
@@ -141,7 +141,7 @@
                 <button mat-raised-button matStepperNext color="primary">Next</button>
               </div>
             </form>
-          </mat-step> -->
+          </mat-step>
 
           <mat-step [stepControl]="clientGroup">
             <form [formGroup]="clientGroup">
@@ -151,11 +151,11 @@
               <button mat-raised-button color="primary" class="btn-client" (click)="addMockClient()">Add Mock Client</button>
 
               <mat-form-field class="input-filter">
-                <input matInput type='text' placeholder='Filter by client name' (keyup)='updateClientFilter($event)'>
+                <input matInput type="text" placeholder="Filter clients" (keyup)="updateClientFilter($event)">
               </mat-form-field>
             
               <ngx-datatable class="material table" columnMode="flex" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'"
-                [limit]="5" [selected]="selectedClient" [rows]="clients" [selectionType]="'single'" (select)='onClientSelected($event)'>
+                [limit]="8" [selected]="selectedClient" [rows]="clients" [selectionType]="'radio'" (select)='onClientSelected($event)'>
             
                 <ngx-datatable-column name="No." [flexGrow]="1">
                   <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex">
@@ -165,7 +165,7 @@
             
                 <ngx-datatable-column prop="clientName" [flexGrow]="2"></ngx-datatable-column>
             
-                <ngx-datatable-column prop="telephoneNumber" [flexGrow]="2"></ngx-datatable-column>
+                <ngx-datatable-column prop="phoneNumber" [flexGrow]="2"></ngx-datatable-column>
             
                 <ngx-datatable-column prop="demand" [flexGrow]="1"></ngx-datatable-column>
 
@@ -188,7 +188,7 @@
             
               <div class="btn-container">
                 <button mat-raised-button matStepperPrevious color="primary">Back</button>
-                <button mat-raised-button matStepperNext color="primary">Save</button>
+                <button mat-raised-button color="primary" (click)="onSubmit()">Save</button>
               </div>
             </form>
           </mat-step>

@@ -5,6 +5,8 @@ var getDistancesMatrix = function (input) {
         var distance = [];
         var duration = [];
 
+        console.log(input)
+
         input.json.rows.forEach(function (elements, rowIndex) {
             var distanceTemp = [];
             var durationTemp = [];
@@ -33,7 +35,7 @@ var vrpSolver = function (request, distances) {
             var waitTimeArray = [0];
             var depotIndex = 0;
             var dayStarts = 0;
-            var dayEnds = request.workingHour * 60 * 60;
+            var dayEnds = 3 * 60 * 60; // 3 hours per delivery round
             var numNodes = results.duration[0].length;
             var timeWindows = new Array(numNodes);
             var demands = new Array(numNodes);
@@ -87,10 +89,10 @@ var vrpSolver = function (request, distances) {
 
             var vrpSearchOpts = {
                 computeTimeLimit: 2000,
-                numVehicles: request.numVehicles,
+                numVehicles: parseInt(request.numVehicles),
                 depotNode: depotIndex,
-                timeHorizon: 12 * 60 * 60,
-                vehicleCapacity: request.vehicleCapacity,
+                timeHorizon: 3 * 60 * 60,
+                vehicleCapacity: parseInt(request.vehicleCapacity),
                 routeLocks: routeLocks,
                 pickups: [],
                 deliveries: []
@@ -104,6 +106,7 @@ var vrpSolver = function (request, distances) {
                 });
             });
         }).catch(function (err) {
+            console.log(err)
             reject('Unable to get distance matrix');
         });
     });
