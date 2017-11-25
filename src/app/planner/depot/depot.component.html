@@ -13,7 +13,7 @@
     <div class="col-xs-12">
       <div class="col-xs-12 col-md-6">
         <mat-form-field class="searchLocationInput">
-          <input matInput placeholder="Search for location" #search [(ngModel)]="searchLocationInput">
+          <input matInput placeholder="Search for location" #searchMap [(ngModel)]="searchLocationInput">
           <button mat-button *ngIf="searchLocationInput" matSuffix mat-icon-button aria-label="Clear" (click)="searchLocationInput=''">
             <i class="fa fa-times"></i>
           </button>

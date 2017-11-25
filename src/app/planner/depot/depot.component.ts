@@ -28,7 +28,7 @@ export class DepotComponent implements OnInit {
 
   searchLocationInput;
   filterDepotInput;
-  @ViewChild("search") public searchElementRef: ElementRef;
+  @ViewChild("searchMap") public searchElementRef: ElementRef;
 
   constructor(
     private activatedRoute: ActivatedRoute,

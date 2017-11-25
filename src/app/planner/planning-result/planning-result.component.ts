@@ -12,7 +12,6 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PlanningResultComponent implements OnInit {
   colors = ['blue', 'yellow', 'lime', 'red', 'green', 'purple', 'maroon', 'navy', 'olive', 'fuchsia'];
-  depotMarker = "../../assets/depot_marker.png";
   id: number;
   result = new Result();
   selectedResult = [];

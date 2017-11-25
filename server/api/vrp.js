@@ -12,6 +12,7 @@ var googleMapClient = require('@google/maps').createClient({
 
 const { PlanningResult } = require('../models/planningResult');
 const { Client } = require('../models/client');
+const { Driver } = require('../models/driver');
 
 const errorHandler = (err, res) => {
     res.status(501).send(err);
@@ -68,41 +69,47 @@ router.post('/saveRoute', (req, res) => {
                 demandsArray.push(client.demand);
             });
 
-            result.solution.routes.forEach(function (route, index) {
-                var loadWeight = 0;
+            Driver.find().then((drivers) => {
+                result.solution.routes.forEach(function (route, index) {
+                    if (route.length !== 0) {
+                        var loadWeight = 0;
 
-                route.forEach(function (client) {
-                    loadWeight += demandsArray[client];
+                        route.forEach(function (client) {
+                            loadWeight += demandsArray[client];
+                        });
+                        vehicles.push({
+                            'driver': drivers[index],
+                            'route': route,
+                            'loadWeight': loadWeight,
+                            'isCompleted': false
+                        });
+                        index++;
+                    }
                 });
-                vehicles.push({
-                    'driver': req.body.drivers[index],
-                    'route': route,
-                    'loadWeight': loadWeight,
-                    'isCompleted': false
+
+                var planningResult = new PlanningResult({
+                    date: new Date(req.body.date),
+                    depot: req.body.depot,
+                    vehicles: vehicles,
+                    clients: req.body.clients,
+                    times: result.duration
                 });
-                index++;
-            });
 
-            var planningResult = new PlanningResult({
-                date: new Date(req.body.date),
-                depot: req.body.depot,
-                vehicles: vehicles,
-                clients: req.body.clients,
-                times: result.duration
-            });
+                req.body.clients.forEach((client) => {
+                    var telNum = client.telNum;
+                    var pickedClient = _.pick(client, ['clientName', 'telNum', 'coordinate']);
 
-            req.body.clients.forEach((client) => {
-                var telNum = client.telNum;
-                var pickedClient = _.pick(client, ['clientName', 'telNum', 'coordinate']);
-
-                Client.findOneAndUpdate({ telNum }, { $set: pickedClient }, { upsert: true }).catch((err) => {
-                    errorHandler(err, res);
+                    Client.findOneAndUpdate({ telNum }, { $set: pickedClient }, { upsert: true }).catch((err) => {
+                        errorHandler(err, res);
+                    });
                 });
-            });
 
-            planningResult.save(function (err, planning) {
-                if (err) errorHandler(err, res);
-                res.status(200).send(planning._id);
+                planningResult.save(function (err, planning) {
+                    if (err) errorHandler(err, res);
+                    res.status(200).send(planning._id);
+                });
+            }, (err) => {
+                errorHandler(err, res);
             });
         })
         .catch(function (err) {

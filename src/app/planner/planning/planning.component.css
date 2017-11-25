@@ -2,18 +2,25 @@ agm-map {
     height: calc(100vh - 150px);
 }
 
-.timepicker {
-    width: 80px;
+.searchLocationInput {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 10px;
 }
 
-label {
-    margin-right: 6px;
-}
-
-.buttonPhase {
+.btn-container {
     float: right;
-    margin-top: 25px;
-    margin-left: 10px;
+    margin-top: 20px;
+}
+
+.btn-client {
+    float: left;
+    margin-top: 10px;
+    margin-left: 5px;
+}
+
+.input-form {
+    width: 90%;
 }
 
 .driver-slider {
@@ -22,8 +29,9 @@ label {
     width: 50%;
 }
 
-.driver-table {
-    margin: 0 4px;
+.table {
+    clear: both;
+    margin: 6px;
 }
 
 .input-filter {
@@ -34,22 +42,22 @@ label {
     padding: 0 12px 12px;
 }
 
-.driverTable-error {
+.table-error {
     width: 300px;
 }
 
-.driverTable-error .mat-input-flex {
+.table-error .mat-input-flex {
     display: none !important;
 }
 
-.driverTable-error .mat-input-underline {
+.table-error .mat-input-underline {
     height: 0 !important;
 }
 
-.driverTable-error .mat-input-ripple {
+.table-error .mat-input-ripple {
     height: 0 !important;
 }
 
-.driverTable-error .mat-input-subscript-wrapper {
+.table-error .mat-input-subscript-wrapper {
     margin-top: 10px
 }
