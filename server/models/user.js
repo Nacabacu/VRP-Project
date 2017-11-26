@@ -9,7 +9,7 @@ const Account = new Schema({
         type: String,
         require: true
     },
-    licenseId: String
+    licenseNo: String
 });
 
 Account.plugin(passportLocalMongoose);

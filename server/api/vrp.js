@@ -117,6 +117,36 @@ router.post('/saveRoute', (req, res) => {
         });
 });
 
+router.put('/updateProgress', (req, res) => {
+    var id = req.body.id;
+    var licenseNo = req.body.licenseNo;
+
+    if (!ObjectID.isValid(id)) {
+        return res.status(404).send();
+    }
+
+    PlanningResult.findById(id).then((result) => {
+        if (!result) {
+            return res.status(404).send();
+        }
+
+        result.vehicles.forEach((vehicle) => {
+            if (vehicle.driver.licenseNo === licenseNo) {
+                vehicle.isCompleted = true;
+            }
+        });
+
+        var planningResult = new PlanningResult(result);
+
+        planningResult.save(function (err, planning) {
+            if (err) errorHandler(err, res);
+            res.send();
+        });
+    }).catch((err) => {
+        errorHandler(err, res);
+    });
+});
+
 router.get('/node', (req, res) => {
     var solverOpts = {
         numNodes: 8,

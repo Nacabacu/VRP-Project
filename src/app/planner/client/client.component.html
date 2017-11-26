@@ -1,3 +1,56 @@
-<p>
-  client works!
-</p>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="title-container">
+        <div class="title">
+          <span>Client</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="col-xs-12 col-md-6">
+        <mat-form-field class="searchLocationInput">
+          <input matInput placeholder="Search for location" #searchMap [(ngModel)]="searchLocationInput">
+          <button mat-button *ngIf="searchLocationInput" matSuffix mat-icon-button aria-label="Clear" (click)="searchLocationInput=''">
+            <i class="fa fa-times"></i>
+          </button>
+        </mat-form-field>
+        <agm-map [latitude]="map?.lat" [longitude]="map?.lng" [zoom]="map?.zoom">
+          <agm-marker *ngFor="let marker of markers; let i = index" [latitude]="marker.lat" [longitude]="marker.lng" [label]="marker.label"
+            [markerDraggable]="false">
+          </agm-marker>
+        </agm-map>
+      </div>
+      <div class="col-xs-12 col-md-6">
+        <mat-form-field floatPlaceholder="auto" id="telNumFilter">
+          <input matInput placeholder='Filter' (keyup)='updateFilter($event)'>
+          <button mat-button *ngIf="filterDepotInput" matSuffix mat-icon-button aria-label="Clear" (click)="filterDepotInput=''">
+            <i class="fa fa-times"></i>
+          </button>
+        </mat-form-field>
+
+        <div id="clientTable">
+          <ngx-datatable #table class='material' columnMode="flex" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'"
+            [limit]="10" [rows]='clients' [selected]="selectedClients" [selectionType]="'radio'" (select)='onClientSelected($event)'>
+
+            <ngx-datatable-column name="No." [flexGrow]="0.5">
+              <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex">
+                {{rowIndex + 1}}
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column prop="clientName" [flexGrow]="2"></ngx-datatable-column>
+
+            <ngx-datatable-column prop="phoneNumber" [flexGrow]="2"></ngx-datatable-column>
+
+            <ngx-datatable-column prop="address" [flexGrow]="4"></ngx-datatable-column>
+
+          </ngx-datatable>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,5 +1,7 @@
-import { ResultService } from './../../services/result.service';
 import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
+
+import { ResultService } from './../../services/result.service';
 
 @Component({
   selector: 'app-driver-todo',
@@ -8,17 +10,19 @@ import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
   encapsulation: ViewEncapsulation.None
 })
 export class DriverTodoComponent implements OnInit {
-  @ViewChild('doingTable') doingTable: any;
+  @ViewChild('todoTable') todoTable: any;
   @ViewChild('doneTable') doneTable: any;
-  doingExpanded: any = {};
+  todoExpanded: any = {};
   doneExpanded: any = {};
-  doing = [];
+  todo = [];
+  selectedTodo = [];
   done = [];
-  licenseId: string;
+  licenseNo: string;
   isResponsive: boolean;
 
   constructor(
-    private resultService: ResultService
+    private resultService: ResultService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -27,22 +31,22 @@ export class DriverTodoComponent implements OnInit {
         innerWidth: window.innerWidth
       }
     });
-    this.licenseId = JSON.stringify(JSON.parse(localStorage.getItem('currentUser')).licenseId).replace(/\"/g, '');
+    this.licenseNo = JSON.stringify(JSON.parse(localStorage.getItem('currentUser')).licenseNo).replace(/\"/g, '');
     this.resultService.getResults().then((response) => {
-      response.results.forEach((result) => {
+      response.forEach((result) => {
         result.vehicles.forEach((vehicle) => {
-          if (vehicle.driver.licenseId === this.licenseId) {
+          if (vehicle.driver.licenseNo === this.licenseNo) {
             if (vehicle.isCompleted) {
               this.done.push({
-                date: result.date.replace(/T.+/g, ''),
-                time: /T(.+)\./g.exec(result.date)[1],
+                date: result.date,
+                time: new Date(result.dateTime).toTimeString().split(" ")[0].slice(0, 5),
                 depot: result.depot.depotName,
                 id: result._id
               });
             } else {
-              this.doing.push({
-                date: result.date.replace(/T.+/g, ''),
-                time: /T(.+)\./g.exec(result.date)[1],
+              this.todo.push({
+                date: result.date,
+                time: new Date(result.dateTime).toTimeString().split(" ")[0].slice(0, 5),
                 depot: result.depot.depotName,
                 id: result._id
               });
@@ -54,11 +58,25 @@ export class DriverTodoComponent implements OnInit {
   }
 
   onView(id: string) {
-    this.resultService.getResult(id).then(res => console.log(res));
+    this.router.navigate(['/driver/result', id]);
+  }
+
+  onDriverSelected({ selected }) {
+    const id = selected[0] ? selected[0].id : null;
+    var rowIndex = this.todo.findIndex(function (todo) {
+      return todo === selected[selected.length - 1];
+    });
+    if (id) {
+      this.resultService.updateDriverDone(id, this.licenseNo).then((res) => {
+        this.selectedTodo = [];
+        var completedItem = this.todo.splice(rowIndex, 1);
+        this.done.push(completedItem[0]);
+      });
+    }
   }
 
   toggleExpandDoing(row) {
-    this.doingTable.rowDetail.toggleExpandRow(row);
+    this.todoTable.rowDetail.toggleExpandRow(row);
   }
 
   toggleExpandDone(row) {
@@ -72,5 +90,4 @@ export class DriverTodoComponent implements OnInit {
       this.isResponsive = false;
     }
   }
-
 }

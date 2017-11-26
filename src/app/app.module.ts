@@ -24,12 +24,12 @@ import { ErrorPageComponent } from './error-page/error-page.component';
 import { HeaderComponent } from './header/header.component';
 import { LoginComponent } from './login/login.component';
 import { ClientComponent } from './planner/client/client.component';
-import { CreateClientComponent } from './planner/client/create-client/create-client.component';
-import { CreateDepotComponent } from './planner/depot/create-depot/create-depot.component';
 import { DepotComponent } from './planner/depot/depot.component';
 import { PlannerComponent } from './planner/planner.component';
 import { PlanningResultComponent } from './planner/planning-result/planning-result.component';
 import { PlanningComponent } from './planner/planning/planning.component';
+import { PlannerTodoComponent } from './planner/planner-todo/planner-todo.component';
+import { DriverTodoComponent } from './driver/driver-todo/driver-todo.component';
 
 import { ClientPickerDialogComponent } from './shared/client-picker-dialog/client-picker-dialog.component';
 import { DeleteDialogComponent } from './shared/delete-dialog/delete-dialog.component';
@@ -37,10 +37,12 @@ import { DeleteDialogComponent } from './shared/delete-dialog/delete-dialog.comp
 import { AuthGuard } from './authentication/auth-guard.service';
 import { AuthService } from './authentication/auth.service';
 import { ResultService } from './services/result.service';
-import { PlannerTodoComponent } from './planner/planner-todo/planner-todo.component';
-import { DriverTodoComponent } from './driver/driver-todo/driver-todo.component';
 
+import { DepotService } from './services/depot.service';
+import { DriverService } from './services/driver.service';
 import { DirectionDirective } from './directives/direction.directive';
+
+import { DeleteDialogComponent } from './shared/delete-dialog/delete-dialog.component';
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -65,8 +67,6 @@ const MY_DATE_FORMATS = {
     PlannerComponent,
     PlanningComponent,
     PlanningResultComponent,
-    CreateClientComponent,
-    CreateDepotComponent,
     DrivingResultComponent,
     ErrorPageComponent,
     HeaderComponent,
@@ -98,7 +98,7 @@ const MY_DATE_FORMATS = {
   providers: [
     AuthGuard,
     AuthService,
-    ResultService,
+    ClientService,
     DriverService,
     DepotService,
     ClientService,
