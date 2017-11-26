@@ -54,13 +54,16 @@ export class PlanningResultComponent implements OnInit {
           var arrivals = [];
           var subDirections = [];
           var demands = [];
+          var waitTimes = [];
           subDirections.push('D 🡒 ' + vehicle.route[0]);
           departures.push(startTime);
           arrivals.push(new Date(startTime.getTime() + this.result.times[0][vehicle.route[0]] * 1000));
 
           vehicle.route.forEach((node, routeIndex) => {
+            var waitTime = this.result.clients[node - 1].waitTime;
+            
             // departure & arrival
-            var departure = new Date(arrivals[routeIndex].getTime() + this.waitTime[routeIndex] * 1000);
+            var departure = new Date(arrivals[routeIndex].getTime() + this.waitTime[routeIndex] * 1000 + waitTime * 60 * 1000);
             if (routeIndex === vehicle.route.length - 1) {
               var arrival = new Date(departure.getTime() + this.result.times[node][vehicle.route[0]] * 1000);
             }
@@ -69,6 +72,7 @@ export class PlanningResultComponent implements OnInit {
             }
             departures.push(departure);
             arrivals.push(arrival);
+            waitTimes.push(waitTime);
 
             // demands
             demands.push(this.result.clients[node - 1].demand);
@@ -87,7 +91,8 @@ export class PlanningResultComponent implements OnInit {
               route: subDirection,
               departure: departures[subDirectionIndex].toLocaleTimeString('th-TH').substring(0, 5),
               arrival: arrivals[subDirectionIndex].toLocaleTimeString('th-TH').substring(0, 5),
-              demand: subDirectionIndex === subDirections.length - 1 ? 0 : demands[subDirectionIndex]
+              demand: subDirectionIndex === subDirections.length - 1 ? 0 : demands[subDirectionIndex],
+              waitTime: subDirectionIndex === subDirections.length - 1 ? 0 : waitTimes[subDirectionIndex]
             });
           })
         });

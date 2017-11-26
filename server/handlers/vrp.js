@@ -5,8 +5,6 @@ var getDistancesMatrix = function (input) {
         var distance = [];
         var duration = [];
 
-        console.log(input)
-
         input.json.rows.forEach(function (elements, rowIndex) {
             var distanceTemp = [];
             var durationTemp = [];
@@ -65,7 +63,7 @@ var vrpSolver = function (request, distances) {
                 waitTime[from] = new Array(numNodes);
                 for (var to = 0; to < numNodes; to++) {
                     if (from !== to) {
-                        waitTime[from][to] = waitTimeArray[from] + results.duration[from][to];
+                        waitTime[from][to] = waitTimeArray[from] * 60 + results.duration[from][to];
                     } else {
                         waitTime[from][to] = 0;
                     }
