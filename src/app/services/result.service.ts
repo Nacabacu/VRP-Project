@@ -15,6 +15,15 @@ export class ResultService {
     private router: Router
   ) { }
 
+  saveResult(request): Promise<any> {
+    return this.http.post('http://localhost:3000/api/vrp/saveRoute', request)
+      .toPromise()
+      .then((response: Response) => {
+        return response;
+      })
+      .catch(this.handleError);
+  }
+
   getResults(): Promise<any> {
     return this.http.get('http://localhost:3000/api/vrp/getResults')
       .toPromise()

@@ -44,13 +44,15 @@
                 [rowHeight]="50" [reorderable]="false" [rows]="routeInfo[i]" [limit]="8" style="clear:both;" [selected]="selectedRouteInfo"
                 [selectionType]="'single'" (select)='onSubRouteSelected($event)'>
               
-                <ngx-datatable-column name="Route"></ngx-datatable-column>
+                <ngx-datatable-column prop="route"></ngx-datatable-column>
 
-                <ngx-datatable-column name="Departure"></ngx-datatable-column>
+                <ngx-datatable-column prop="departure"></ngx-datatable-column>
 
-                <ngx-datatable-column name="Arrival"></ngx-datatable-column>
+                <ngx-datatable-column prop="arrival"></ngx-datatable-column>
 
-                <ngx-datatable-column name="Demand"></ngx-datatable-column>
+                <ngx-datatable-column prop="demand"></ngx-datatable-column>
+
+                <ngx-datatable-column prop="waitTime" name="Wait Time(min)"></ngx-datatable-column>
 
                 <ngx-datatable-footer>
                   <ng-template ngx-datatable-footer-template>

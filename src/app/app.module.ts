@@ -1,4 +1,4 @@
-import { DeleteDialogComponent } from './shared/delete-dialog/delete-dialog.component';
+import { ClientService } from './services/client.service';
 import { DepotService } from './services/depot.service';
 import { DriverService } from './services/driver.service';
 import { NgModule, Directive } from '@angular/core';
@@ -30,6 +30,9 @@ import { DepotComponent } from './planner/depot/depot.component';
 import { PlannerComponent } from './planner/planner.component';
 import { PlanningResultComponent } from './planner/planning-result/planning-result.component';
 import { PlanningComponent } from './planner/planning/planning.component';
+
+import { ClientPickerDialogComponent } from './shared/client-picker-dialog/client-picker-dialog.component';
+import { DeleteDialogComponent } from './shared/delete-dialog/delete-dialog.component';
 
 import { AuthGuard } from './authentication/auth-guard.service';
 import { AuthService } from './authentication/auth.service';
@@ -70,9 +73,13 @@ const MY_DATE_FORMATS = {
     PlannerTodoComponent,
     DriverTodoComponent,
     DirectionDirective,
-    DeleteDialogComponent
+    DeleteDialogComponent,
+    ClientPickerDialogComponent
   ],
-  entryComponents: [DeleteDialogComponent],
+  entryComponents: [
+    DeleteDialogComponent,
+    ClientPickerDialogComponent
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -94,6 +101,7 @@ const MY_DATE_FORMATS = {
     ResultService,
     DriverService,
     DepotService,
+    ClientService,
     { provide: DateAdapter, useClass: MyDateAdapter },
     { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
     GoogleMapsAPIWrapper
