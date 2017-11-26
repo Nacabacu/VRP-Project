@@ -20,47 +20,36 @@
         </agm-map>
       </div>
       <div class="col-xs-12 col-md-6 info">
-        <mat-tab-group>
-          <mat-tab label="Main">
-            <mat-list>
-              <mat-list-item>Derivery Date: {{ result.date }}</mat-list-item>
-              <mat-list-item>Departure Time: {{ result.time }}</mat-list-item>
-              <mat-list-item>Depot Name: {{ result.depot.depotName }}</mat-list-item>
-            </mat-list>
-          </mat-tab>
-          <mat-tab label="Route">
-            <div align="center">
-              <h3>
-                {{ result.date }} {{ result.time }}
-              </h3>
-            </div>
-            <mat-list>
-              <mat-list-item>Depot Name: {{ result.depot.depotName }}</mat-list-item>
-              <mat-list-item>Driver Name: {{ driver?.name }}</mat-list-item>
-              <mat-list-item>Vehicle No: {{ driver?.vehicleNo }}</mat-list-item>
-              <mat-list-item>Load Weight: {{ loadWeight }}</mat-list-item>
+        <div align="center">
+          <h3>
+            {{ result.date }} {{ result.time }}
+          </h3>
+        </div>
+        <mat-list>
+          <mat-list-item>Depot Name: {{ result.depot.depotName }}</mat-list-item>
+          <mat-list-item>Driver Name: {{ driver?.name }}</mat-list-item>
+          <mat-list-item>Vehicle No: {{ driver?.vehicleNo }}</mat-list-item>
+          <mat-list-item>Load Weight: {{ loadWeight }}</mat-list-item>
 
-              <ngx-datatable #driverTable class="material expandable driver-table" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
-                [rowHeight]="50" [reorderable]="false" [rows]="routeInfo" [limit]="8" style="clear:both;" [selected]="selectedRouteInfo"
-                [selectionType]="'radio'" (select)='onSubRouteSelected($event)'>
+          <ngx-datatable #driverTable class="material expandable driver-table" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
+            [rowHeight]="50" [reorderable]="false" [rows]="routeInfo" [limit]="8" style="clear:both;" [selected]="selectedRouteInfo"
+            [selectionType]="'radio'" (select)='onSubRouteSelected($event)'>
 
-                <ngx-datatable-column name="Route"></ngx-datatable-column>
+            <ngx-datatable-column name="Route"></ngx-datatable-column>
 
-                <ngx-datatable-column name="Departure"></ngx-datatable-column>
+            <ngx-datatable-column name="Departure"></ngx-datatable-column>
 
-                <ngx-datatable-column name="Arrival"></ngx-datatable-column>
+            <ngx-datatable-column name="Arrival"></ngx-datatable-column>
 
-                <ngx-datatable-column name="Demand"></ngx-datatable-column>
+            <ngx-datatable-column name="Demand"></ngx-datatable-column>
 
-                <ngx-datatable-footer>
-                  <ng-template ngx-datatable-footer-template>
-                    <button class="clear-btn" mat-raised-button color="primary" (click)="showAllRoute()">Show All Route</button>
-                  </ng-template>
-                </ngx-datatable-footer>
-              </ngx-datatable>
-            </mat-list>
-          </mat-tab>
-        </mat-tab-group>
+            <ngx-datatable-footer>
+              <ng-template ngx-datatable-footer-template>
+                <button class="clear-btn" mat-raised-button color="primary" (click)="showAllRoute()">Show All Route</button>
+              </ng-template>
+            </ngx-datatable-footer>
+          </ngx-datatable>
+        </mat-list>
       </div>
     </div>
   </div>

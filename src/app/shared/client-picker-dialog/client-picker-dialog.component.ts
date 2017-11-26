@@ -112,6 +112,9 @@ export class ClientPickerDialogComponent implements OnInit, OnDestroy {
             lng: client.coordinate[1],
             draggable: true
           }
+          this.map.lat= client.coordinate[0];
+          this.map.lng= client.coordinate[1];
+          this.map.zoom = 16;
         }
         
         this.clientFormGroup.controls.clientName.setValue(client.clientName);

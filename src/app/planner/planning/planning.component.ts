@@ -242,6 +242,7 @@ export class PlanningComponent implements OnInit, OnDestroy {
       if (parseInt(month) < 10) {
         month = '0' + month;
       }
+
       const request = {
         date: date.getFullYear() + '-' + month + '-' + day + 'T' + time + ':00:00.000Z',
         method: this.planningInfoGroup.value.method,
