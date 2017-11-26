@@ -55,7 +55,7 @@ export class PlannerTodoComponent implements OnInit {
   }
 
   onView(id: string) {
-    this.router.navigate(['./result', id], {relativeTo: this.route});
+    this.router.navigate(['./result', id], { relativeTo: this.route });
   }
 
   toggleExpandDoing(row) {
@@ -71,6 +71,21 @@ export class PlannerTodoComponent implements OnInit {
       this.isResponsive = true;
     } else {
       this.isResponsive = false;
+    }
+  }
+
+  sortByDate(firstDate, secondDate) {
+    firstDate = firstDate.split("/");
+    secondDate = secondDate.split("/");
+    const formattedFirstDate = new Date(firstDate[2], firstDate[1] - 1, firstDate[0]);
+    const formattedSecondDate = new Date(secondDate[2], secondDate[1] - 1, secondDate[0]);
+
+    if (formattedFirstDate < formattedSecondDate) {
+      return -1;
+    } else if (formattedFirstDate > formattedSecondDate) {
+      return 1;
+    } else {
+      return 0;
     }
   }
 

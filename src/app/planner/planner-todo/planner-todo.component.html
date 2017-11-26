@@ -29,7 +29,7 @@
                 </ng-template>
               </ngx-datatable-column>
       
-              <ngx-datatable-column name="Date" [minWidth]="95" [flexGrow]="0.6"></ngx-datatable-column>
+              <ngx-datatable-column name="Date" [comparator]="sortByDate.bind(this)" [minWidth]="95" [flexGrow]="0.6"></ngx-datatable-column>
       
               <ngx-datatable-column name="Time" [minWidth]="75" [flexGrow]="0.6"></ngx-datatable-column>
       

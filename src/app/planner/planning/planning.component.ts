@@ -232,8 +232,18 @@ export class PlanningComponent implements OnInit, OnDestroy {
       if (parseInt(time) < 10) {
         time = '0' + time;
       }
+
+      var day = date.getDate().toString();
+      if (parseInt(day) < 10) {
+        day = '0' + day;
+      }
+
+      var month = (date.getMonth() +1).toString();
+      if (parseInt(month) < 10) {
+        month = '0' + month;
+      }
       const request = {
-        date: date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + 'T' + time + ':00:00.000Z',
+        date: date.getFullYear() + '-' + month + '-' + day + 'T' + time + ':00:00.000Z',
         method: this.planningInfoGroup.value.method,
         numVehicles: this.planningInfoGroup.value.numOfDrivers,
         vehicleCapacity: this.planningInfoGroup.value.capacity,
