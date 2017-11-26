@@ -12,7 +12,7 @@ import { Map } from '../../shared/map';
 })
 export class ClientComponent implements OnInit {
   clients: Client[];
-  tempCleint = [];
+  tempClients = [];
   selectedClients = [];
 
   map = new Map();
@@ -23,15 +23,15 @@ export class ClientComponent implements OnInit {
   ngOnInit() {
     this.clientService.getAllClients().then((response) => {
       this.clients = response;
-      this.tempCleint = [...this.clients];
+      this.tempClients = [...this.clients];
       this.renderMarkers();
     });
   }
 
   updateFilter(event) {
     const val = event.target.value.toLowerCase();
-    const temp = this.tempCleint.filter((data) => {
-      return data.telNum.toLowerCase().indexOf(val) !== -1 || !val;
+    const temp = this.tempClients.filter((data) => {
+      return data.clientName.toLowerCase().indexOf(val) !== -1 || data.phoneNumber.toLowerCase().indexOf(val) !== -1 || !val;
     });
     this.clients = temp;
   }

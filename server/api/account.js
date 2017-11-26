@@ -9,7 +9,7 @@ router.post('/register', (req, res) => {
     let account = {
         username: req.body.username,
         role: req.body.role,
-        licenseId: req.body.licenseId
+        licenseNo: req.body.licenseNo
     };
 
     Account.register(new Account(account), req.body.password, (err) => {
@@ -22,7 +22,7 @@ router.post('/login', passport.authenticate('local'), (req, res) => {
         err ? res.send(err) : res.send({
             username: res.req.user.username,
             role: res.req.user.role,
-            licenseId: res.req.user.licenseId
+            licenseNo: res.req.user.licenseNo
         });
     });
 });

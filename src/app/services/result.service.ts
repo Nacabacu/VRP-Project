@@ -39,6 +39,16 @@ export class ResultService {
       .catch(this.handleError);
   }
 
+  updateDriverDone(id, licenseNo): Promise<any> {
+    return this.http.put(this.vrpUrl + '/updateProgress', { id, licenseNo })
+      .toPromise()
+      .then((response: Response) => {
+        console.log(response)
+        return response;
+      })
+      .catch(this.handleError);
+  }
+
   sendClearMap() {
     this.clearMapSubject.next(true);
   }

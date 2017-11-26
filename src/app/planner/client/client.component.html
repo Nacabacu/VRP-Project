@@ -26,7 +26,7 @@
       </div>
       <div class="col-xs-12 col-md-6">
         <mat-form-field floatPlaceholder="auto" id="telNumFilter">
-          <input matInput placeholder='Filter by depot name' (keyup)='updateFilter($event)'>
+          <input matInput placeholder='Filter' (keyup)='updateFilter($event)'>
           <button mat-button *ngIf="filterDepotInput" matSuffix mat-icon-button aria-label="Clear" (click)="filterDepotInput=''">
             <i class="fa fa-times"></i>
           </button>
@@ -36,28 +36,17 @@
           <ngx-datatable #table class='material' columnMode="flex" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'"
             [limit]="10" [rows]='clients' [selected]="selectedClients" [selectionType]="'radio'" (select)='onClientSelected($event)'>
 
-            <ngx-datatable-column name="View" [maxWidth]="50">
-              <ng-template ngx-datatable-cell-template let-row="row">
-                <span *ngIf="selectedClients.includes(row)">
-                  <i class="fa fa-address-book fa-lg" aria-hidden="true"></i>
-                </span>
-                <span *ngIf="!selectedClients.includes(row)">
-                  <i class="fa fa-address-book-o fa-lg" aria-hidden="true"></i>
-                </span>
-              </ng-template>
-            </ngx-datatable-column>
-
-            <ngx-datatable-column name="No." [maxWidth]="50">
+            <ngx-datatable-column name="No." [flexGrow]="0.5">
               <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex">
                 {{rowIndex + 1}}
               </ng-template>
             </ngx-datatable-column>
 
-            <ngx-datatable-column prop="clientName" [flexGrow]="0.1"></ngx-datatable-column>
+            <ngx-datatable-column prop="clientName" [flexGrow]="2"></ngx-datatable-column>
 
-            <ngx-datatable-column prop="address" [flexGrow]="0.25"></ngx-datatable-column>
+            <ngx-datatable-column prop="phoneNumber" [flexGrow]="2"></ngx-datatable-column>
 
-            <ngx-datatable-column prop="telNum" name="Phone Number" [flexGrow]="0.2"></ngx-datatable-column>
+            <ngx-datatable-column prop="address" [flexGrow]="4"></ngx-datatable-column>
 
           </ngx-datatable>
         </div>

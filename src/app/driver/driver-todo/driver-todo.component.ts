@@ -10,14 +10,14 @@ import { ResultService } from './../../services/result.service';
   encapsulation: ViewEncapsulation.None
 })
 export class DriverTodoComponent implements OnInit {
-  @ViewChild('doingTable') doingTable: any;
+  @ViewChild('todoTable') todoTable: any;
   @ViewChild('doneTable') doneTable: any;
-  doingExpanded: any = {};
+  todoExpanded: any = {};
   doneExpanded: any = {};
-  todoDriver = [];
-  selectedDriver = [];
+  todo = [];
+  selectedTodo = [];
   done = [];
-  licenseId: string;
+  licenseNo: string;
   isResponsive: boolean;
 
   constructor(
@@ -31,11 +31,11 @@ export class DriverTodoComponent implements OnInit {
         innerWidth: window.innerWidth
       }
     });
-    this.licenseId = JSON.stringify(JSON.parse(localStorage.getItem('currentUser')).licenseId).replace(/\"/g, '');
+    this.licenseNo = JSON.stringify(JSON.parse(localStorage.getItem('currentUser')).licenseNo).replace(/\"/g, '');
     this.resultService.getResults().then((response) => {
       response.forEach((result) => {
         result.vehicles.forEach((vehicle) => {
-          if (vehicle.driver.licenseNo === this.licenseId) {
+          if (vehicle.driver.licenseNo === this.licenseNo) {
             if (vehicle.isCompleted) {
               this.done.push({
                 date: result.date,
@@ -44,7 +44,7 @@ export class DriverTodoComponent implements OnInit {
                 id: result._id
               });
             } else {
-              this.todoDriver.push({
+              this.todo.push({
                 date: result.date,
                 time: new Date(result.dateTime).toTimeString().split(" ")[0].slice(0, 5),
                 depot: result.depot.depotName,
@@ -62,13 +62,21 @@ export class DriverTodoComponent implements OnInit {
   }
 
   onDriverSelected({ selected }) {
-    this.todoDriver.findIndex(function(todo) {
+    const id = selected[0] ? selected[0].id : null;
+    var rowIndex = this.todo.findIndex(function (todo) {
       return todo === selected[selected.length - 1];
     });
+    if (id) {
+      this.resultService.updateDriverDone(id, this.licenseNo).then((res) => {
+        this.selectedTodo = [];
+        var completedItem = this.todo.splice(rowIndex, 1);
+        this.done.push(completedItem[0]);
+      });
+    }
   }
 
   toggleExpandDoing(row) {
-    this.doingTable.rowDetail.toggleExpandRow(row);
+    this.todoTable.rowDetail.toggleExpandRow(row);
   }
 
   toggleExpandDone(row) {

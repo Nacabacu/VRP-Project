@@ -21,7 +21,7 @@ export class AuthService {
                 localStorage.setItem('currentUser', JSON.stringify({
                     username: response.json().username,
                     role: response.json().role,
-                    licenseId: response.json().licenseId
+                    licenseNo: response.json().licenseNo
                 }));
                 this.loggedInSubject.next(true);
 

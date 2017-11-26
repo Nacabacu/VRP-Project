@@ -21,7 +21,7 @@ export class DrivingResultComponent implements OnInit {
   routeInfo = [];
   waitTime = [];
   currentTab;
-  licenseId: string;
+  licenseNo: string;
   driver: any = {};
   loadWeight: number;
   vehiclesIndex: number;
@@ -38,7 +38,7 @@ export class DrivingResultComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.licenseId = JSON.stringify(JSON.parse(localStorage.getItem('currentUser')).licenseId).replace(/\"/g, '');
+    this.licenseNo = JSON.stringify(JSON.parse(localStorage.getItem('currentUser')).licenseNo).replace(/\"/g, '');
     this.resultService.getResult(this.id)
       .then((response) => {
         this.result = response;
@@ -51,7 +51,7 @@ export class DrivingResultComponent implements OnInit {
           vehicle.color = 'blue';
         });
         this.result.vehicles.forEach((vehicle, vehiclesIndex) => {
-          if (vehicle.driver.licenseNo === this.licenseId) {
+          if (vehicle.driver.licenseNo === this.licenseNo) {
             this.vehiclesIndex = vehiclesIndex;
             this.driver.name = vehicle.driver.name;
             this.driver.licenseNo = vehicle.driver.licenseNo;
