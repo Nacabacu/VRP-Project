@@ -1,3 +1,4 @@
+import { Router, ActivatedRoute } from '@angular/router';
 import { ResultService } from './../../services/result.service';
 import { MatDialog, MatSnackBar } from '@angular/material';
 import { Component, OnInit, ViewChild, OnDestroy, ViewEncapsulation, NgZone, ElementRef } from '@angular/core';
@@ -62,7 +63,9 @@ export class PlanningComponent implements OnInit, OnDestroy {
     private mapsAPILoader: MapsAPILoader,
     private ngZone: NgZone,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit() {
@@ -241,7 +244,13 @@ export class PlanningComponent implements OnInit, OnDestroy {
         clients: this.clients
       }
       this.resultService.saveResult(request).then((res) => {
-        console.log(res);
+        const id = res._body.replace(/\"/g, '');
+
+        // this.router.navigate(['/planner/result', id]);
+      }).catch((err) => {
+        this.snackBar.open('Cannot find the solution', 'close', {
+          duration: 2000,
+        });
       });
     }
     else {

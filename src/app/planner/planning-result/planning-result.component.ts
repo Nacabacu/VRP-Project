@@ -92,7 +92,6 @@ export class PlanningResultComponent implements OnInit {
           })
         });
 
-        console.log(this.result)
       })
       .catch((err) => {
         this.router.navigate(['/not-found']);

@@ -61,7 +61,7 @@
 
             <div style="float: left;">
               <mat-form-field class="table-error">
-                <input matInput disabled formControlName="coordinate">
+                <input matInput formControlName="coordinate">
                 <mat-error *ngIf="this.clientFormGroup.get('coordinate').hasError('selectedCoordinateError')">You must pin coordinate at the map</mat-error>
               </mat-form-field>
             </div>

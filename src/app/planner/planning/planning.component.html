@@ -131,7 +131,7 @@
 
               <div style="float: left;">
                 <mat-form-field class="table-error">
-                  <input matInput disabled formControlName="depotTable">
+                  <input matInput formControlName="depotTable">
                   <mat-error *ngIf="this.depotGroup.get('depotTable').hasError('selectedDepotError')">You must select depot</mat-error>
                 </mat-form-field>
               </div>
@@ -181,7 +181,7 @@
             
               <div style="float: left;">
                 <mat-form-field class="table-error">
-                  <input matInput disabled formControlName="clientTable">
+                  <input matInput formControlName="clientTable">
                   <mat-error *ngIf="this.clientGroup.get('clientTable').hasError('selectedClientError')">You must select at least 1 client</mat-error>
                 </mat-form-field>
               </div>
