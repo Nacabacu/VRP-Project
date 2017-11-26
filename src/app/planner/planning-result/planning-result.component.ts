@@ -3,7 +3,7 @@ import { GoogleMapsAPIWrapper } from '@agm/core';
 import { Result } from './../../models/result';
 import { ParamMap, ActivatedRoute, Router } from '@angular/router';
 import { ResultService } from './../../services/result.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-planning-result',
@@ -22,6 +22,7 @@ export class PlanningResultComponent implements OnInit {
   routeInfo = [];
   waitTime = [];
   currentTab;
+  @ViewChild('driverTable') todoTable: any;
 
   constructor(
     private resultService: ResultService,
@@ -142,4 +143,7 @@ export class PlanningResultComponent implements OnInit {
     }
   }
 
+  toggleExpandDoing(row) {
+    this.todoTable.rowDetail.toggleExpandRow(row);
+  }
 }
