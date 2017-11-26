@@ -97,7 +97,7 @@ router.post('/saveRoute', (req, res) => {
 
                 req.body.clients.forEach((client) => {
                     var phoneNumber = client.phoneNumber;
-                    var pickedClient = _.pick(client, ['clientName', 'phoneNumber', 'coordinate']);
+                    var pickedClient = _.pick(client, ['clientName', 'phoneNumber', 'coordinate', 'address']);
 
                     Client.findOneAndUpdate({ phoneNumber }, { $set: pickedClient }, { upsert: true }).catch((err) => {
                         errorHandler(err, res);
