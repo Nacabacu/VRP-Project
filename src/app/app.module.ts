@@ -1,6 +1,3 @@
-import { ClientService } from './services/client.service';
-import { DepotService } from './services/depot.service';
-import { DriverService } from './services/driver.service';
 import { NgModule, Directive } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
@@ -36,13 +33,12 @@ import { DeleteDialogComponent } from './shared/delete-dialog/delete-dialog.comp
 
 import { AuthGuard } from './authentication/auth-guard.service';
 import { AuthService } from './authentication/auth.service';
-import { ResultService } from './services/result.service';
 
+import { ResultService } from './services/result.service';
+import { ClientService } from './services/client.service';
 import { DepotService } from './services/depot.service';
 import { DriverService } from './services/driver.service';
 import { DirectionDirective } from './directives/direction.directive';
-
-import { DeleteDialogComponent } from './shared/delete-dialog/delete-dialog.component';
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -102,6 +98,7 @@ const MY_DATE_FORMATS = {
     DriverService,
     DepotService,
     ClientService,
+    ResultService,
     { provide: DateAdapter, useClass: MyDateAdapter },
     { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
     GoogleMapsAPIWrapper
