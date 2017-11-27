@@ -40,17 +40,39 @@ export class ClientPickerDialogComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.header = 'Add Client';
+    console.log()
+    if (this.data.clientName) {
+      this.isSearched = true;
+      this.header = 'Edit Client';
 
-    this.clientFormGroup = this.formBuilder.group({
-      clientName: new FormControl(null, Validators.required),
-      phoneNumber: new FormControl(null, Validators.required),
-      address: new FormControl(null, Validators.required),
-      coordinate: new FormControl(null, this.checkCoordinateSelected.bind(this)),
-      demand: new FormControl(null, Validators.required),
-      waitTime: new FormControl(null, Validators.required)
-    });
+      this.clientFormGroup = this.formBuilder.group({
+        clientName: new FormControl(this.data.clientName, Validators.required),
+        phoneNumber: new FormControl(this.data.phoneNumber, Validators.required),
+        address: new FormControl(this.data.address, Validators.required),
+        coordinate: new FormControl(this.data.coordinate, this.checkCoordinateSelected.bind(this)),
+        demand: new FormControl(this.data.demand, Validators.required),
+        waitTime: new FormControl(this.data.waitTime, Validators.required)
+      });
 
+      this.marker = {
+        lat: this.data.coordinate[0],
+        lng: this.data.coordinate[1],
+        draggable: true
+      }
+    }
+    else {
+      this.header = 'Add Client';
+
+      this.clientFormGroup = this.formBuilder.group({
+        clientName: new FormControl(null, Validators.required),
+        phoneNumber: new FormControl(null, Validators.required),
+        address: new FormControl(null, Validators.required),
+        coordinate: new FormControl(null, this.checkCoordinateSelected.bind(this)),
+        demand: new FormControl(null, Validators.required),
+        waitTime: new FormControl(null, Validators.required)
+      });
+    }
+    
     this.SelectedCoordinateSubScription = this.SelectedCoordinateSubject.subscribe((value) => {
       this.clientFormGroup.get('coordinate').setValidators(this.checkCoordinateSelected.bind(this));
       this.clientFormGroup.get('coordinate').updateValueAndValidity();

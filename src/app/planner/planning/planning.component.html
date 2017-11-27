@@ -171,9 +171,11 @@
 
                 <ngx-datatable-column prop="waitTime" [flexGrow]="1"></ngx-datatable-column>
 
-                <ngx-datatable-column name="remove" [flexGrow]="2">
+                <ngx-datatable-column [flexGrow]="1">
                   <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex">
-                    <i class="fa fa-times" (click)="removeClient(rowIndex)"></i>
+                    <i class="fa fa-pencil" (click)="editClient(rowIndex)"></i>
+
+                    <i class="fa fa-times" (click)="removeClient(rowIndex)" style="margin-left:15px;"></i>
                   </ng-template>
                 </ngx-datatable-column>
         

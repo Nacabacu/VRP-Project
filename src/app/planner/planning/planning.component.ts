@@ -168,8 +168,22 @@ export class PlanningComponent implements OnInit, OnDestroy {
     this.clientTable.offset = 0;
   }
 
-  removeClient(e) {
-    this.clients.splice(e, 1);
+  editClient(index) {
+    const dialogRef = this.dialog.open(ClientPickerDialogComponent, {
+      width: '80vw',
+      data: this.clients[index]
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.clients[index] = result;
+        this.tempClients = this.clients;
+      }
+    });
+  }
+
+  removeClient(index) {
+    this.clients.splice(index, 1);
     this.tempClients = this.clients;
   }
 

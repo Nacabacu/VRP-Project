@@ -7,14 +7,14 @@
 
       <agm-map style="height: 600px;" [latitude]="map?.lat" [longitude]="map?.lng" [zoom]="map?.zoom" (mapClick)="onMapClicked($event)">
         <agm-marker [latitude]="searchMarker?.lat" [longitude]="searchMarker?.lng" [label]="searchMarker?.label" [iconUrl]="'http://maps.google.com/mapfiles/kml/pal3/icon28.png'"></agm-marker>
-        <agm-marker [latitude]="marker?.lat" [longitude]="marker?.lng" [label]="marker?.label" (dragEnd)="onDragEnd($event)"></agm-marker>
+        <agm-marker [latitude]="marker?.lat" [longitude]="marker?.lng" [label]="marker?.label" [markerDraggable]="true" (dragEnd)="onDragEnd($event)"></agm-marker>
       </agm-map>
     </div>
 
     <div class="col-xs-12 col-md-6">
       <div class="form-container">
         <h2 style="text-align:center;">{{ header }}</h2>
-        <div class="col-xs-8 col-xs-offset-2">
+        <div class="col-xs-8 col-xs-offset-2" *ngIf="!data.clientName">
           <mat-form-field class="phoneInput">
             <input matInput type="tel" placeholder="Search Phone Number" maxlength="10" [(ngModel)]="phoneNumber">
           </mat-form-field>
