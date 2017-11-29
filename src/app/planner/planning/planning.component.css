@@ -61,3 +61,9 @@ agm-map {
 .table-error .mat-input-subscript-wrapper {
     margin-top: 10px
 }
+
+.depot-tip {
+    float: left;
+    font-size: 16px;
+    margin: 30px 0 0 5px;
+}

@@ -40,7 +40,6 @@ export class ClientPickerDialogComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    console.log()
     if (this.data.clientName) {
       this.isSearched = true;
       this.header = 'Edit Client';
@@ -128,7 +127,6 @@ export class ClientPickerDialogComponent implements OnInit, OnDestroy {
           }
         }
         else {
-          this.header = 'Found Client';
           this.marker = {
             lat: client.coordinate[0],
             lng: client.coordinate[1],

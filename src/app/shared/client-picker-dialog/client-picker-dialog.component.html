@@ -54,15 +54,15 @@
             
             <div class="col-xs-6">
               <mat-form-field class="formInput" style="float:right;">
-                <input matInput type="number" placeholder="Wait Time (min)" formControlName="waitTime">
-                <mat-error *ngIf="this.clientFormGroup.get('waitTime').hasError('required')">You must enter wait time</mat-error>
+                <input matInput type="number" placeholder="Service time (min)" formControlName="waitTime">
+                <mat-error *ngIf="this.clientFormGroup.get('waitTime').hasError('required')">You must enter service time</mat-error>
               </mat-form-field>
             </div>
 
             <div style="float: left;">
               <mat-form-field class="table-error">
                 <input matInput formControlName="coordinate">
-                <mat-error *ngIf="this.clientFormGroup.get('coordinate').hasError('selectedCoordinateError')">You must pin coordinate at the map</mat-error>
+                <mat-error *ngIf="this.clientFormGroup.get('coordinate').hasError('selectedCoordinateError')">You must pin the marker on the map</mat-error>
               </mat-form-field>
             </div>
 

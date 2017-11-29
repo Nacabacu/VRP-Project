@@ -42,7 +42,11 @@ var vrpSolver = function (request, distances) {
 
             // set timeWindows as full day working
             for (var at = 0; at < numNodes; ++at) {
-                timeWindows[at] = [dayStarts, dayEnds];
+                if (at === 0) {
+                    timeWindows[at] = [dayStarts, dayEnds + 1 * 60 * 60]; // add 1 hour for end day of depot
+                } else {
+                    timeWindows[at] = [dayStarts, dayEnds];
+                }
             }
 
             request.clients.forEach((client) => {
@@ -89,7 +93,7 @@ var vrpSolver = function (request, distances) {
                 computeTimeLimit: 2000,
                 numVehicles: parseInt(request.numVehicles),
                 depotNode: depotIndex,
-                timeHorizon: 3 * 60 * 60,
+                timeHorizon: 4 * 60 * 60,
                 vehicleCapacity: parseInt(request.vehicleCapacity),
                 routeLocks: routeLocks,
                 pickups: [],
@@ -104,7 +108,7 @@ var vrpSolver = function (request, distances) {
                 });
             });
         }).catch(function (err) {
-            console.log(err)
+            console.log(err);
             reject('Unable to get distance matrix');
         });
     });

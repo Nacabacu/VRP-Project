@@ -62,6 +62,14 @@ var PlanningResult = mongoose.model('planningResults', {
             waitTime: {
                 type: Number,
                 require: true
+            },
+            phoneNumber: {
+                type: String,
+                require: true
+            },
+            address: {
+                type: String,
+                require: true,
             }
         },
     ],

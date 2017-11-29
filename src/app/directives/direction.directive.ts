@@ -42,7 +42,7 @@ export class DirectionDirective {
 
     if (this.subRoute) {
       var origin = this.route[0] === 'D' ? this.result.depot.coordinate : this.result.clients[this.route[0] - 1].coordinate;
-      var destination = this.route[2] === 'D' ? this.result.depot.coordinate : this.result.clients[this.route[2] - 1].coordinate;
+      var destination = this.route[1] === 'D' ? this.result.depot.coordinate : this.result.clients[this.route[1] - 1].coordinate;
       this.createDirection(origin, destination);
     }
     else {
