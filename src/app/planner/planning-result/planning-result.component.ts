@@ -20,8 +20,11 @@ export class PlanningResultComponent implements OnInit {
   subRoute = false;
   selectedRouteInfo = [];
   routeInfo = [];
+  clients = [];
   waitTime = [];
   currentTab;
+  selectedTabIndex;
+  subRouteStartNode;
   @ViewChild('driverTable') todoTable: any;
 
   constructor(
@@ -47,16 +50,21 @@ export class PlanningResultComponent implements OnInit {
           vehicle.color = this.colors[index];
         });
 
+        this.clients = this.result.clients;
+
         this.result.vehicles.forEach((vehicle, vehiclesIndex) => {
           this.routeInfo.push(new Array());
 
           var startTime = new Date(this.result.dateTime);
           var departures = [];
           var arrivals = [];
-          var subDirections = [];
+          var startNodes = [];
+          var endNodes = [];
           var demands = [];
           var waitTimes = [];
-          subDirections.push('D 🡒 ' + vehicle.route[0]);
+          
+          startNodes.push('D')
+          endNodes.push(vehicle.route[0])
           departures.push(startTime);
           arrivals.push(new Date(startTime.getTime() + this.result.times[0][vehicle.route[0]] * 1000));
 
@@ -80,20 +88,23 @@ export class PlanningResultComponent implements OnInit {
 
             // route
             if (routeIndex !== vehicle.route.length - 1) {
-              subDirections.push(node + ' 🡒 ' + vehicle.route[routeIndex + 1]);
+              startNodes.push(node);
+              endNodes.push(vehicle.route[routeIndex + 1]);
             }
             else {
-              subDirections.push(node + ' 🡒 D');
+              startNodes.push(node);
+              endNodes.push('D');
             }
           });
 
-          subDirections.forEach((subDirection, subDirectionIndex) => {
+          startNodes.forEach((startNode, subDirectionIndex) => {
             this.routeInfo[vehiclesIndex].push({
-              route: subDirection,
+              startNode: startNode,
+              endNode: endNodes[subDirectionIndex],
               departure: departures[subDirectionIndex].toLocaleTimeString('th-TH').substring(0, 5),
               arrival: arrivals[subDirectionIndex].toLocaleTimeString('th-TH').substring(0, 5),
-              demand: subDirectionIndex === subDirections.length - 1 ? 0 : demands[subDirectionIndex],
-              waitTime: subDirectionIndex === subDirections.length - 1 ? 0 : waitTimes[subDirectionIndex]
+              demand: demands[subDirectionIndex],
+              waitTime: waitTimes[subDirectionIndex]
             });
           })
         });
@@ -104,24 +115,24 @@ export class PlanningResultComponent implements OnInit {
       });
   }
 
-  onSubRouteSelected(e) {
-    this.subRoute = true;
-    this.resultService.sendClearMap();
-    var node = e.selected[0].route.split(' ');
-    this.selectedResult = [];
-    this.selectedResult.push({
-      route: node,
-      color: this.colors[this.currentTab - 1]
-    });
-  }
+  // onSubRouteSelected(e) {
+  //   this.subRoute = true;
+  //   this.resultService.sendClearMap();
+  //   var node = e.selected[0].route.split(' ');
+  //   this.selectedResult = [];
+  //   this.selectedResult.push({
+  //     route: node,
+  //     color: this.colors[this.currentTab - 1]
+  //   });
+  // }
 
-  clearSelectedRouteInfo() {
-    if (this.selectedRouteInfo.length !== 0) {
-      this.subRoute = false;
-      this.selectedRouteInfo = [];
-      this.onChangedTab({ index: this.currentTab });
-    }
-  }
+  // clearSelectedRouteInfo() {
+  //   if (this.selectedRouteInfo.length !== 0) {
+  //     this.subRoute = false;
+  //     this.selectedRouteInfo = [];
+  //     this.onChangedTab({ index: this.currentTab });
+  //   }
+  // }
 
   onChangedTab(e) {
     this.selectedRouteInfo = [];
@@ -133,7 +144,7 @@ export class PlanningResultComponent implements OnInit {
     } else {
       this.resultService.sendClearMap();
       this.selectedResult = [];
-      this.selectedResult.push(this.result.vehicles[e.index - 1]);
+      this.selectedResult.push(this.result.vehicles[this.currentTab - 1]);
 
       this.selectedClient = [];
       this.selectedResult[0].route.forEach((clientNumber) => {
@@ -143,7 +154,20 @@ export class PlanningResultComponent implements OnInit {
     }
   }
 
-  toggleExpandDoing(row) {
-    this.todoTable.rowDetail.toggleExpandRow(row);
+  onOpenedExpansionPanel(data) {
+    this.subRouteStartNode = data.startNode;
+    this.subRoute = true;
+    this.resultService.sendClearMap();
+    this.selectedResult = [];
+    this.selectedResult.push({
+      route: [data.startNode, data.endNode],
+      color: this.colors[this.currentTab - 1]
+    });
+  }
+
+  test(data) {
+    if (this.subRouteStartNode === data.startNode) {
+      this.onChangedTab({ index: this.currentTab });
+    }
   }
 }

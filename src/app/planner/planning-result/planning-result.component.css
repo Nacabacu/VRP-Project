@@ -14,3 +14,12 @@ agm-map {
    overflow: auto;
    max-height: calc(100vh - 150px);
 }
+
+.expand-container {
+    padding: 0 15px 15px;
+    box-sizing: border-box;
+}
+
+.mat-expansion-panel-header-title {
+    flex-grow: 0.3;
+}

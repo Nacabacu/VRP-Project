@@ -19,6 +19,7 @@ import { Marker } from '../../shared/marker';
 import { Map } from '../../shared/map';
 
 import { ClientPickerDialogComponent } from '../../shared/client-picker-dialog/client-picker-dialog.component';
+import { DeleteDialogComponent } from '../../shared/delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'app-planning',
@@ -169,12 +170,12 @@ export class PlanningComponent implements OnInit, OnDestroy {
   }
 
   editClient(index) {
-    const dialogRef = this.dialog.open(ClientPickerDialogComponent, {
+    const editDialog = this.dialog.open(ClientPickerDialogComponent, {
       width: '80vw',
       data: this.clients[index]
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
+    editDialog.afterClosed().subscribe((result) => {
       if (result) {
         this.clients[index] = result;
         this.tempClients = this.clients;
@@ -183,8 +184,20 @@ export class PlanningComponent implements OnInit, OnDestroy {
   }
 
   removeClient(index) {
-    this.clients.splice(index, 1);
-    this.tempClients = this.clients;
+    const removeDialog = this.dialog.open(DeleteDialogComponent, {
+      width: '250px',
+      data: {
+        action: 'Remove',
+        item: 'client'
+      }
+    });
+
+    removeDialog.afterClosed().subscribe((result) => {
+      if (result) {
+        this.clients.splice(index, 1);
+        this.tempClients = this.clients;
+      }
+    });
   }
 
   dateFilter(date: Date): boolean {
@@ -212,12 +225,12 @@ export class PlanningComponent implements OnInit, OnDestroy {
   }
 
   onAddClient(rowIndex: number) {
-    const dialogRef = this.dialog.open(ClientPickerDialogComponent, {
+    const addDialog = this.dialog.open(ClientPickerDialogComponent, {
       width: '80vw',
       data: {}
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
+    addDialog.afterClosed().subscribe((result) => {
       if (result) {
         this.clients.push(result);
         this.tempClients = this.clients;

@@ -25,6 +25,11 @@
         </agm-map>
       </div>
       <div class="col-xs-12 col-md-6">
+
+        <div class="depot-tip">
+          Click on the map to add new depot
+        </div>
+
         <mat-form-field floatPlaceholder="auto" class="depotFilterInput">
           <input matInput placeholder='Filter by depot name' (keyup)='updateFilter($event)'>
           <button mat-button *ngIf="filterDepotInput" matSuffix mat-icon-button aria-label="Clear" (click)="filterDepotInput=''">
@@ -52,9 +57,9 @@
               </ng-template>
             </ngx-datatable-column>
           
-            <ngx-datatable-column name="Edit" [flexGrow]="2">
+            <ngx-datatable-column [flexGrow]="2">
               <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-row="row" let-value="value">
-                <button mat-raised-button color="warn" (click)="onDelete(rowIndex, row)">Delete</button>
+                <i class="fa fa-trash-o" aria-hidden="true" (click)="onDelete(rowIndex, row)"></i>
               </ng-template>
             </ngx-datatable-column>
           
