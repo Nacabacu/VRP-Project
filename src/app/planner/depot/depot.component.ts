@@ -146,7 +146,10 @@ export class DepotComponent implements OnInit {
   onDelete(rowIndex: number, rowData) {
     const dialogRef = this.dialog.open(DeleteDialogComponent, {
       width: '250px',
-      data: 'Delete'
+      data: {
+        action: 'Delete',
+        item: 'depot'
+      }
     });
 
     dialogRef.afterClosed().subscribe((result) => {

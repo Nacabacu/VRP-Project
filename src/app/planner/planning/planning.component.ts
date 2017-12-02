@@ -186,7 +186,10 @@ export class PlanningComponent implements OnInit, OnDestroy {
   removeClient(index) {
     const removeDialog = this.dialog.open(DeleteDialogComponent, {
       width: '250px',
-      data: 'Remove'
+      data: {
+        action: 'Remove',
+        item: 'client'
+      }
     });
 
     removeDialog.afterClosed().subscribe((result) => {
@@ -228,7 +231,6 @@ export class PlanningComponent implements OnInit, OnDestroy {
     });
 
     addDialog.afterClosed().subscribe((result) => {
-      console.log(result)
       if (result) {
         this.clients.push(result);
         this.tempClients = this.clients;
