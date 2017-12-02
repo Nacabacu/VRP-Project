@@ -115,25 +115,6 @@ export class PlanningResultComponent implements OnInit {
       });
   }
 
-  // onSubRouteSelected(e) {
-  //   this.subRoute = true;
-  //   this.resultService.sendClearMap();
-  //   var node = e.selected[0].route.split(' ');
-  //   this.selectedResult = [];
-  //   this.selectedResult.push({
-  //     route: node,
-  //     color: this.colors[this.currentTab - 1]
-  //   });
-  // }
-
-  // clearSelectedRouteInfo() {
-  //   if (this.selectedRouteInfo.length !== 0) {
-  //     this.subRoute = false;
-  //     this.selectedRouteInfo = [];
-  //     this.onChangedTab({ index: this.currentTab });
-  //   }
-  // }
-
   onChangedTab(e) {
     this.selectedRouteInfo = [];
     this.currentTab = e.index;

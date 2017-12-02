@@ -42,11 +42,11 @@ var vrpSolver = function (request, distances) {
 
             // set timeWindows as full day working
             for (var at = 0; at < numNodes; ++at) {
-                if (at === 0) {
-                    timeWindows[at] = [dayStarts, dayEnds + 1 * 60 * 60]; // add 1 hour for end day of depot
-                } else {
-                    timeWindows[at] = [dayStarts, dayEnds];
-                }
+                // if (at === 0) {
+                    // timeWindows[at] = [dayStarts, dayEnds + 1 * 60 * 60]; // add 1 hour for end day of depot
+                // } else {
+                timeWindows[at] = [dayStarts, dayEnds];
+                // }
             }
 
             request.clients.forEach((client) => {
