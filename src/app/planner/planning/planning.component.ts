@@ -172,7 +172,10 @@ export class PlanningComponent implements OnInit, OnDestroy {
   editClient(index) {
     const editDialog = this.dialog.open(ClientPickerDialogComponent, {
       width: '80vw',
-      data: this.clients[index]
+      data: {
+        client: this.clients[index],
+        isNew: false
+      }
     });
 
     editDialog.afterClosed().subscribe((result) => {
@@ -224,10 +227,12 @@ export class PlanningComponent implements OnInit, OnDestroy {
     this.map.zoom = 15;
   }
 
-  onAddClient(rowIndex: number) {
+  onAddClient() {
     const addDialog = this.dialog.open(ClientPickerDialogComponent, {
       width: '80vw',
-      data: {}
+      data: {
+        isNew: false
+      }
     });
 
     addDialog.afterClosed().subscribe((result) => {

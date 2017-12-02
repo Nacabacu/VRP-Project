@@ -42,26 +42,6 @@ agm-map {
     padding: 0 12px 12px;
 }
 
-.table-error {
-    width: 300px;
-}
-
-.table-error .mat-input-flex {
-    display: none !important;
-}
-
-.table-error .mat-input-underline {
-    height: 0 !important;
-}
-
-.table-error .mat-input-ripple {
-    height: 0 !important;
-}
-
-.table-error .mat-input-subscript-wrapper {
-    margin-top: 10px
-}
-
 .depot-tip {
     float: left;
     font-size: 16px;

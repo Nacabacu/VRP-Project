@@ -25,6 +25,8 @@
         </agm-map>
       </div>
       <div class="col-xs-12 col-md-6">
+        <button mat-raised-button color="primary" class="btn-client" (click)="onNewClient()">New Client</button>
+
         <mat-form-field floatPlaceholder="auto" id="telNumFilter">
           <input matInput placeholder='Filter' (keyup)='updateFilter($event)'>
           <button mat-button *ngIf="filterDepotInput" matSuffix mat-icon-button aria-label="Clear" (click)="filterDepotInput=''">
@@ -34,7 +36,7 @@
 
         <div id="clientTable">
           <ngx-datatable #table class='material' columnMode="flex" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'"
-            [limit]="10" [rows]='clients' [selected]="selectedClients" [selectionType]="'radio'" (select)='onClientSelected($event)'>
+            [limit]="8" [rows]='clients' [selected]="selectedClients" [selectionType]="'radio'" (select)='onClientSelected($event)'>
 
             <ngx-datatable-column name="No." [flexGrow]="0.5">
               <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex">
@@ -42,11 +44,19 @@
               </ng-template>
             </ngx-datatable-column>
 
-            <ngx-datatable-column prop="clientName" [flexGrow]="2"></ngx-datatable-column>
+            <ngx-datatable-column prop="clientName" [flexGrow]="1.5"></ngx-datatable-column>
 
-            <ngx-datatable-column prop="phoneNumber" [flexGrow]="2"></ngx-datatable-column>
+            <ngx-datatable-column prop="phoneNumber" [flexGrow]="1.5"></ngx-datatable-column>
 
-            <ngx-datatable-column prop="address" [flexGrow]="4"></ngx-datatable-column>
+            <ngx-datatable-column prop="address" [flexGrow]="2.5"></ngx-datatable-column>
+
+            <ngx-datatable-column [flexGrow]="1.2">
+              <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex">
+                <i class="fa fa-pencil" (click)="editClient(rowIndex)"></i>
+            
+                <i class="fa fa-times" (click)="deleteClient(rowIndex)" style="margin-left:15px;"></i>
+              </ng-template>
+            </ngx-datatable-column>
 
           </ngx-datatable>
         </div>

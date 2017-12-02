@@ -26,8 +26,8 @@ export class ClientService {
             .catch(this.handleError);
     }
 
-    deleteClient(clientId) {
-        return this.http.delete(this.clientUrl + '/delete/' + clientId)
+    deleteClient(phoneNumber) {
+        return this.http.delete(this.clientUrl + '/delete/' + phoneNumber)
             .toPromise()
             .then((response) => {
                 this.router.navigate(['/planner/client']);
@@ -55,13 +55,9 @@ export class ClientService {
             .catch(this.handleError);
     }
 
-    updateClient(companyData) {
-        const headers = new Headers();
-        headers.set('Content-Type', 'application/json');
-        const opts = new RequestOptions();
-        opts.headers = headers;
-        const body = { client: companyData };
-        return this.http.put(this.clientUrl + '/update/' + companyData._id, JSON.stringify(body), opts)
+    updateClient(client) {
+        const body = { client };
+        return this.http.put(this.clientUrl + '/update', body)
             .toPromise()
             .then((response) => {
                 return response;
