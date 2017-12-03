@@ -26,7 +26,10 @@ export class Result {
         coordinate: []
     };
     public isAllCompleted: boolean;
-    public times: [[number]]
+    public times: [[number]];
+    public method: String;
+    public vehicleCapacity: Number;
+    public availableDriver: Number;
 
     constructor() {}
 }

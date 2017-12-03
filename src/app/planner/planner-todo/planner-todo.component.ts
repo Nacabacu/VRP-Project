@@ -51,7 +51,9 @@ export class PlannerTodoComponent implements OnInit {
   }
 
   onEdit(id: string) {
-    this.resultService.getResult(id).then(res => console.log(res));
+    this.resultService.getResult(id).then((res) => {
+      this.router.navigate(['./planning', id], {relativeTo: this.route})
+    });
   }
 
   onView(id: string) {

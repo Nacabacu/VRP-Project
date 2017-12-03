@@ -73,7 +73,19 @@ var PlanningResult = mongoose.model('planningResults', {
             }
         },
     ],
-    times: [[Number]]
+    times: [[Number]],
+    method: {
+        type: String,
+        require: true
+    },
+    vehicleCapacity: {
+        type: Number,
+        require: true
+    },
+    availableDriver: {
+        type: Number,
+        require: true
+    }
 }, 'planningResults');
 
 module.exports = { PlanningResult };

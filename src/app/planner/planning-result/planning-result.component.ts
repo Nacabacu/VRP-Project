@@ -1,7 +1,7 @@
 import { Subject } from 'rxjs/Subject';
 import { GoogleMapsAPIWrapper } from '@agm/core';
 import { Result } from './../../models/result';
-import { ParamMap, ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ResultService } from './../../services/result.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 

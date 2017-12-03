@@ -32,6 +32,7 @@ export class PlanningComponent implements OnInit, OnDestroy {
   @ViewChild(DatatableComponent) clientTable: DatatableComponent;
   @ViewChild("searchMap") public searchElementRef: ElementRef;
 
+  header;
   map = new Map;
   searchLocationInput;
   offset = 0;
@@ -56,6 +57,11 @@ export class PlanningComponent implements OnInit, OnDestroy {
   depotGroup: FormGroup;
   clientGroup: FormGroup;
 
+  // editing
+  selectedTime;
+  selectedDriver;
+  id;
+
   constructor(
     private formBuilder: FormBuilder,
     private driverService: DriverService,
@@ -67,7 +73,11 @@ export class PlanningComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     private router: Router,
     private route: ActivatedRoute
-  ) { }
+  ) {
+    this.route.params.subscribe((param) => {
+      this.id = param['id'];
+    });
+  }
 
   ngOnInit() {
     this.mapsAPILoader.load().then(() => {
@@ -100,6 +110,38 @@ export class PlanningComponent implements OnInit, OnDestroy {
       this.depots = response;
       this.tempDepots = this.depots;
     });
+
+    if (this.id) {
+      this.header = "Edit Planning"
+      this.resultService.getResult(this.id).then((result) => {
+        // set Planning value
+        this.planningInfoGroup.setValue({
+          date: new Date(result.dateTime),
+          time: null,
+          numOfDrivers: null,
+          capacity: result.vehicleCapacity,
+          method: result.method
+        })
+        this.selectedTime = result.time.substring(0, result.time.indexOf(':'));
+        this.selectedDriver = (result.availableDriver).toString();
+
+        // set Depot value
+        this.depots.forEach((depot) => {
+          if (depot.coordinate[0] === result.depot.coordinate[0] && depot.coordinate[1] === result.depot.coordinate[1]) {
+            this.selectedDepot.push(depot);
+            this.numOfSelectedDepotSubject.next(1);
+          }
+        })
+
+        // set Client value
+        result.clients.forEach((client) => {
+          this.clients.push(client);
+          this.numOfSelectedClientSubject.next(1);
+        })
+      });
+    } else {
+      this.header = "New Planning";
+    }
 
     // Planning
     this.planningInfoGroup = this.formBuilder.group({
@@ -286,8 +328,13 @@ export class PlanningComponent implements OnInit, OnDestroy {
         },
         clients: this.clients
       }
+
+      if (this.id) {
+        request['id'] = this.id;
+      }
+
       this.resultService.saveResult(request).then((res) => {
-        const id = res._body.replace(/\"/g, '');
+      const id = res._body.replace(/\"/g, '');
 
         // this.router.navigate(['/planner/result', id]);
       }).catch((err) => {
