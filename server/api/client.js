@@ -46,19 +46,26 @@ router.patch('/updates', (req, res) => {
     res.status(200).send('update client successfully');
 });
 
-router.delete('/delete/:id', (req, res) => {
-    var id = req.params.id;
-
-    if (!ObjectID.isValid(id)) {
-        return res.status(404).send();
-    }
-
-    Client.findByIdAndRemove(id).then((client) => {
+router.put('/update', (req, res) => {
+    var phoneNumber = req.body.client.phoneNumber;
+    var client = req.body.client;
+    Client.findOneAndUpdate({ phoneNumber }, { $set: client }, { upsert: true }).then((client) => {
         if (!client) {
-            return res.status(404).send();
+            res.status(404).send();
         }
+    }).catch((err) => {
+        errorHandler(err, res);
+    });
+    res.status(200).send('update client successfully');
+});
 
-        res.status(200).send('delete client successfully');
+router.delete('/delete/:phoneNumber', (req, res) => {
+    var phoneNumber = req.params.phoneNumber;
+
+    Client.findOneAndRemove({ phoneNumber }).then((client) => {
+        if (!client) {
+            res.status(404).send();
+        }
     }).catch((err) => {
         errorHandler(err, res);
     });

@@ -20,6 +20,7 @@ export class ClientPickerDialogComponent implements OnInit, OnDestroy {
   marker: Marker;
 
   header;
+  buttonMode;
   isSearched = false;
   phoneNumber: Number;
 
@@ -40,36 +41,56 @@ export class ClientPickerDialogComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    if (this.data.clientName) {
+    if (this.data.client && this.data.client.clientName) {
       this.isSearched = true;
       this.header = 'Edit Client';
+      this.buttonMode = 'Edit';
 
-      this.clientFormGroup = this.formBuilder.group({
-        clientName: new FormControl(this.data.clientName, Validators.required),
-        phoneNumber: new FormControl(this.data.phoneNumber, Validators.required),
-        address: new FormControl(this.data.address, Validators.required),
-        coordinate: new FormControl(this.data.coordinate, this.checkCoordinateSelected.bind(this)),
-        demand: new FormControl(this.data.demand, Validators.required),
-        waitTime: new FormControl(this.data.waitTime, Validators.required)
-      });
+      if (this.data.isNew) {
+        this.clientFormGroup = this.formBuilder.group({
+          clientName: new FormControl(this.data.client.clientName, Validators.required),
+          phoneNumber: new FormControl(this.data.client.phoneNumber, Validators.required),
+          address: new FormControl(this.data.client.address, Validators.required),
+          coordinate: new FormControl(this.data.client.coordinate, this.checkCoordinateSelected.bind(this))
+        });
+      } else {
+        this.clientFormGroup = this.formBuilder.group({
+          clientName: new FormControl(this.data.client.clientName, Validators.required),
+          phoneNumber: new FormControl(this.data.client.phoneNumber, Validators.required),
+          address: new FormControl(this.data.client.address, Validators.required),
+          coordinate: new FormControl(this.data.client.coordinate, this.checkCoordinateSelected.bind(this)),
+          demand: new FormControl(this.data.client.demand, Validators.required),
+          waitTime: new FormControl(this.data.client.waitTime, Validators.required)
+        });
+      }
 
       this.marker = {
-        lat: this.data.coordinate[0],
-        lng: this.data.coordinate[1],
+        lat: this.data.client.coordinate[0],
+        lng: this.data.client.coordinate[1],
         draggable: true
       }
     }
     else {
       this.header = 'Add Client';
+      this.buttonMode = 'Add';
 
-      this.clientFormGroup = this.formBuilder.group({
-        clientName: new FormControl(null, Validators.required),
-        phoneNumber: new FormControl(null, Validators.required),
-        address: new FormControl(null, Validators.required),
-        coordinate: new FormControl(null, this.checkCoordinateSelected.bind(this)),
-        demand: new FormControl(null, Validators.required),
-        waitTime: new FormControl(null, Validators.required)
-      });
+      if (this.data.isNew) {
+        this.clientFormGroup = this.formBuilder.group({
+          clientName: new FormControl(null, Validators.required),
+          phoneNumber: new FormControl(null, Validators.required),
+          address: new FormControl(null, Validators.required),
+          coordinate: new FormControl(null, this.checkCoordinateSelected.bind(this))
+        });
+      } else {
+        this.clientFormGroup = this.formBuilder.group({
+          clientName: new FormControl(null, Validators.required),
+          phoneNumber: new FormControl(null, Validators.required),
+          address: new FormControl(null, Validators.required),
+          coordinate: new FormControl(null, this.checkCoordinateSelected.bind(this)),
+          demand: new FormControl(null, Validators.required),
+          waitTime: new FormControl(null, Validators.required)
+        });
+      }
     }
     
     this.SelectedCoordinateSubScription = this.SelectedCoordinateSubject.subscribe((value) => {
@@ -119,6 +140,9 @@ export class ClientPickerDialogComponent implements OnInit, OnDestroy {
         
         if (client === 'not found') {
           this.header = 'New Client';
+          if (this.data.isNew) {
+            this.buttonMode = 'Add'
+          }
           client = {
             clientName: '',
             address: '',
@@ -127,6 +151,10 @@ export class ClientPickerDialogComponent implements OnInit, OnDestroy {
           }
         }
         else {
+          if (this.data.isNew) {
+            this.header = 'Edit Client';
+            this.buttonMode = 'Edit'
+          }
           this.marker = {
             lat: client.coordinate[0],
             lng: client.coordinate[1],
@@ -146,7 +174,7 @@ export class ClientPickerDialogComponent implements OnInit, OnDestroy {
   }
 
   onMapClicked(event) {
-    if (this.isSearched) {
+    if (this.isSearched || this.data.isNew) {
       this.marker = {
         lat: event.coords.lat,
         lng: event.coords.lng,

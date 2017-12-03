@@ -1,7 +1,7 @@
 import { Subject } from 'rxjs/Subject';
 import { GoogleMapsAPIWrapper } from '@agm/core';
 import { Result } from './../../models/result';
-import { ParamMap, ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ResultService } from './../../services/result.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 
@@ -70,17 +70,25 @@ export class PlanningResultComponent implements OnInit {
 
           vehicle.route.forEach((node, routeIndex) => {
             var waitTime = this.result.clients[node - 1].waitTime;
+
+            if (vehicle.route.length === 1) {
+              var departure = new Date(arrivals[routeIndex].getTime() + this.waitTime[routeIndex] * 1000 + waitTime * 60 * 1000);
+              var arrival = new Date(departure.getTime() + this.result.times[0][vehicle.route[0]] * 1000);
+              departures.push(departure);
+              arrivals.push(arrival);
+            } else {
+              // departure & arrival
+              var departure = new Date(arrivals[routeIndex].getTime() + this.waitTime[routeIndex] * 1000 + waitTime * 60 * 1000);
+              if (routeIndex === vehicle.route.length - 1) {
+                var arrival = new Date(departure.getTime() + this.result.times[node][vehicle.route[0]] * 1000);
+              }
+              else {
+                var arrival = new Date(departure.getTime() + this.result.times[node][vehicle.route[routeIndex + 1]] * 1000);
+              }
+              departures.push(departure);
+              arrivals.push(arrival);
+            }
             
-            // departure & arrival
-            var departure = new Date(arrivals[routeIndex].getTime() + this.waitTime[routeIndex] * 1000 + waitTime * 60 * 1000);
-            if (routeIndex === vehicle.route.length - 1) {
-              var arrival = new Date(departure.getTime() + this.result.times[node][vehicle.route[0]] * 1000);
-            }
-            else {
-              var arrival = new Date(departure.getTime() + this.result.times[node][vehicle.route[routeIndex + 1]] * 1000);
-            }
-            departures.push(departure);
-            arrivals.push(arrival);
             waitTimes.push(waitTime);
 
             // demands
@@ -114,25 +122,6 @@ export class PlanningResultComponent implements OnInit {
         this.router.navigate(['/not-found']);
       });
   }
-
-  // onSubRouteSelected(e) {
-  //   this.subRoute = true;
-  //   this.resultService.sendClearMap();
-  //   var node = e.selected[0].route.split(' ');
-  //   this.selectedResult = [];
-  //   this.selectedResult.push({
-  //     route: node,
-  //     color: this.colors[this.currentTab - 1]
-  //   });
-  // }
-
-  // clearSelectedRouteInfo() {
-  //   if (this.selectedRouteInfo.length !== 0) {
-  //     this.subRoute = false;
-  //     this.selectedRouteInfo = [];
-  //     this.onChangedTab({ index: this.currentTab });
-  //   }
-  // }
 
   onChangedTab(e) {
     this.selectedRouteInfo = [];

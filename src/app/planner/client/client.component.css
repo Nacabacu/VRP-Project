@@ -17,3 +17,9 @@ agm-map {
     box-sizing: border-box;
     padding: 0 10px;
 }
+
+.btn-client {
+    float: left;
+    margin-top: 15px;
+    margin-left: 25px;
+}

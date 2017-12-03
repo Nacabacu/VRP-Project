@@ -87,14 +87,6 @@ router.post('/saveRoute', (req, res) => {
                     }
                 });
 
-                var planningResult = new PlanningResult({
-                    date: new Date(req.body.date),
-                    depot: req.body.depot,
-                    vehicles: vehicles,
-                    clients: req.body.clients,
-                    times: result.duration
-                });
-
                 req.body.clients.forEach((client) => {
                     var phoneNumber = client.phoneNumber;
                     var pickedClient = _.pick(client, ['clientName', 'phoneNumber', 'coordinate', 'address']);
@@ -104,10 +96,40 @@ router.post('/saveRoute', (req, res) => {
                     });
                 });
 
-                planningResult.save(function (err, planning) {
-                    if (err) errorHandler(err, res);
-                    res.status(200).send(planning._id);
-                });
+                if (req.body.id) {
+                    var planningResult = {
+                        date: new Date(req.body.date),
+                        depot: req.body.depot,
+                        vehicles: vehicles,
+                        clients: req.body.clients,
+                        times: result.duration,
+                        method: req.body.method,
+                        vehicleCapacity: req.body.vehicleCapacity,
+                        availableDriver: req.body.numVehicles
+                    };
+
+                    // Edit
+                    PlanningResult.findByIdAndUpdate(req.body.id, { $set: planningResult }, { upsert: true }).catch((err) => {
+                        errorHandler(err, res);
+                    });
+                } else {
+                    var planningResult = new PlanningResult({
+                        date: new Date(req.body.date),
+                        depot: req.body.depot,
+                        vehicles: vehicles,
+                        clients: req.body.clients,
+                        times: result.duration,
+                        method: req.body.method,
+                        vehicleCapacity: req.body.vehicleCapacity,
+                        availableDriver: req.body.numVehicles
+                    });
+
+                    // New
+                    planningResult.save(function (err, planning) {
+                        if (err) errorHandler(err, res);
+                        res.status(200).send(planning._id);
+                    });
+                }
             }, (err) => {
                 errorHandler(err, res);
             });

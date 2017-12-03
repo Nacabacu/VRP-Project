@@ -49,3 +49,23 @@ html, body {
 .ngx-datatable.material.multi-click-selection .datatable-body-row.active .datatable-row-group {
     background-color: #b9c3ff!important;
 }
+
+.table-error {
+    width: 300px;
+}
+
+.table-error .mat-input-flex {
+    display: none !important;
+}
+
+.table-error .mat-input-underline {
+    height: 0 !important;
+}
+
+.table-error .mat-input-ripple {
+    height: 0 !important;
+}
+
+.table-error .mat-input-subscript-wrapper {
+    margin-top: 10px
+}

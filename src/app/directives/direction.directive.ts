@@ -38,7 +38,7 @@ export class DirectionDirective {
     }
 
     var date = this.result.date.split('/');
-    this.date = this.result.isAllCompleted ? new Date() : new Date(this.result.dateTime);
+    this.date = new Date() >= new Date(this.result.dateTime) ? new Date() : new Date(this.result.dateTime);
 
     if (this.subRoute) {
       var origin = this.route[0] === 'D' ? this.result.depot.coordinate : this.result.clients[this.route[0] - 1].coordinate;
