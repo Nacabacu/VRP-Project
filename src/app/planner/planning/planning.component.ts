@@ -122,22 +122,27 @@ export class PlanningComponent implements OnInit, OnDestroy {
           capacity: result.vehicleCapacity,
           method: result.method
         })
-        this.selectedTime = result.time.substring(0, result.time.indexOf(':'));
+        this.selectedTime = parseInt(result.time.substring(0, result.time.indexOf(':'))).toString();
         this.selectedDriver = (result.availableDriver).toString();
 
         // set Depot value
         this.depots.forEach((depot) => {
           if (depot.coordinate[0] === result.depot.coordinate[0] && depot.coordinate[1] === result.depot.coordinate[1]) {
             this.selectedDepot.push(depot);
+            this.depotMarker = {
+              lat: depot.coordinate[0],
+              lng: depot.coordinate[1],
+              draggable: false
+            }
             this.numOfSelectedDepotSubject.next(1);
           }
-        })
+        });
 
         // set Client value
         result.clients.forEach((client) => {
           this.clients.push(client);
           this.numOfSelectedClientSubject.next(1);
-        })
+        });
       });
     } else {
       this.header = "New Planning";
