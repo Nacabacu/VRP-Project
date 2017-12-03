@@ -70,17 +70,25 @@ export class PlanningResultComponent implements OnInit {
 
           vehicle.route.forEach((node, routeIndex) => {
             var waitTime = this.result.clients[node - 1].waitTime;
+
+            if (vehicle.route.length === 1) {
+              var departure = new Date(arrivals[routeIndex].getTime() + this.waitTime[routeIndex] * 1000 + waitTime * 60 * 1000);
+              var arrival = new Date(departure.getTime() + this.result.times[0][vehicle.route[0]] * 1000);
+              departures.push(departure);
+              arrivals.push(arrival);
+            } else {
+              // departure & arrival
+              var departure = new Date(arrivals[routeIndex].getTime() + this.waitTime[routeIndex] * 1000 + waitTime * 60 * 1000);
+              if (routeIndex === vehicle.route.length - 1) {
+                var arrival = new Date(departure.getTime() + this.result.times[node][vehicle.route[0]] * 1000);
+              }
+              else {
+                var arrival = new Date(departure.getTime() + this.result.times[node][vehicle.route[routeIndex + 1]] * 1000);
+              }
+              departures.push(departure);
+              arrivals.push(arrival);
+            }
             
-            // departure & arrival
-            var departure = new Date(arrivals[routeIndex].getTime() + this.waitTime[routeIndex] * 1000 + waitTime * 60 * 1000);
-            if (routeIndex === vehicle.route.length - 1) {
-              var arrival = new Date(departure.getTime() + this.result.times[node][vehicle.route[0]] * 1000);
-            }
-            else {
-              var arrival = new Date(departure.getTime() + this.result.times[node][vehicle.route[routeIndex + 1]] * 1000);
-            }
-            departures.push(departure);
-            arrivals.push(arrival);
             waitTimes.push(waitTime);
 
             // demands
