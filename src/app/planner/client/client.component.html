@@ -28,8 +28,8 @@
         <button mat-raised-button color="primary" class="btn-client" (click)="onNewClient()">New Client</button>
 
         <mat-form-field floatPlaceholder="auto" id="telNumFilter">
-          <input matInput placeholder='Filter' (keyup)='updateFilter($event)'>
-          <button mat-button *ngIf="filterDepotInput" matSuffix mat-icon-button aria-label="Clear" (click)="filterDepotInput=''">
+          <input matInput placeholder='Filter clients' (keyup)='updateFilter($event)' [(ngModel)]="filterClientInput">
+          <button mat-button *ngIf="filterClientInput" matSuffix mat-icon-button aria-label="Clear" (click)="filterClientInput=''">
             <i class="fa fa-times"></i>
           </button>
         </mat-form-field>
@@ -54,7 +54,7 @@
               <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex">
                 <i class="fa fa-pencil" (click)="editClient(rowIndex)"></i>
             
-                <i class="fa fa-times" (click)="deleteClient(rowIndex)" style="margin-left:15px;"></i>
+                <i class="fa fa-trash-o" (click)="deleteClient(rowIndex)" style="margin-left:15px;"></i>
               </ng-template>
             </ngx-datatable-column>
 

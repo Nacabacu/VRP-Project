@@ -16,7 +16,7 @@
         <h2 style="text-align:center;">{{ header }}</h2>
         <div class="col-xs-8 col-xs-offset-2" *ngIf="!(data.client && data.client.clientName)">
           <mat-form-field class="phoneInput">
-            <input matInput type="tel" placeholder="Search Phone Number" maxlength="10" [(ngModel)]="phoneNumber">
+            <input matInput type="tel" placeholder="Search phone number" maxlength="10" [(ngModel)]="phoneNumber">
           </mat-form-field>
           <!-- [disabled]="phoneNumber && phoneNumber.length < 9 " -->
           <button mat-raised-button color="primary" style="margin-left:10px;" (click)="onPhoneNumberSearch()">Search</button>
@@ -26,14 +26,14 @@
           <div class="col-xs-10 col-xs-offset-1 form" *ngIf="isSearched">
             <div class="col-xs-6">
               <mat-form-field class="formInput">
-                <input matInput type="text" placeholder="Client Name" formControlName="clientName">
+                <input matInput type="text" placeholder="Client name" formControlName="clientName">
                 <mat-error *ngIf="this.clientFormGroup.get('clientName').hasError('required')">You must enter client name</mat-error>
               </mat-form-field>
             </div>
 
             <div class="col-xs-6">
               <mat-form-field class="formInput" style="float:right;">
-                <input matInput type="tel" placeholder="Phone Number" formControlName="phoneNumber">
+                <input matInput type="tel" placeholder="Phone number" formControlName="phoneNumber">
                 <mat-error *ngIf="this.clientFormGroup.get('phoneNumber').hasError('required')">You must enter phone number</mat-error>
               </mat-form-field>
             </div>

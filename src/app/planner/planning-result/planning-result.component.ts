@@ -154,7 +154,7 @@ export class PlanningResultComponent implements OnInit {
     });
   }
 
-  test(data) {
+  onClosedExpansionPanel(data) {
     if (this.subRouteStartNode === data.startNode) {
       this.onChangedTab({ index: this.currentTab });
     }

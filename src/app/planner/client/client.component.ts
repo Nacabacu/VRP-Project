@@ -22,6 +22,9 @@ export class ClientComponent implements OnInit {
   map = new Map();
   markers: Marker[] = [];
 
+  searchLocationInput;
+  filterClientInput;
+
   constructor(
     private clientService: ClientService,
     private dialog: MatDialog
@@ -110,6 +113,7 @@ export class ClientComponent implements OnInit {
           }
         }
         this.tempClients = this.clients;
+        this.renderMarkers();
         this.clientService.updateClient(result);
       }
     });

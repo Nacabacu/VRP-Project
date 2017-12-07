@@ -1,10 +1,9 @@
+import { Subject } from 'rxjs/Subject';
 import { GoogleMapsAPIWrapper } from '@agm/core';
+import { Result } from './../../models/result';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
-
-import { ResultService } from '../../services/result.service';
-
-import { Result } from '../../models/result';
+import { ResultService } from './../../services/result.service';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-driving-result',
@@ -12,6 +11,8 @@ import { Result } from '../../models/result';
   styleUrls: ['./driving-result.component.css']
 })
 export class DrivingResultComponent implements OnInit {
+  licenseNo;
+  colors = ['blue', 'yellow', 'lime', 'red', 'green', 'purple', 'maroon', 'navy', 'olive', 'fuchsia'];
   id: number;
   result = new Result();
   selectedResult = [];
@@ -19,12 +20,11 @@ export class DrivingResultComponent implements OnInit {
   subRoute = false;
   selectedRouteInfo = [];
   routeInfo = [];
+  clients = [];
   waitTime = [];
-  currentTab;
-  licenseNo: string;
-  driver: any = {};
-  loadWeight: number;
-  vehiclesIndex: number;
+  selectedTabIndex;
+  subRouteStartNode;
+  @ViewChild('driverTable') todoTable: any;
 
   constructor(
     private resultService: ResultService,
@@ -39,36 +39,53 @@ export class DrivingResultComponent implements OnInit {
 
   ngOnInit() {
     this.licenseNo = JSON.stringify(JSON.parse(localStorage.getItem('currentUser')).licenseNo).replace(/\"/g, '');
+
     this.resultService.getResult(this.id)
       .then((response) => {
         this.result = response;
-        this.result.date = new Date(this.result.dateTime).toUTCString().slice(0, 16);
         this.result.clients.forEach((client, index) => {
           client.index = index + 1;
           this.waitTime.push(client.waitTime);
         });
-        this.result.vehicles.forEach((vehicle, index) => {
-          vehicle.color = 'blue';
-        });
-        this.result.vehicles.forEach((vehicle, vehiclesIndex) => {
-          if (vehicle.driver.licenseNo === this.licenseNo) {
-            this.vehiclesIndex = vehiclesIndex;
-            this.driver.name = vehicle.driver.name;
-            this.driver.licenseNo = vehicle.driver.licenseNo;
-            this.driver.vehicleNo = vehicle.driver.vehicleNo;
-            this.loadWeight = vehicle.loadWeight;
-            var startTime = new Date(this.result.dateTime);
-            var departures = [];
-            var arrivals = [];
-            var subDirections = [];
-            var demands = [];
-            subDirections.push('D 🡒 ' + vehicle.route[0]);
-            departures.push(startTime);
-            arrivals.push(new Date(startTime.getTime() + this.result.times[0][vehicle.route[0]] * 1000));
 
-            vehicle.route.forEach((node, routeIndex) => {
+        var vehiclesTemp = this.result.vehicles
+        this.result.vehicles = [];
+        vehiclesTemp.forEach((vehicle, index) => {
+          if (vehicle.driver.licenseNo === this.licenseNo) {
+            this.result.vehicles.push(vehicle);
+            this.result.vehicles[0].color = 'blue';
+          }
+        });
+
+        this.clients = this.result.clients;
+
+        this.result.vehicles.forEach((vehicle, vehiclesIndex) => {
+          this.routeInfo.push(new Array());
+
+          var startTime = new Date(this.result.dateTime);
+          var departures = [];
+          var arrivals = [];
+          var startNodes = [];
+          var endNodes = [];
+          var demands = [];
+          var waitTimes = [];
+
+          startNodes.push('D')
+          endNodes.push(vehicle.route[0])
+          departures.push(startTime);
+          arrivals.push(new Date(startTime.getTime() + this.result.times[0][vehicle.route[0]] * 1000));
+
+          vehicle.route.forEach((node, routeIndex) => {
+            var waitTime = this.result.clients[node - 1].waitTime;
+
+            if (vehicle.route.length === 1) {
+              var departure = new Date(arrivals[routeIndex].getTime() + this.waitTime[routeIndex] * 1000 + waitTime * 60 * 1000);
+              var arrival = new Date(departure.getTime() + this.result.times[0][vehicle.route[0]] * 1000);
+              departures.push(departure);
+              arrivals.push(arrival);
+            } else {
               // departure & arrival
-              var departure = new Date(arrivals[routeIndex].getTime() + this.waitTime[routeIndex] * 1000);
+              var departure = new Date(arrivals[routeIndex].getTime() + this.waitTime[routeIndex] * 1000 + waitTime * 60 * 1000);
               if (routeIndex === vehicle.route.length - 1) {
                 var arrival = new Date(departure.getTime() + this.result.times[node][vehicle.route[0]] * 1000);
               }
@@ -77,66 +94,79 @@ export class DrivingResultComponent implements OnInit {
               }
               departures.push(departure);
               arrivals.push(arrival);
+            }
 
-              // demands
-              demands.push(this.result.clients[node - 1].demand);
+            waitTimes.push(waitTime);
 
-              // route
-              if (routeIndex !== vehicle.route.length - 1) {
-                subDirections.push(node + ' 🡒 ' + vehicle.route[routeIndex + 1]);
-              }
-              else {
-                subDirections.push(node + ' 🡒 D');
-              }
+            // demands
+            demands.push(this.result.clients[node - 1].demand);
+
+            // route
+            if (routeIndex !== vehicle.route.length - 1) {
+              startNodes.push(node);
+              endNodes.push(vehicle.route[routeIndex + 1]);
+            }
+            else {
+              startNodes.push(node);
+              endNodes.push('D');
+            }
+          });
+
+          startNodes.forEach((startNode, subDirectionIndex) => {
+            this.routeInfo[vehiclesIndex].push({
+              startNode: startNode,
+              endNode: endNodes[subDirectionIndex],
+              departure: departures[subDirectionIndex].toLocaleTimeString('th-TH').substring(0, 5),
+              arrival: arrivals[subDirectionIndex].toLocaleTimeString('th-TH').substring(0, 5),
+              demand: demands[subDirectionIndex],
+              waitTime: waitTimes[subDirectionIndex]
             });
-
-            subDirections.forEach((subDirection, subDirectionIndex) => {
-              this.routeInfo.push({
-                route: subDirection,
-                departure: departures[subDirectionIndex].toLocaleTimeString('th-TH').substring(0, 5),
-                arrival: arrivals[subDirectionIndex].toLocaleTimeString('th-TH').substring(0, 5),
-                demand: subDirectionIndex === subDirections.length - 1 ? 0 : demands[subDirectionIndex]
-              });
-            });
-            this.onChangedTab();
-          }
+          })
         });
+        this.refreshMap();
       })
       .catch((err) => {
         this.router.navigate(['/not-found']);
       });
   }
 
-  onSubRouteSelected(event) {
-    this.subRoute = true;
-    this.resultService.sendClearMap();
-    var node = event.selected[0].route.split(' ');
-    this.selectedResult = [];
-    this.selectedResult.push({
-      route: node,
-      color: 'blue'
-    });
-  }
-
-  showAllRoute() {
-    if (this.selectedRouteInfo.length !== 0) {
-      this.subRoute = false;
-      this.selectedRouteInfo = [];
-      this.onChangedTab();
-    }
-  }
-
-  onChangedTab() {
+  refreshMap() {
     this.selectedRouteInfo = [];
     this.subRoute = false;
 
     this.resultService.sendClearMap();
     this.selectedResult = [];
-    this.selectedResult.push(this.result.vehicles[this.vehiclesIndex]);
+    this.selectedResult.push(this.result.vehicles[0]);
 
     this.selectedClient = [];
     this.selectedResult[0].route.forEach((clientNumber) => {
       this.selectedClient.push(this.result.clients[clientNumber - 1]);
     });
+  }
+
+  onOpenedExpansionPanel(data) {
+    this.subRouteStartNode = data.startNode;
+    this.subRoute = true;
+    this.resultService.sendClearMap();
+    this.selectedResult = [];
+    this.selectedResult.push({
+      route: [data.startNode, data.endNode],
+      color: 'blue'
+    });
+  }
+
+  onClosedExpansionPanel(data) {
+    if (this.subRouteStartNode === data.startNode) {
+      this.refreshMap();
+    }
+  }
+
+  onCompleteButton() {
+    const id = this.result._id;
+    if (id) {
+      this.resultService.updateDriverDone(id, this.licenseNo).then((res) => {
+        this.router.navigate(['/driver']);
+      });
+    }
   }
 }

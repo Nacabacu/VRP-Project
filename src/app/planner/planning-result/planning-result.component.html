@@ -30,36 +30,53 @@
           
           <mat-tab label="Main">
             <mat-list>
-              <mat-list-item>Delivery Date: {{ result.date }}</mat-list-item>
-              <mat-list-item>Departure Time: {{ result.time }}</mat-list-item>
-              <mat-list-item>Depot Name: {{ result.depot.depotName }}</mat-list-item>
+              <div class="col-xs-12" style="text-align:center">
+                <mat-list-item>Status:&nbsp;
+                  <span *ngIf="result.isAllCompleted" style="color:blue">All completed</span>
+                  <span *ngIf="!result.isAllCompleted" style="color:red">Not all completed</span>
+                </mat-list-item>
+              </div>
+              <div class="col-xs-6">
+                <mat-list-item>Delivery date: {{ result.date }}</mat-list-item>
+              </div>
+              <div class="col-xs-6">
+                <mat-list-item>Departure time: {{ result.time }}</mat-list-item>
+              </div>
+              <div class="col-xs-6">
+                <mat-list-item>Depot name: {{ result.depot.depotName }}</mat-list-item>
+              </div>     
+              <div class="col-xs-6">
+                <mat-list-item>Resolve method: {{ result.method }}</mat-list-item>
+              </div>
             </mat-list>
           </mat-tab>
 
           <mat-tab *ngFor="let vehicle of result.vehicles; let vehicleIndex = index" label="Route {{ vehicleIndex + 1}}">
 
             <mat-list>
-              <div class="col-xs-6">
-                <mat-list-item>Driver Name: {{ vehicle.driver.name }}</mat-list-item>
+              <div class="col-xs-12" style="text-align:center">
+                <mat-list-item>Status:&nbsp;
+                  <span *ngIf="vehicle.isCompleted" style="color:blue">Completed</span>
+                  <span *ngIf="!vehicle.isCompleted" style="color:red">Not completed</span>
+                </mat-list-item>
               </div>
               <div class="col-xs-6">
-                <mat-list-item>License No: {{ vehicle.driver.licenseNo }}</mat-list-item>
+                <mat-list-item>Driver name: {{ vehicle.driver.name }}</mat-list-item>
               </div>
               <div class="col-xs-6">
-                <mat-list-item>Vehicle No: {{ vehicle.driver.vehicleNo }}</mat-list-item>
+                <mat-list-item>Driver license: {{ vehicle.driver.licenseNo }}</mat-list-item>
               </div>
               <div class="col-xs-6">
-                <mat-list-item>Actual Load: {{ vehicle.loadWeight }}</mat-list-item>
+                <mat-list-item>Vehicle no: {{ vehicle.driver.vehicleNo }}</mat-list-item>
               </div>
               <div class="col-xs-6">
-                <mat-list-item *ngIf="vehicle.isCompleted">Completed</mat-list-item>
-                <mat-list-item *ngIf="!vehicle.isCompleted">Not completed</mat-list-item>
+                <mat-list-item>Actual load: {{ vehicle.loadWeight }}</mat-list-item>
               </div>
             </mat-list>
 
             <div class="col-xs-12 expand-container" *ngIf="selectedTabIndex === vehicleIndex + 1">
               <mat-accordion>
-                <mat-expansion-panel *ngFor="let route of routeInfo[vehicleIndex]" (opened)="onOpenedExpansionPanel(route)" (closed)="test(route)">
+                <mat-expansion-panel *ngFor="let route of routeInfo[vehicleIndex]" (opened)="onOpenedExpansionPanel(route)" (closed)="onClosedExpansionPanel(route)">
                   <mat-expansion-panel-header>
                     <mat-panel-title>
                       {{ route.startNode }} → {{ route.endNode }}

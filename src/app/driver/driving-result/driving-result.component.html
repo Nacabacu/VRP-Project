@@ -19,37 +19,58 @@
             [route]="vehicle.route" [result]="result"></agm-direction>
         </agm-map>
       </div>
-      <div class="col-xs-12 col-md-6 info">
-        <div align="center">
-          <h3>
-            {{ result.date }} {{ result.time }}
-          </h3>
-        </div>
+      <div class="col-xs-12 col-md-6 info" *ngFor="let vehicle of result.vehicles; let vehicleIndex = index">
         <mat-list>
-          <mat-list-item>Depot Name: {{ result.depot.depotName }}</mat-list-item>
-          <mat-list-item>Driver Name: {{ driver?.name }}</mat-list-item>
-          <mat-list-item>Vehicle No: {{ driver?.vehicleNo }}</mat-list-item>
-          <mat-list-item>Load Weight: {{ loadWeight }}</mat-list-item>
-
-          <ngx-datatable #driverTable class="material expandable driver-table" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
-            [rowHeight]="50" [reorderable]="false" [rows]="routeInfo" [limit]="8" style="clear:both;" [selected]="selectedRouteInfo"
-            [selectionType]="'radio'" (select)='onSubRouteSelected($event)'>
-
-            <ngx-datatable-column name="Route"></ngx-datatable-column>
-
-            <ngx-datatable-column name="Departure"></ngx-datatable-column>
-
-            <ngx-datatable-column name="Arrival"></ngx-datatable-column>
-
-            <ngx-datatable-column name="Demand"></ngx-datatable-column>
-
-            <ngx-datatable-footer>
-              <ng-template ngx-datatable-footer-template>
-                <button class="clear-btn" mat-raised-button color="primary" (click)="showAllRoute()">Show All Route</button>
-              </ng-template>
-            </ngx-datatable-footer>
-          </ngx-datatable>
+          <div class="col-xs-6">
+            <mat-list-item>Delivery date: {{ result.date }}</mat-list-item>
+          </div>
+          <div class="col-xs-6">
+            <mat-list-item>Departure time: {{ result.time }}</mat-list-item>
+          </div>
+          <div class="col-xs-6">
+            <mat-list-item>Depot name: {{ result.depot.depotName }}</mat-list-item>
+          </div>
+          <div class="col-xs-6">
+            <mat-list-item>Actual load: {{ vehicle.loadWeight }}</mat-list-item>
+          </div>
         </mat-list>
+
+        <div class="col-xs-12 expand-container">
+          <mat-accordion>
+            <mat-expansion-panel *ngFor="let route of routeInfo[vehicleIndex]" (opened)="onOpenedExpansionPanel(route)" (closed)="onClosedExpansionPanel(route)">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  {{ route.startNode }} → {{ route.endNode }}
+                </mat-panel-title>
+                <mat-panel-description>
+                  From {{ route.departure }} to {{ route.arrival }}
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+              <mat-list *ngIf="route.endNode !== 'D'">
+                <div class="col-xs-6">
+                  <mat-list-item>Demand: {{ route.demand }}</mat-list-item>
+                </div>
+                <div class="col-xs-6">
+                  <mat-list-item>Service time: {{ route.waitTime }} min.</mat-list-item>
+                </div>
+                <div class="col-xs-6">
+                  <mat-list-item>Client name: {{ clients[route.endNode - 1].clientName }}</mat-list-item>
+                </div>
+                <div class="col-xs-6">
+                  <mat-list-item>Phone number: {{ clients[route.endNode - 1].phoneNumber }}</mat-list-item>
+                </div>
+                <div class="col-xs-12">
+                  <mat-list-item>Address: {{ clients[route.endNode - 1].address }}</mat-list-item>
+                </div>
+              </mat-list>
+              <mat-list *ngIf="route.endNode === 'D'">
+                <mat-list-item>Back to depot</mat-list-item>
+              </mat-list>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+
+        <button mat-raised-button color="primary" class="complete-btn" (click)="onCompleteButton()">Complete this job</button>
       </div>
     </div>
   </div>
