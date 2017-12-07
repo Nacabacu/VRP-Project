@@ -31,7 +31,7 @@
         </div>
 
         <mat-form-field floatPlaceholder="auto" class="depotFilterInput">
-          <input matInput placeholder='Filter by depot name' (keyup)='updateFilter($event)'>
+          <input matInput placeholder='Filter depots' (keyup)='updateFilter($event)' [(ngModel)]="filterDepotInput">
           <button mat-button *ngIf="filterDepotInput" matSuffix mat-icon-button aria-label="Clear" (click)="filterDepotInput=''">
             <i class="fa fa-times"></i>
           </button>
@@ -68,7 +68,6 @@
           <span *ngIf="!isDepotNameValid" class="validateText">Please enter branch name</span>
           <div class="btn-group">
             <button mat-raised-button color="primary" (click)="onSave()" [disabled]="!isDepotNameValid">Save</button>
-            <button mat-raised-button (click)="onCancel()" style="margin-left:10px;">Cancel</button>
           </div>
         </div>
       </div>

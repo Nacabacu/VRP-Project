@@ -112,7 +112,7 @@ export class PlanningComponent implements OnInit, OnDestroy {
     });
 
     if (this.id) {
-      this.header = "Edit Planning"
+      this.header = "Edit a Plan"
       this.resultService.getResult(this.id).then((result) => {
         // set Planning value
         this.planningInfoGroup.setValue({
@@ -145,7 +145,7 @@ export class PlanningComponent implements OnInit, OnDestroy {
         });
       });
     } else {
-      this.header = "New Planning";
+      this.header = "Create a Plan";
     }
 
     // Planning
@@ -291,18 +291,18 @@ export class PlanningComponent implements OnInit, OnDestroy {
     });
   }
 
-  addMockClient() {
-    this.offset += 0.01
-    this.clients.push({
-      clientName: 'test Name',
-      phoneNumber: '1231564',
-      address: 'test address',
-      demand: 1,
-      waitTime: 30,
-      coordinate: [13.6526 + this.offset, 100.486328 + this.offset]
-    })
-    this.tempClients = this.clients;
-  }
+  // addMockClient() {
+  //   this.offset += 0.01
+  //   this.clients.push({
+  //     clientName: 'test Name',
+  //     phoneNumber: '1231564',
+  //     address: 'test address',
+  //     demand: 1,
+  //     waitTime: 30,
+  //     coordinate: [13.6526 + this.offset, 100.486328 + this.offset]
+  //   })
+  //   this.tempClients = this.clients;
+  // }
 
   onSubmit() {
     if (this.planningInfoGroup.valid && this.depotGroup.valid && this.clientGroup.valid) {

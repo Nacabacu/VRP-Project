@@ -139,7 +139,6 @@ export class DepotComponent implements OnInit {
       this.snackBar.open('Update depot successfully', 'close', {
         duration: 2000,
       });
-      // this.router.navigate(['/planner']);
     });
   }
 
@@ -167,9 +166,5 @@ export class DepotComponent implements OnInit {
         });
       }
     });
-  }
-
-  onCancel() {
-    this.router.navigate(['/planner']);
   }
 }
