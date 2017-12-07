@@ -76,7 +76,7 @@
 
             <div class="col-xs-12 expand-container" *ngIf="selectedTabIndex === vehicleIndex + 1">
               <mat-accordion>
-                <mat-expansion-panel *ngFor="let route of routeInfo[vehicleIndex]" (opened)="onOpenedExpansionPanel(route)" (closed)="test(route)">
+                <mat-expansion-panel *ngFor="let route of routeInfo[vehicleIndex]" (opened)="onOpenedExpansionPanel(route)" (closed)="onClosedExpansionPanel(route)">
                   <mat-expansion-panel-header>
                     <mat-panel-title>
                       {{ route.startNode }} → {{ route.endNode }}

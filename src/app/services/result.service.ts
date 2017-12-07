@@ -52,7 +52,6 @@ export class ResultService {
     return this.http.put(this.vrpUrl + '/updateProgress', { id, licenseNo })
       .toPromise()
       .then((response: Response) => {
-        console.log(response)
         return response;
       })
       .catch(this.handleError);

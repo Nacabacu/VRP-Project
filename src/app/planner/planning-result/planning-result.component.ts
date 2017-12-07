@@ -41,7 +41,6 @@ export class PlanningResultComponent implements OnInit {
   ngOnInit() {
     this.resultService.getResult(this.id)
       .then((response) => {
-        console.log(response)
         this.result = response;
         this.result.clients.forEach((client, index) => {
           client.index = index + 1;
@@ -155,7 +154,7 @@ export class PlanningResultComponent implements OnInit {
     });
   }
 
-  test(data) {
+  onClosedExpansionPanel(data) {
     if (this.subRouteStartNode === data.startNode) {
       this.onChangedTab({ index: this.currentTab });
     }
