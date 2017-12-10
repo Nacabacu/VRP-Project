@@ -81,7 +81,7 @@ var vrpSolver = function (request, distances) {
 
             var solverOpts = {
                 numNodes: numNodes,
-                costs: request.method === 'distance' ? results.distance : results.duration,
+                costs: request.method === 'distance' ? results.distance : waitTime, /* results.duration */
                 durations: waitTime,
                 timeWindows: timeWindows,
                 demands: demands

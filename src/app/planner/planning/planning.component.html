@@ -97,10 +97,6 @@
             <form [formGroup]="depotGroup">
               <ng-template matStepLabel>Select a Depot</ng-template>
 
-              <div class="depot-tip">
-                 Select depot by click on row table
-              </div>
-
               <mat-form-field class="input-filter">
                 <input matInput type='text' placeholder='Filter by depot name' (keyup)='updateDepotFilter($event)'>
               </mat-form-field>
@@ -116,13 +112,16 @@
                 <ngx-datatable-column prop="depotName" [flexGrow]="2"></ngx-datatable-column>
               </ngx-datatable>
 
-              <div style="float: left;">
-                <mat-form-field class="table-error">
-                  <input matInput formControlName="depotTable">
-                  <mat-error *ngIf="this.depotGroup.get('depotTable').hasError('selectedDepotError')">You must select depot</mat-error>
-                </mat-form-field>
+              <div class="depot-tip">
+                *Select depot by click on row table
+                <div>
+                  <mat-form-field class="table-error" style="font-size:16px;">
+                    <input matInput formControlName="depotTable">
+                    <mat-error *ngIf="this.depotGroup.get('depotTable').hasError('selectedDepotError')">You must select depot</mat-error>
+                  </mat-form-field>
+                </div>
               </div>
-
+              
               <div class="btn-container">
                 <button mat-raised-button matStepperPrevious color="primary">Back</button>
                 <button mat-raised-button matStepperNext color="primary">Next</button>

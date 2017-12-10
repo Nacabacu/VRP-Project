@@ -23,3 +23,8 @@ agm-map {
 .mat-expansion-panel-header-title {
     flex-grow: 0.3;
 }
+
+.expansion-tip {
+    color: #6e6e6e;
+    font-size: 12px;
+}

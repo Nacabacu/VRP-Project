@@ -67,10 +67,12 @@
                 <mat-list-item>Back to depot</mat-list-item>
               </mat-list>
             </mat-expansion-panel>
+            <span class="expansion-tip">*Collapse all panel to show all route</span>
           </mat-accordion>
         </div>
 
-        <button mat-raised-button color="primary" class="complete-btn" (click)="onCompleteButton()">Complete this job</button>
+        <button mat-raised-button color="primary" class="complete-btn" *ngIf="!vehicle.isCompleted" (click)="onCompleteButton()">Complete this job</button>
+        <button mat-raised-button color="primary" class="completed-btn" disabled *ngIf="vehicle.isCompleted" >This job is completed</button>
       </div>
     </div>
   </div>

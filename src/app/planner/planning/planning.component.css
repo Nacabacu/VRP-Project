@@ -43,7 +43,7 @@ agm-map {
 }
 
 .depot-tip {
-    float: left;
-    font-size: 16px;
-    margin: 30px 0 0 5px;
+    margin-top: 10px;
+    font-size: 12px;
+    color: #6e6e6e;
 }

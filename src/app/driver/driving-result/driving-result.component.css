@@ -29,3 +29,14 @@ agm-map {
     margin: 0 auto;
     width: 140px;
 }
+
+.completed-btn {
+    display: table;
+    margin: 0 auto;
+    width: 170px;
+}
+
+.expansion-tip {
+    color: #6e6e6e;
+    font-size: 12px;
+}

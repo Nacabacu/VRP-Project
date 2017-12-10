@@ -26,10 +26,6 @@
       </div>
       <div class="col-xs-12 col-md-6">
 
-        <div class="depot-tip">
-          Click on the map to add new depot
-        </div>
-
         <mat-form-field floatPlaceholder="auto" class="depotFilterInput">
           <input matInput placeholder='Filter depots' (keyup)='updateFilter($event)' [(ngModel)]="filterDepotInput">
           <button mat-button *ngIf="filterDepotInput" matSuffix mat-icon-button aria-label="Clear" (click)="filterDepotInput=''">
@@ -64,8 +60,11 @@
             </ngx-datatable-column>
           
           </ngx-datatable>
+          <div class="depot-tip">
+            *Click on the map to add new depot
+            <div *ngIf="!isDepotNameValid" style="color:red">Please enter branch name</div>
+          </div>
 
-          <span *ngIf="!isDepotNameValid" class="validateText">Please enter branch name</span>
           <div class="btn-group">
             <button mat-raised-button color="primary" (click)="onSave()" [disabled]="!isDepotNameValid">Save</button>
           </div>
