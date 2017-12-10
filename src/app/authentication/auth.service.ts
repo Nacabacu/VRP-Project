@@ -55,6 +55,17 @@ export class AuthService {
         }
     }
 
+    onHomeClicked() {
+        var isLoggedIn = localStorage.getItem('currentUser') ? true : false;
+        if (isLoggedIn) {
+            var role = this.getRole();
+            var navigateHomeUrl = '/' + role;
+            this.router.navigate([navigateHomeUrl]);
+        } else {
+            this.router.navigate(['/login']);
+        }
+    }
+
     loginEmitter(): Observable<boolean> {
         return this.loggedInSubject.asObservable();
     }

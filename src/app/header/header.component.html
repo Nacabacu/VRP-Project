@@ -1,37 +1,8 @@
 <mat-toolbar color="primary">
     <div class="nav-responsive">
-        <button mat-icon-button [matMenuTriggerFor]="menu">
+        <button mat-icon-button (click)="onNavResponsive()">
             <i class="fa fa-bars fa-2x" aria-hidden="true"></i>
         </button>
-        <mat-menu #menu="matMenu">
-            <a mat-menu-item (click)="onHomeClicked()">
-                <i class="fa fa-home logo" aria-hidden="true"></i>
-                <span style="margin-left: 1px;">Home</span>
-            </a>
-
-            <span *ngIf="isLoggedIn">
-               <span *ngIf="role === 'planner'">
-                    <a mat-menu-item routerLink="/planner/plannning">
-                        <i class="fa fa-truck logo" style="margin-right: 7px;" aria-hidden="true"></i>
-                        <span>Plan</span>
-                    </a>
-                    <a mat-menu-item routerLink="/planner/client">
-                        <i class="fa fa-users logo" style="margin-right: 7px;" aria-hidden="true"></i>
-                        <span>Client</span>
-                    </a>
-                    <a mat-menu-item routerLink="/planner/depot">
-                        <i class="fa fa-building logo" aria-hidden="true"></i>
-                        <span style="padding-left: 4px;">Depot</span>
-                    </a>
-                </span>
-
-                <hr>
-                <a mat-menu-item (click)="onLogout()">
-                    <i class="fa fa-sign-out logo" aria-hidden="true"></i>
-                    <span>Logout</span>
-                </a>
-            </span>
-        </mat-menu>
     </div>
 
     <div class="nav-bar">

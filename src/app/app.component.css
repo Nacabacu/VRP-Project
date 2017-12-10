@@ -1,0 +1,13 @@
+.menu {
+    margin-left: 5px;
+}
+
+.mat-nav-list {
+    height: calc(100% - 8px);
+}
+
+.logout {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}

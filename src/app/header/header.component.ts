@@ -1,6 +1,6 @@
 import { Router } from '@angular/router';
 import { AuthService } from './../authentication/auth.service';
-import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
 @Component({
@@ -10,6 +10,8 @@ import { Subscription } from 'rxjs/Subscription';
   encapsulation: ViewEncapsulation.None
 })
 export class HeaderComponent implements OnInit, OnDestroy {
+  @Output() openNav: EventEmitter<any> = new EventEmitter();
+
   loggedInSubscription: Subscription;
   isLoggedIn: boolean;
   role: string;
@@ -38,17 +40,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   onHomeClicked() {
-    if (this.isLoggedIn) {
-      this.navigateHomeUrl = '/' + this.role;
-      this.router.navigate([this.navigateHomeUrl]);
-    } else {
-      this.router.navigate(['/login']);
-    }
+    this.authService.onHomeClicked();
+  }
+
+  onNavResponsive() {
+    this.openNav.emit(null);
   }
 
   onLogout() {
     this.authService.logout();
     this.router.navigate(['/login']);
   }
-
 }
