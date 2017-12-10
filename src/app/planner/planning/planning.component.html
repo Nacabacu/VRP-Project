@@ -102,7 +102,7 @@
               </mat-form-field>
 
               <ngx-datatable class="material table" columnMode="flex" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'"
-                [limit]="5" [selected]="selectedDepot" [rows]="depots" [selectionType]="'single'" (select)='onDepotSelected($event)'>
+                [limit]="8" [selected]="selectedDepot" [rows]="depots" [selectionType]="'single'" (select)='onDepotSelected($event)'>
                 <ngx-datatable-column name="No." [flexGrow]="0.5">
                   <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex">
                     {{ rowIndex + 1 }}

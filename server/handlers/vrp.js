@@ -90,10 +90,10 @@ var vrpSolver = function (request, distances) {
             var VRP = new nodeOrTools.VRP(solverOpts);
 
             var vrpSearchOpts = {
-                computeTimeLimit: 2000,
+                computeTimeLimit: 3000,
                 numVehicles: parseInt(request.numVehicles),
                 depotNode: depotIndex,
-                timeHorizon: 4 * 60 * 60,
+                timeHorizon: 3 * 60 * 60,
                 vehicleCapacity: parseInt(request.vehicleCapacity),
                 routeLocks: routeLocks,
                 pickups: [],
