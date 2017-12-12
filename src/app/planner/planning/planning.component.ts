@@ -341,7 +341,7 @@ export class PlanningComponent implements OnInit, OnDestroy {
       this.resultService.saveResult(request).then((res) => {
       const id = res._body.replace(/\"/g, '');
 
-        // this.router.navigate(['/planner/result', id]);
+        this.router.navigate(['/planner/result', id]);
       }).catch((err) => {
         this.snackBar.open('Cannot find the solution', 'close', {
           duration: 2000,
