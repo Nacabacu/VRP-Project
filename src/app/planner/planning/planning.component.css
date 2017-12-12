@@ -39,6 +39,7 @@ agm-map {
 }
 
 .mat-horizontal-content-container {
+    height: calc(100vh - 246px);
     padding: 0 12px 12px;
 }
 

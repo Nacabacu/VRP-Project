@@ -59,11 +59,15 @@
               </mat-form-field>
             </div>
 
-            <div style="float: left;">
-              <mat-form-field class="table-error">
-                <input matInput formControlName="coordinate">
-                <mat-error *ngIf="this.clientFormGroup.get('coordinate').hasError('selectedCoordinateError')">You must pin the marker on the map</mat-error>
-              </mat-form-field>
+            <div class="col-xs-6">
+              <div class="marker-tip">
+                *Click on the map to add new depot
+                <br>
+                <mat-form-field class="table-error" style="font-size:16px;">
+                  <input matInput formControlName="coordinate">
+                  <mat-error *ngIf="this.clientFormGroup.get('coordinate').hasError('selectedCoordinateError')">You must pin the marker on the map</mat-error>
+                </mat-form-field>
+              </div>
             </div>
 
             <div class="col-xs-6 col-xs-offset-3" style="margin-top:15px;">
